@@ -1,0 +1,896 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      The system is: Windows - 10.0.22631 - AMD64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.41.34120/bin/Hostx64/x64/cl.exe 
+      Build flags: /nologo;/DWIN32;/D_WINDOWS;/W3;/utf-8;/GR;/EHsc;/MP
+      Id flags:  
+      
+      The output was:
+      0
+      CMakeCXXCompilerId.cpp
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.exe"
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
+      
+      The CXX compiler identification is MSVC, found in:
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/3.31.0-rc1/CompilerIdCXX/CMakeCXXCompilerId.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:1288 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Detecting CXX compiler /showIncludes prefix:
+        main.c
+        Note: including file: C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\ShowIncludes\\foo.h
+        
+      Found prefix "Note: including file: "
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-jxefkf"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-jxefkf"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-jxefkf'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_d7f64
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_d7f64.dir\\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\\cmTC_d7f64.dir\\ /FS -c "C:\\Program Files\\CMake\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\CMake\\bin\\cmake.exe" -E vs_link_exe --msvc-ver=1941 --intdir=CMakeFiles\\cmTC_d7f64.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_d7f64.dir\\CMakeCXXCompilerABI.cpp.obj  /out:cmTC_d7f64.exe /implib:cmTC_d7f64.lib /pdb:cmTC_d7f64.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'CXX': C:/PROGRA~1/MICROS~4/2022/COMMUN~1/VC/Tools/MSVC/1441~1.341/bin/Hostx64/x64/link.exe
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Running the CXX compiler's linker: "C:/PROGRA~1/MICROS~4/2022/COMMUN~1/VC/Tools/MSVC/1441~1.341/bin/Hostx64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.41.34120.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:99 (CHECK_CXX_SOURCE_COMPILES)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake:859 (_find_package)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeFindDependencyMacro.cmake:76 (find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost_atomic/boost_atomic-config.cmake:27 (find_dependency)"
+      - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake:859 (_find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/BoostConfig.cmake:67 (find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/BoostConfig.cmake:128 (boostcfg_find_component)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/vcpkg-cmake-wrapper.cmake:3 (_find_package)"
+      - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake:813 (include)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build/BoostRoot.cmake:234 (find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build/BoostRoot.cmake:274 (__boost_scan_dependencies)"
+      - "CMakeLists.txt:10 (include)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-0heew4"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-0heew4"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-0heew4'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_82809
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DCMAKE_HAVE_LIBC_PTHREAD  /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_82809.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_82809.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-0heew4\\src.cxx
+        FAILED: CMakeFiles/cmTC_82809.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DCMAKE_HAVE_LIBC_PTHREAD  /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_82809.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_82809.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-0heew4\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-0heew4\\src.cxx(1): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake:78 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:112 (CHECK_LIBRARY_EXISTS)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:175 (_threads_check_lib)"
+      - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake:859 (_find_package)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeFindDependencyMacro.cmake:76 (find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost_atomic/boost_atomic-config.cmake:27 (find_dependency)"
+      - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake:859 (_find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/BoostConfig.cmake:67 (find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/BoostConfig.cmake:128 (boostcfg_find_component)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/vcpkg-cmake-wrapper.cmake:3 (_find_package)"
+      - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake:813 (include)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build/BoostRoot.cmake:234 (find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build/BoostRoot.cmake:274 (__boost_scan_dependencies)"
+      - "CMakeLists.txt:10 (include)"
+    checks:
+      - "Looking for pthread_create in pthreads"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-sahfwc"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-sahfwc"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "CMAKE_HAVE_PTHREADS_CREATE"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-sahfwc'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_c7b68
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP  -DCHECK_FUNCTION_EXISTS=pthread_create /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_c7b68.dir\\CheckFunctionExists.cxx.obj /FdCMakeFiles\\cmTC_c7b68.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-sahfwc\\CheckFunctionExists.cxx
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\CMake\\bin\\cmake.exe" -E vs_link_exe --msvc-ver=1941 --intdir=CMakeFiles\\cmTC_c7b68.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_c7b68.dir\\CheckFunctionExists.cxx.obj  /out:cmTC_c7b68.exe /implib:cmTC_c7b68.lib /pdb:cmTC_c7b68.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthreads.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        FAILED: cmTC_c7b68.exe 
+        C:\\WINDOWS\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\CMake\\bin\\cmake.exe" -E vs_link_exe --msvc-ver=1941 --intdir=CMakeFiles\\cmTC_c7b68.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_c7b68.dir\\CheckFunctionExists.cxx.obj  /out:cmTC_c7b68.exe /implib:cmTC_c7b68.lib /pdb:cmTC_c7b68.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthreads.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        LINK Pass 1: command "C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_c7b68.dir\\CheckFunctionExists.cxx.obj /out:cmTC_c7b68.exe /implib:cmTC_c7b68.lib /pdb:cmTC_c7b68.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console pthreads.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_c7b68.dir/intermediate.manifest CMakeFiles\\cmTC_c7b68.dir/manifest.res" failed (exit code 1104) with the following output:
+        LINK : fatal error LNK1104: cannot open file 'pthreads.lib'\x0d
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake:78 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:112 (CHECK_LIBRARY_EXISTS)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:176 (_threads_check_lib)"
+      - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake:859 (_find_package)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeFindDependencyMacro.cmake:76 (find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost_atomic/boost_atomic-config.cmake:27 (find_dependency)"
+      - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake:859 (_find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/BoostConfig.cmake:67 (find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/BoostConfig.cmake:128 (boostcfg_find_component)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/vcpkg-cmake-wrapper.cmake:3 (_find_package)"
+      - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake:813 (include)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build/BoostRoot.cmake:234 (find_package)"
+      - "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build/BoostRoot.cmake:274 (__boost_scan_dependencies)"
+      - "CMakeLists.txt:10 (include)"
+    checks:
+      - "Looking for pthread_create in pthread"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-x9spvu"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-x9spvu"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "CMAKE_HAVE_PTHREAD_CREATE"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-x9spvu'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_967f7
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP  -DCHECK_FUNCTION_EXISTS=pthread_create /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_967f7.dir\\CheckFunctionExists.cxx.obj /FdCMakeFiles\\cmTC_967f7.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-x9spvu\\CheckFunctionExists.cxx
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\CMake\\bin\\cmake.exe" -E vs_link_exe --msvc-ver=1941 --intdir=CMakeFiles\\cmTC_967f7.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_967f7.dir\\CheckFunctionExists.cxx.obj  /out:cmTC_967f7.exe /implib:cmTC_967f7.lib /pdb:cmTC_967f7.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthread.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        FAILED: cmTC_967f7.exe 
+        C:\\WINDOWS\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\CMake\\bin\\cmake.exe" -E vs_link_exe --msvc-ver=1941 --intdir=CMakeFiles\\cmTC_967f7.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100226~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_967f7.dir\\CheckFunctionExists.cxx.obj  /out:cmTC_967f7.exe /implib:cmTC_967f7.lib /pdb:cmTC_967f7.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthread.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        LINK Pass 1: command "C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_967f7.dir\\CheckFunctionExists.cxx.obj /out:cmTC_967f7.exe /implib:cmTC_967f7.lib /pdb:cmTC_967f7.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console pthread.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_967f7.dir/intermediate.manifest CMakeFiles\\cmTC_967f7.dir/manifest.res" failed (exit code 1104) with the following output:
+        LINK : fatal error LNK1104: cannot open file 'pthread.lib'\x0d
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:34 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_INIT_PRIORITY"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-9p8owo"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-9p8owo"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_INIT_PRIORITY"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-9p8owo'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_de719
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_INIT_PRIORITY -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_de719.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_de719.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-9p8owo\\src.cxx
+        FAILED: CMakeFiles/cmTC_de719.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_INIT_PRIORITY -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_de719.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_de719.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-9p8owo\\src.cxx
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_attribute_init_priority.cpp(14): error C3861: 'init_priority': identifier not found
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_attribute_init_priority.cpp(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_attribute_init_priority.cpp(15): error C2146: syntax error: missing ';' before identifier 'global_class'
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:35 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_CXX20_ATOMIC_REF"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-tuyb24"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-tuyb24"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_CXX20_ATOMIC_REF"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-tuyb24'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_2dd33
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_CXX20_ATOMIC_REF -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_2dd33.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_2dd33.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-tuyb24\\src.cxx
+        FAILED: CMakeFiles/cmTC_2dd33.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_CXX20_ATOMIC_REF -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_2dd33.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_2dd33.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-tuyb24\\src.cxx
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_cxx20_atomic_ref.cpp(15): error C2039: 'atomic_ref': is not a member of 'std'
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\include\\atomic(300): note: see declaration of 'std'
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_cxx20_atomic_ref.cpp(15): error C2065: 'atomic_ref': undeclared identifier
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_cxx20_atomic_ref.cpp(15): error C2059: syntax error: '>'
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_cxx20_atomic_ref.cpp(16): error C2065: 'ref': undeclared identifier
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_cxx20_atomic_ref.cpp(17): error C2065: 'ref': undeclared identifier
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:36 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_STAT_ST_BLKSIZE"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-2f1c59"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-2f1c59"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_STAT_ST_BLKSIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-2f1c59'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_3a65a
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_BLKSIZE -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_3a65a.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_3a65a.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-2f1c59\\src.cxx
+        FAILED: CMakeFiles/cmTC_3a65a.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_BLKSIZE -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_3a65a.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_3a65a.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-2f1c59\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:37 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_STAT_ST_MTIM"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-2aeli7"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-2aeli7"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_STAT_ST_MTIM"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-2aeli7'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_53def
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_MTIM -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_53def.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_53def.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-2aeli7\\src.cxx
+        FAILED: CMakeFiles/cmTC_53def.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_MTIM -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_53def.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_53def.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-2aeli7\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:38 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_STAT_ST_MTIMENSEC"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-zqyhct"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-zqyhct"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_STAT_ST_MTIMENSEC"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-zqyhct'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_6e839
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_MTIMENSEC -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_6e839.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_6e839.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-zqyhct\\src.cxx
+        FAILED: CMakeFiles/cmTC_6e839.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_MTIMENSEC -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_6e839.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_6e839.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-zqyhct\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:39 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_STAT_ST_MTIMESPEC"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-8bhl4i"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-8bhl4i"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_STAT_ST_MTIMESPEC"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-8bhl4i'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_edf15
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_MTIMESPEC -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_edf15.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_edf15.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-8bhl4i\\src.cxx
+        FAILED: CMakeFiles/cmTC_edf15.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_MTIMESPEC -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_edf15.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_edf15.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-8bhl4i\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:40 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_STAT_ST_BIRTHTIMENSEC"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-eizajr"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-eizajr"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_STAT_ST_BIRTHTIMENSEC"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-eizajr'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_aa40d
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_BIRTHTIMENSEC -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_aa40d.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_aa40d.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-eizajr\\src.cxx
+        FAILED: CMakeFiles/cmTC_aa40d.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_BIRTHTIMENSEC -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_aa40d.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_aa40d.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-eizajr\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:41 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_STAT_ST_BIRTHTIMESPEC"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-oz9e9i"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-oz9e9i"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_STAT_ST_BIRTHTIMESPEC"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-oz9e9i'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_a81b6
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_BIRTHTIMESPEC -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_a81b6.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_a81b6.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-oz9e9i\\src.cxx
+        FAILED: CMakeFiles/cmTC_a81b6.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STAT_ST_BIRTHTIMESPEC -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_a81b6.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_a81b6.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-oz9e9i\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:43 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_STATX"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-95n7t9"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-95n7t9"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_STATX"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-95n7t9'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_37373
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STATX -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_37373.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_37373.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-95n7t9\\src.cxx
+        FAILED: CMakeFiles/cmTC_37373.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STATX -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_37373.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_37373.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-95n7t9\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:45 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_STATX_SYSCALL"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-a8t1w9"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-a8t1w9"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_STATX_SYSCALL"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-a8t1w9'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_589f6
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STATX_SYSCALL -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_589f6.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_589f6.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-a8t1w9\\src.cxx
+        FAILED: CMakeFiles/cmTC_589f6.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_STATX_SYSCALL -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_589f6.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_589f6.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-a8t1w9\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:48 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_FDOPENDIR_NOFOLLOW"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-tqy3js"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-tqy3js"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_FDOPENDIR_NOFOLLOW"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-tqy3js'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_54bb1
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_FDOPENDIR_NOFOLLOW -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_54bb1.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_54bb1.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-tqy3js\\src.cxx
+        FAILED: CMakeFiles/cmTC_54bb1.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_FDOPENDIR_NOFOLLOW -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_54bb1.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_54bb1.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-tqy3js\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:49 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_DIRENT_D_TYPE"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-0yvxe2"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-0yvxe2"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_DIRENT_D_TYPE"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-0yvxe2'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_e727c
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_DIRENT_D_TYPE -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_e727c.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_e727c.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-0yvxe2\\src.cxx
+        FAILED: CMakeFiles/cmTC_e727c.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_DIRENT_D_TYPE -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_e727c.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_e727c.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-0yvxe2\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:50 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_POSIX_AT_APIS"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-k1e7da"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-k1e7da"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_POSIX_AT_APIS"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-k1e7da'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_3d6c7
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_POSIX_AT_APIS -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_3d6c7.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_3d6c7.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-k1e7da\\src.cxx
+        FAILED: CMakeFiles/cmTC_3d6c7.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_POSIX_AT_APIS -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_3d6c7.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_3d6c7.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-k1e7da\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:51 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_FALLOCATE"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-f6fh40"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-f6fh40"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_FALLOCATE"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-f6fh40'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_504a8
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_FALLOCATE -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_504a8.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_504a8.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-f6fh40\\src.cxx
+        FAILED: CMakeFiles/cmTC_504a8.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_FALLOCATE -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_504a8.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_504a8.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-f6fh40\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:54 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_BCRYPT"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-z7ea0s"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-z7ea0s"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_BCRYPT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-z7ea0s'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_4e902
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_BCRYPT -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_4e902.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_4e902.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-z7ea0s\\src.cxx
+        FAILED: CMakeFiles/cmTC_4e902.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_BCRYPT -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src -IC:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\include /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_4e902.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_4e902.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-z7ea0s\\src.cxx
+        C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\src\\ost-1.85.0-442b222fdc.clean\\libs\\filesystem\\src\\platform_config.hpp(74): fatal error C1083: Cannot open include file: 'boost/winapi/config.hpp': No such file or directory
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:94 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_LINKFLAG_NO_UNDEFINED"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-xmv34w"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-xmv34w"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_LINKFLAG_NO_UNDEFINED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-xmv34w'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_c8a82
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_LINKFLAG_NO_UNDEFINED  /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_c8a82.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_c8a82.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-xmv34w\\src.cxx
+        FAILED: CMakeFiles/cmTC_c8a82.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_LINKFLAG_NO_UNDEFINED  /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_c8a82.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_c8a82.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-xmv34w\\src.cxx
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_linkflag_no_undefined.cpp(12): fatal error C1189: #error:  "MSVC and compatible compilers don't support -Wl,... flags"
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "libs/filesystem/CMakeLists.txt:98 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BOOST_FILESYSTEM_HAS_LINKFLAG_UNDEFINED_ERROR"
+    directories:
+      source: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-5py02v"
+      binary: "C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-5py02v"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP "
+      CMAKE_CXX_FLAGS_DEBUG: "/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 "
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/share/boost/cmake-build"
+      CMAKE_MSVC_DEBUG_INFORMATION_FORMAT: ""
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:dynamic,dynamic>:DLL>"
+      VCPKG_APPLOCAL_DEPS: "OFF"
+      VCPKG_CHAINLOAD_TOOLCHAIN_FILE: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/toolchains/windows.cmake"
+      VCPKG_TARGET_ARCHITECTURE: "x64"
+      VCPKG_TARGET_TRIPLET: "x64-windows"
+      Z_VCPKG_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg"
+    buildResult:
+      variable: "BOOST_FILESYSTEM_HAS_LINKFLAG_UNDEFINED_ERROR"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-rel/CMakeFiles/CMakeScratch/TryCompile-5py02v'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe" -v cmTC_c46ca
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_LINKFLAG_UNDEFINED_ERROR  /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_c46ca.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_c46ca.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-5py02v\\src.cxx
+        FAILED: CMakeFiles/cmTC_c46ca.dir/src.cxx.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1441~1.341\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DBOOST_FILESYSTEM_HAS_LINKFLAG_UNDEFINED_ERROR  /nologo /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP   /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1  -MDd /showIncludes /FoCMakeFiles\\cmTC_c46ca.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_c46ca.dir\\ /FS -c C:\\Users\\frede\\Bachelor\\build\\vcpkg_installed\\vcpkg\\blds\\boost-filesystem\\x64-windows-rel\\CMakeFiles\\CMakeScratch\\TryCompile-5py02v\\src.cxx
+        C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/src/ost-1.85.0-442b222fdc.clean/libs/filesystem/config/has_linkflag_no_undefined.cpp(12): fatal error C1189: #error:  "MSVC and compatible compilers don't support -Wl,... flags"
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+...

@@ -1,0 +1,7 @@
+Package: mpfr
+Version: 4.2.1
+Depends: gmp
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 7b311b9a5af7a1b59830dbdac630ca43a1f44d68f8f7c0583a6a0261bb2bf0f7
+Description: The MPFR library is a C library for multiple-precision floating-point computations with correct rounding

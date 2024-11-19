@@ -1,0 +1,8 @@
+Package: boost-circular-buffer
+Version: 1.85.0
+Port-Version: 1
+Depends: boost-assert, boost-cmake, boost-concept-check, boost-config, boost-core, boost-headers, boost-move, boost-static-assert, boost-throw-exception, boost-type-traits
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 29c756394baff566a1b3846ed6ea76fa5f66054933fd6e7fa68731b2e911485f
+Description: Boost circular_buffer module

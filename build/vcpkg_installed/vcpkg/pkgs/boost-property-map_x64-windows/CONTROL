@@ -1,0 +1,8 @@
+Package: boost-property-map
+Version: 1.85.0
+Port-Version: 1
+Depends: boost-any, boost-assert, boost-cmake, boost-concept-check, boost-config, boost-core, boost-function, boost-headers, boost-iterator, boost-lexical-cast, boost-mpl, boost-smart-ptr, boost-static-assert, boost-throw-exception, boost-type-index, boost-type-traits, boost-utility
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 0779bef3acda10204233ff4c9eee677a70eac61d1efc41d8302571315cd386d6
+Description: Boost property_map module

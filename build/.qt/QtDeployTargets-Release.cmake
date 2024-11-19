@@ -1,0 +1,5 @@
+set(__QT_DEPLOY_TARGET_CGAL_Qt6_moc_and_resources_FILE C:/Users/frede/Bachelor/build/Release/CGAL_Qt6_moc_and_resources.lib)
+set(__QT_DEPLOY_TARGET_CGAL_Qt6_moc_and_resources_TYPE STATIC_LIBRARY)
+set(__QT_DEPLOY_TARGET_Bachelor_FILE C:/Users/frede/Bachelor/build/Release/Bachelor.exe)
+set(__QT_DEPLOY_TARGET_Bachelor_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_Bachelor_RUNTIME_DLLS C:/Users/frede/Qt/6.8.0/msvc2022_64/bin/Qt6Svg.dll;C:/Users/frede/Qt/6.8.0/msvc2022_64/bin/Qt6OpenGLWidgets.dll;C:/Users/frede/Qt/6.8.0/msvc2022_64/bin/Qt6Widgets.dll;C:/Users/frede/Qt/6.8.0/msvc2022_64/bin/Qt6OpenGL.dll;C:/Users/frede/Qt/6.8.0/msvc2022_64/bin/Qt6Gui.dll;C:/Users/frede/Qt/6.8.0/msvc2022_64/bin/Qt6Core.dll)

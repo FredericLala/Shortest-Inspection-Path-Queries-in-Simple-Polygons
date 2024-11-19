@@ -1,0 +1,17 @@
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/ctti_type_index.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/detail/compile_time_type_info.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/detail/ctti_register_class.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/detail/stl_register_class.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/runtime_cast/boost_shared_ptr_cast.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/runtime_cast/detail/runtime_cast_impl.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/runtime_cast/pointer_cast.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/runtime_cast/reference_cast.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/runtime_cast/register_runtime_class.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/runtime_cast/std_shared_ptr_cast.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/runtime_cast.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/stl_type_index.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index/type_index_facade.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/include/boost/type_index.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/lib/cmake/boost_type_index-1.85.0/boost_type_index-targets.cmake
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/lib/cmake/boost_type_index-1.85.0/boost_type_index-config.cmake
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-type-index_x64-windows/lib/cmake/boost_type_index-1.85.0/boost_type_index-config-version.cmake

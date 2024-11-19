@@ -1,0 +1,15 @@
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/CMakeFiles/tests.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/CMakeFiles/check.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/CMakeFiles/tests-quick.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/CMakeFiles/check-quick.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/CMakeFiles/edit_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/CMakeFiles/rebuild_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/CMakeFiles/list_install_components.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/CMakeFiles/install.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/CMakeFiles/install/local.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/libs/atomic/CMakeFiles/boost_atomic.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/libs/atomic/CMakeFiles/edit_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/libs/atomic/CMakeFiles/rebuild_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/libs/atomic/CMakeFiles/list_install_components.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/libs/atomic/CMakeFiles/install.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-atomic/x64-windows-dbg/libs/atomic/CMakeFiles/install/local.dir

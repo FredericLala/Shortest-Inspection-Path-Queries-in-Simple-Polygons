@@ -1,0 +1,17 @@
+#ifndef COMMON_H
+#define COMMOM_H
+
+#include <CGAL/Polygon_2.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+
+#include <QPoint>
+
+#include <iostream>
+#include <vector>
+
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+typedef K::Point_2 Point_2;
+typedef std::list<Point_2> Container;
+typedef CGAL::Polygon_2<K, Container> Polygon_2;
+
+#endif

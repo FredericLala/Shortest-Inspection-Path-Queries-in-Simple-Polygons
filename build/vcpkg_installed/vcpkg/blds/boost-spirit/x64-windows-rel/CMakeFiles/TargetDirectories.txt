@@ -1,0 +1,14 @@
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/CMakeFiles/tests.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/CMakeFiles/check.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/CMakeFiles/tests-quick.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/CMakeFiles/check-quick.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/CMakeFiles/edit_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/CMakeFiles/rebuild_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/CMakeFiles/list_install_components.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/CMakeFiles/install.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/CMakeFiles/install/local.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/libs/spirit/CMakeFiles/edit_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/libs/spirit/CMakeFiles/rebuild_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/libs/spirit/CMakeFiles/list_install_components.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/libs/spirit/CMakeFiles/install.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-spirit/x64-windows-rel/libs/spirit/CMakeFiles/install/local.dir

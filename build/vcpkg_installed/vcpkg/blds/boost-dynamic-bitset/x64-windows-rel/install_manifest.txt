@@ -1,0 +1,10 @@
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/include/boost/dynamic_bitset/config.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/include/boost/dynamic_bitset/detail/dynamic_bitset.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/include/boost/dynamic_bitset/detail/lowest_bit.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/include/boost/dynamic_bitset/dynamic_bitset.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/include/boost/dynamic_bitset/serialization.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/include/boost/dynamic_bitset.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/include/boost/dynamic_bitset_fwd.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/lib/cmake/boost_dynamic_bitset-1.85.0/boost_dynamic_bitset-targets.cmake
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/lib/cmake/boost_dynamic_bitset-1.85.0/boost_dynamic_bitset-config.cmake
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-dynamic-bitset_x64-windows/lib/cmake/boost_dynamic_bitset-1.85.0/boost_dynamic_bitset-config-version.cmake

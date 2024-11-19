@@ -1,0 +1,4 @@
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-rational_x64-windows/include/boost/rational.hpp
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-rational_x64-windows/lib/cmake/boost_rational-1.85.0/boost_rational-targets.cmake
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-rational_x64-windows/lib/cmake/boost_rational-1.85.0/boost_rational-config.cmake
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-rational_x64-windows/lib/cmake/boost_rational-1.85.0/boost_rational-config-version.cmake

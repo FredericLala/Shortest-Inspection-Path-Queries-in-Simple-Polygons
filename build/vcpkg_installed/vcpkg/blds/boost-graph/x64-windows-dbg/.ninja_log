@@ -1,0 +1,6 @@
+# ninja log v5
+71	25098	7536546904382686	libs/graph/CMakeFiles/boost_graph.dir/src/graphml.cpp.obj	627ed2c2cdd5ea2
+85	28128	7536546934932677	libs/graph/CMakeFiles/boost_graph.dir/src/read_graphviz_new.cpp.obj	6c833e146a65ce45
+28134	29303	7536546946559402	stage/bin/boost_graph-vc143-mt-gd-x64-1_85.dll	3c6c070a7c816638
+28134	29303	7536546946559402	stage/lib/boost_graph-vc143-mt-gd-x64-1_85.lib	3c6c070a7c816638
+29308	36998	0	CMakeFiles/install.util	165c0418f0db9a84

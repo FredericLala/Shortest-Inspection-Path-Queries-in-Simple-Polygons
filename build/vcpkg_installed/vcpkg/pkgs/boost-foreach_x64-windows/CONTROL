@@ -1,0 +1,8 @@
+Package: boost-foreach
+Version: 1.85.0
+Port-Version: 1
+Depends: boost-cmake, boost-config, boost-core, boost-headers, boost-iterator, boost-mpl, boost-range, boost-type-traits
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 5a6ec135716180acccab5d0929af6df8d54e316a9100a884d8a6ee4622834608
+Description: Boost foreach module

@@ -1,0 +1,8 @@
+Package: boost-detail
+Version: 1.85.0
+Port-Version: 1
+Depends: boost-cmake, boost-config, boost-core, boost-headers, boost-preprocessor, boost-static-assert, boost-type-traits
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 1d1d0ee9dc7ef145062d33d1282db915c43fc93cda38ccd7d82135a9220cdb40
+Description: Boost detail module

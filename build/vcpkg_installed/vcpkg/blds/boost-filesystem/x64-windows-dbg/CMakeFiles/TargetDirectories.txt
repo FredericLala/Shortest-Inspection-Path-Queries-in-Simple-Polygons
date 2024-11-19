@@ -1,0 +1,15 @@
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/CMakeFiles/tests.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/CMakeFiles/check.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/CMakeFiles/tests-quick.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/CMakeFiles/check-quick.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/CMakeFiles/edit_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/CMakeFiles/rebuild_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/CMakeFiles/list_install_components.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/CMakeFiles/install.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/CMakeFiles/install/local.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/libs/filesystem/CMakeFiles/boost_filesystem.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/libs/filesystem/CMakeFiles/edit_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/libs/filesystem/CMakeFiles/rebuild_cache.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/libs/filesystem/CMakeFiles/list_install_components.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/libs/filesystem/CMakeFiles/install.dir
+C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-filesystem/x64-windows-dbg/libs/filesystem/CMakeFiles/install/local.dir

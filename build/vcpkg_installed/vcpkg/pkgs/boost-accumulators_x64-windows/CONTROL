@@ -1,0 +1,8 @@
+Package: boost-accumulators
+Version: 1.85.0
+Port-Version: 1
+Depends: boost-array, boost-assert, boost-circular-buffer, boost-cmake, boost-concept-check, boost-config, boost-core, boost-fusion, boost-headers, boost-iterator, boost-mpl, boost-numeric-conversion, boost-parameter, boost-preprocessor, boost-range, boost-serialization, boost-static-assert, boost-throw-exception, boost-tuple, boost-type-traits, boost-typeof, boost-ublas
+Architecture: x64-windows
+Multi-Arch: same
+Abi: ce1e7a69cdcdc8f4bd4be84dbb792e1a95cb3aa3e5337eed730ea152307b2fa9
+Description: Boost accumulators module
