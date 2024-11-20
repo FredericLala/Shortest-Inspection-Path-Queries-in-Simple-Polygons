@@ -28,6 +28,7 @@ public:
     void setMode(int mode); // Set the mode (1 or 2)
     void clearPoints();     // Clear all selected points
     void constructPolygon(int size);
+    void clearCanvas();
     void onePointQuery(QPointF queryPoint);
     void setStep(int step);
     void computeOptimalPoint();
@@ -94,6 +95,7 @@ private:
     void pointCheck();
     bool valid;
     std::string errorMessage;
+    bool hideQuery;
 };
 
 #endif // POLYGONWIDGET_H

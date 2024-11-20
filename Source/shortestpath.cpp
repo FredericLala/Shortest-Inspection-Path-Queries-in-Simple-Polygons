@@ -54,6 +54,11 @@ Point_3 convertToCGALPoint3D(const QPointF &qtPoint)
     return Point_3(qtPoint.x(), qtPoint.y(), 0);
 }
 
+
+void ShortestPath::clearTree() {
+    tree.clear();
+}
+
 std::vector<Point_3> ShortestPath::findShortestPath(QPointF source_2D, QPointF query_2D, const Polygon_2 &polygon)
 {
     points.clear();

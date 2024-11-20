@@ -45,6 +45,7 @@ public:
     ShortestPath();
     void createMesh(const Polygon_2 &polygon);
     const Surface_mesh &getMesh() const;
+    void clearTree();
     std::vector<Point_3> findShortestPath(QPointF source_2D, QPointF query_2D, const Polygon_2 &polygon);
     const std::vector<Point_3> &getShortestPath() const;
     const Point_2 &getPenultimate(const std::vector<Point_3> &path, const Polygon_2 &polygon) const;

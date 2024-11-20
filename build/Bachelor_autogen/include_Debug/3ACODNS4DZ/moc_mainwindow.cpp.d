@@ -2261,6 +2261,7 @@ C:/Users/frede/Bachelor/build/Bachelor_autogen/include_Debug/3ACODNS4DZ/moc_main
   C:/Users/frede/Qt/6.8.0/msvc2022_64/include/QtWidgets/QLabel \
   C:/Users/frede/Qt/6.8.0/msvc2022_64/include/QtWidgets/QMainWindow \
   C:/Users/frede/Qt/6.8.0/msvc2022_64/include/QtWidgets/QPushButton \
+  C:/Users/frede/Qt/6.8.0/msvc2022_64/include/QtWidgets/QSlider \
   C:/Users/frede/Qt/6.8.0/msvc2022_64/include/QtWidgets/QStackedWidget \
   C:/Users/frede/Qt/6.8.0/msvc2022_64/include/QtWidgets/QVBoxLayout \
   C:/Users/frede/Qt/6.8.0/msvc2022_64/include/QtWidgets/QWidget \

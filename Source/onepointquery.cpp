@@ -75,6 +75,11 @@ bool OnePointQuery::checkVisibilty(const QPointF& point1, const QPointF& point2,
 	return !tree.do_intersect(segment_query);
 }
 
+void OnePointQuery::clearTree() {
+	tree.clear();
+	edges.clear();
+}
+
 // Skip as an unfinished alternative
 struct Skip
 {

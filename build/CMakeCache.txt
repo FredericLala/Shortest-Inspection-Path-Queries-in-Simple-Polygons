@@ -282,6 +282,9 @@ CMAKE_TOOLCHAIN_FILE:STRING=C:\Program Files\Microsoft Visual Studio\2022\Commun
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//git command line client
+GIT_EXECUTABLE:FILEPATH=C:/Program Files/Git/cmd/git.exe
+
 //The directory containing the GMPXX include files
 GMPXX_INCLUDE_DIR:PATH=C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/include
 

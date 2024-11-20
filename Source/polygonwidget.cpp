@@ -4,6 +4,7 @@ PolygonWidget::PolygonWidget(QWidget* parent) : QWidget(parent)
 {
 	constructPolygon(40);
 	step = 0;
+	hideQuery = false;
 }
 
 void PolygonWidget::constructPolygon(int size)
@@ -15,6 +16,17 @@ void PolygonWidget::constructPolygon(int size)
 		polygonQ.append(QPointF(it->x(), it->y()));
 	}
 
+	update();
+}
+
+void PolygonWidget::clearCanvas() {
+	polygonC.clear();
+	polygonQ.clear();
+	m_onePointHandler.clearTree();
+	m_shortestPathHandler.clearTree();
+	clearPoints();
+	step = 0;
+	hideQuery = true;
 	update();
 }
 
@@ -287,6 +299,7 @@ void PolygonWidget::startSingleQuery()
 
 void PolygonWidget::onePointQuery(QPointF queryPoint)
 {
+	hideQuery = false;
 	visibilitySQ = m_onePointHandler.checkVisibilty(startingPoint, queryPoint, polygonC);
 	if (visibilitySQ)
 	{
@@ -383,6 +396,7 @@ void PolygonWidget::decreaseStep()
 
 void PolygonWidget::twoPointQuery()
 {
+	hideQuery = false;
 	// visibility check
 	visibilitySQ1 = m_onePointHandler.checkVisibilty(startingPoint, queryPoint1, polygonC);
 	visibilitySQ2 = m_onePointHandler.checkVisibilty(startingPoint, queryPoint2, polygonC);
@@ -482,6 +496,10 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 			drawLabel(queryPoint1.x(), queryPoint1.y(), QString("q"), painter);
 		}
 
+		if (hideQuery) {
+			return;
+		}
+
 		if (!stepmode)
 		{
 			visualizeAuto(painter);
@@ -508,6 +526,10 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		{
 			painter.drawEllipse(queryPoint2, 3, 3);
 			drawLabel(queryPoint2.x(), queryPoint2.y(), QString("q2"), painter);
+		}
+
+		if (hideQuery) {
+			return;
 		}
 
 		if ((visibilitySQ1 && !visibilitySQ2) || (!visibilitySQ1 && visibilitySQ2))
@@ -699,7 +721,10 @@ void PolygonWidget::visualizeStep(QPainter& painter)
 
 	if (step == 7)
 	{
-		// TBA point c;
+		painter.setPen(Qt::red);
+		painter.setBrush(Qt::red);
+		painter.drawEllipse(c, 3, 3);
+		drawLabel(c.x(), c.y(), QString("c"), painter);
 	}
 }
 
