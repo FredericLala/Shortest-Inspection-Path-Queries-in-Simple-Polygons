@@ -63,11 +63,14 @@ std::vector<Point_3> ShortestPath::findShortestPath(QPointF source_2D, QPointF q
 {
     points.clear();
     shortestPath.clear();
-    Surface_mesh_shortest_path shortest_path(mesh);
 
     // Convert to 3D points
     Point_3 source = convertToCGALPoint3D(source_2D);
     Point_3 query = convertToCGALPoint3D(query_2D);
+
+    mesh.add_vertex(query);
+    Surface_mesh_shortest_path shortest_path(mesh);
+
 
     Face_location source_loc = shortest_path.locate<AABB_face_graph_traits>(source);
     // Add source point
@@ -110,7 +113,9 @@ const Point_2 &ShortestPath::getPenultimate(const std::vector<Point_3> &path, co
     }
 
     // Handle case where no point on the boundary was found
-    throw std::runtime_error("No point on the polygon boundary was found in the path.");
+    //throw std::runtime_error("No point on the polygon boundary was found in the path.");
+    Point_3 lastPoint_3 = path.back();
+    return Point_2(lastPoint_3.x(), lastPoint_3.y());
 }
 
 std::vector<Point_3> ShortestPath::reversePath(std::vector<Point_3> path)
