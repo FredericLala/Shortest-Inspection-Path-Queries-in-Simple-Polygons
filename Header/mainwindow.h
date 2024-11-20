@@ -12,6 +12,7 @@
 #include "ShortestPath.h"
 #include <QMainWindow>
 #include <QApplication>
+#include <QSlider>
 
 class MainWindow : public QWidget
 {
@@ -26,6 +27,7 @@ private Q_SLOTS:
     void onQueryTypeChanged(int); // Updates UI based on query type selection
 
     void onStartClicked();
+    void onRegenerateClicked();
     void runStepperMode();
     void runAutorunMode();
 
@@ -57,9 +59,12 @@ private:
     void setupQueryControls();
     void updateUIForStepQ1();
 
+    void tickLabel();
+
 
     //
     QComboBox *modeSelector;
     int index;
     QString queryMode;
+    QSlider *slider;
 };

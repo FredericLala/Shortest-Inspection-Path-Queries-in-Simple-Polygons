@@ -524,11 +524,11 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 48,
-			"id" : "CGAL_Qt6_moc_and_resources::@6890427a1f51a3e7e1df"
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+			"backtrace" : 48,
+			"id" : "CGAL_Qt6_moc_and_resources::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "Bachelor::@6890427a1f51a3e7e1df",

@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Release/Bachelor.exe"
+			"path" : "MinSizeRel/Bachelor.exe"
 		},
 		{
-			"path" : "Release/Bachelor.pdb"
+			"path" : "MinSizeRel/Bachelor.pdb"
 		}
 	],
 	"backtrace" : 2,
@@ -334,7 +334,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -std:c++17 -MD"
 				},
 				{
 					"backtrace" : 18,
@@ -450,7 +450,7 @@
 				},
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/frede/Bachelor/build/Bachelor_autogen/include_Release"
+					"path" : "C:/Users/frede/Bachelor/build/Bachelor_autogen/include_MinSizeRel"
 				},
 				{
 					"backtrace" : 49,
@@ -528,11 +528,11 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 48,
-			"id" : "CGAL_Qt6_moc_and_resources::@6890427a1f51a3e7e1df"
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+			"backtrace" : 48,
+			"id" : "CGAL_Qt6_moc_and_resources::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "Bachelor::@6890427a1f51a3e7e1df",
@@ -541,7 +541,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -MD",
+				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
@@ -550,7 +550,7 @@
 			},
 			{
 				"backtrace" : 8,
-				"fragment" : "Release\\CGAL_Qt6_moc_and_resources.lib",
+				"fragment" : "MinSizeRel\\CGAL_Qt6_moc_and_resources.lib",
 				"role" : "libraries"
 			},
 			{
@@ -678,7 +678,7 @@
 			"backtrace" : 0,
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "build/Bachelor_autogen/mocs_compilation_Release.cpp",
+			"path" : "build/Bachelor_autogen/mocs_compilation_MinSizeRel.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

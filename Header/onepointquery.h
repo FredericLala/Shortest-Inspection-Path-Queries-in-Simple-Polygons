@@ -44,6 +44,7 @@ public:
 	bool isQueryPointSet() const;
 
 	bool checkVisibilty(const QPointF& point1, const QPointF& point2, Polygon_2& polygon);
+	void clearTree();
 	void shootRayExtended(const QPointF& point1, const QPointF& point2, Polygon_2& polygon);
 	Point_2 convertToCGALPoint(const QPointF& qtPoint);
 	QPointF convertToQTPoint(const Point_2& cgalPoint);

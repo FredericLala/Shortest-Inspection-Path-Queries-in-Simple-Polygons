@@ -1570,6 +1570,18 @@
 			"value" : "[C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/debug/lib/mpfr.lib][C:/Users/frede/Bachelor/build/vcpkg_installed/x64-windows/include][v()]"
 		},
 		{
+			"name" : "GIT_EXECUTABLE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "git command line client"
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "C:/Program Files/Git/cmd/git.exe"
+		},
+		{
 			"name" : "GMPXX_INCLUDE_DIR",
 			"properties" : 
 			[
