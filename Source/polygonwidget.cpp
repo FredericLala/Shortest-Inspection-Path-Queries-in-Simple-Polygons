@@ -600,7 +600,7 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 		auto source = m_shortestPathHandler.getMesh().point(m_shortestPathHandler.getMesh().vertex(edge, 0));
 		auto target = m_shortestPathHandler.getMesh().point(m_shortestPathHandler.getMesh().vertex(edge, 1));
 
-		painter.drawLine(QPointF(source.x(), source.y()), QPointF(target.x(), target.y()));
+		//painter.drawLine(QPointF(source.x(), source.y()), QPointF(target.x(), target.y()));
 	}
 
 	// draw shortest path
@@ -611,14 +611,12 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 	}
 
 	// draw point a
-	painter.setPen(Qt::gray);
-	painter.setBrush(Qt::gray);
+	painter.setPen(Qt::black);
+	painter.setBrush(Qt::black);
 	painter.drawEllipse(a, 3, 3);
 	drawLabel(a.x(), a.y(), QString("a"), painter);
 
 	// draw point b and window
-	painter.setPen(Qt::green);
-	painter.setBrush(Qt::green);
 	painter.drawEllipse(b, 3, 3);
 	drawLabel(b.x(), b.y(), QString("b"), painter);
 	painter.setPen(Qt::green);
@@ -632,25 +630,26 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 	painter.drawEllipse(lca, 3, 3);
 	drawLabel(lca.x(), lca.y(), QString("r"), painter);
 
-	painter.setPen(Qt::blue);
-	painter.setBrush(Qt::blue);
+
 
 	for (size_t i = 1; i < pathRA.size(); ++i)
 	{
+		painter.setPen(QPen(Qt::blue, 2));
 		painter.drawLine(pathRA[i - 1], pathRA[i]);
-		painter.setPen(Qt::gray);
-		painter.drawEllipse(pathRA[i - 1], 5, 5);
+		//painter.setPen(Qt::gray);
+		//painter.drawEllipse(pathRA[i - 1], 5, 5);
 	}
 
 	for (size_t i = 1; i < pathRB.size(); ++i)
 	{
+		painter.setPen(QPen(Qt::magenta, 2));
 		painter.drawLine(pathRB[i - 1], pathRB[i]);
-		painter.setPen(Qt::green);
-		painter.drawEllipse(pathRB[i - 1], 5, 5);
+		//painter.setPen(Qt::green);
+		//painter.drawEllipse(pathRB[i - 1], 5, 5);
 	}
 
-	painter.setPen(Qt::red);
-	painter.setBrush(Qt::red);
+	painter.setPen(Qt::black);
+	painter.setBrush(Qt::black);
 	painter.drawEllipse(c, 3, 3);
 	drawLabel(c.x(), c.y(), QString("c"), painter);
 }

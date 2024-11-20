@@ -48,8 +48,8 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(regenerateButton, &QPushButton::clicked, this, &MainWindow::onRegenerateClicked);
 
 	// Set the initial query mode to One Point Query
-	queryTypeSelector->setCurrentText("Two Point Query"); // Select "One Point Query" by default
-	onQueryTypeChanged(1);                 // Trigger mode change to initialize the mode
+	queryTypeSelector->setCurrentText("One Point Query"); // Select "One Point Query" by default
+	onQueryTypeChanged(0);                 // Trigger mode change to initialize the mode
 
 	modeSelector->setCurrentText("Autorun");
 	updateUIForStepQ1();

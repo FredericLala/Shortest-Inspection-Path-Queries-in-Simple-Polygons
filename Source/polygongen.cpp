@@ -11,7 +11,7 @@ Polygon_2 PolygonGen::generateRandomPolygon(int size)
     std::list<Point_2> point_set;
     CGAL::Random rand;
 
-    const double RADIUS = 200;
+    const double RADIUS = 300;
     const int MAX_POLY_SIZE = 100;
 
     if (size < 4)
