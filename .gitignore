@@ -361,3 +361,17 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore build artifacts
+/build/
+
+# Ignore CMake generated files
+CMakeUserPresets.json
+
+# Ignore system-specific files
+*.log
+*.tmp
+*.swp
+
+# Ignore temporary files
+*.bak
