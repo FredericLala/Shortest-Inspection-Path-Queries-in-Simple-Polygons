@@ -1,8 +1,0 @@
-Package: boost-graph
-Version: 1.85.0
-Port-Version: 1
-Depends: boost-algorithm, boost-any, boost-array, boost-assert, boost-bimap, boost-bind, boost-cmake, boost-concept-check, boost-config, boost-container-hash, boost-conversion, boost-core, boost-detail, boost-foreach, boost-function, boost-headers, boost-integer, boost-iterator, boost-lexical-cast, boost-math, boost-move, boost-mpl, boost-multi-index, boost-optional, boost-parameter, boost-preprocessor, boost-property-map, boost-property-tree, boost-random, boost-range, boost-regex, boost-serialization, boost-smart-ptr, boost-spirit, boost-static-assert, boost-throw-exception, boost-tti, boost-tuple, boost-type-traits, boost-typeof, boost-unordered, boost-utility, boost-xpressive
-Architecture: x64-windows
-Multi-Arch: same
-Abi: a591bea0bce8879bfc880946f64ae9197f7b42caf2f8bf989d8c8524276674d8
-Description: Boost graph module

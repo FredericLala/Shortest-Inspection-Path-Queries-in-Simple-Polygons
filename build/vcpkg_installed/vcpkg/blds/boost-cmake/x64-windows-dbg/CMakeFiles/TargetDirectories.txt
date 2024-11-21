@@ -1,5 +1,0 @@
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-cmake/x64-windows-dbg/CMakeFiles/edit_cache.dir
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-cmake/x64-windows-dbg/CMakeFiles/rebuild_cache.dir
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-cmake/x64-windows-dbg/CMakeFiles/list_install_components.dir
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-cmake/x64-windows-dbg/CMakeFiles/install.dir
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/blds/boost-cmake/x64-windows-dbg/CMakeFiles/install/local.dir

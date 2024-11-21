@@ -1,8 +1,0 @@
-Package: boost-scope
-Version: 1.85.0
-Port-Version: 1
-Depends: boost-assert, boost-cmake, boost-config, boost-core, boost-headers, boost-type-traits
-Architecture: x64-windows
-Multi-Arch: same
-Abi: e7dba58f39fde94bb917483fec9d8c2ea88a10d3452a4034d1331da5f0642aaa
-Description: Boost scope module

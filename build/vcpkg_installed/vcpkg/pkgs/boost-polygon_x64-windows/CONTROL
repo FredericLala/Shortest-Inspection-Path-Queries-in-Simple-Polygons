@@ -1,8 +1,0 @@
-Package: boost-polygon
-Version: 1.85.0
-Port-Version: 1
-Depends: boost-cmake, boost-config, boost-headers
-Architecture: x64-windows
-Multi-Arch: same
-Abi: 2b31e0a491e68bbcfe305ec5ac786b4d9769e41c648f9357c920dd867e556eeb
-Description: Boost polygon module

@@ -1,4 +1,0 @@
-C:/Users/frede/Bachelor/build/CMakeFiles/CGAL_Qt6_moc_and_resources.dir
-C:/Users/frede/Bachelor/build/CMakeFiles/Bachelor.dir
-C:/Users/frede/Bachelor/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/frede/Bachelor/build/CMakeFiles/ZERO_CHECK.dir

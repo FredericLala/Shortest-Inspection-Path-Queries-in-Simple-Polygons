@@ -1,6 +1,0 @@
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-logic_x64-windows/include/boost/logic/tribool.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-logic_x64-windows/include/boost/logic/tribool_fwd.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-logic_x64-windows/include/boost/logic/tribool_io.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-logic_x64-windows/lib/cmake/boost_logic-1.85.0/boost_logic-targets.cmake
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-logic_x64-windows/lib/cmake/boost_logic-1.85.0/boost_logic-config.cmake
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-logic_x64-windows/lib/cmake/boost_logic-1.85.0/boost_logic-config-version.cmake

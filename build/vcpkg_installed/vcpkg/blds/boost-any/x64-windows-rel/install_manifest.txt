@@ -1,9 +1,0 @@
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-any_x64-windows/include/boost/any/bad_any_cast.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-any_x64-windows/include/boost/any/basic_any.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-any_x64-windows/include/boost/any/detail/placeholder.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-any_x64-windows/include/boost/any/fwd.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-any_x64-windows/include/boost/any/unique_any.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-any_x64-windows/include/boost/any.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-any_x64-windows/lib/cmake/boost_any-1.85.0/boost_any-targets.cmake
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-any_x64-windows/lib/cmake/boost_any-1.85.0/boost_any-config.cmake
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-any_x64-windows/lib/cmake/boost_any-1.85.0/boost_any-config-version.cmake

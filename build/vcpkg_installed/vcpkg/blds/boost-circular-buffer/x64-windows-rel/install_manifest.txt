@@ -1,9 +1,0 @@
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-circular-buffer_x64-windows/include/boost/circular_buffer/base.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-circular-buffer_x64-windows/include/boost/circular_buffer/debug.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-circular-buffer_x64-windows/include/boost/circular_buffer/details.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-circular-buffer_x64-windows/include/boost/circular_buffer/space_optimized.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-circular-buffer_x64-windows/include/boost/circular_buffer.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-circular-buffer_x64-windows/include/boost/circular_buffer_fwd.hpp
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-circular-buffer_x64-windows/lib/cmake/boost_circular_buffer-1.85.0/boost_circular_buffer-targets.cmake
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-circular-buffer_x64-windows/lib/cmake/boost_circular_buffer-1.85.0/boost_circular_buffer-config.cmake
-C:/Users/frede/Bachelor/build/vcpkg_installed/vcpkg/pkgs/boost-circular-buffer_x64-windows/lib/cmake/boost_circular_buffer-1.85.0/boost_circular_buffer-config-version.cmake

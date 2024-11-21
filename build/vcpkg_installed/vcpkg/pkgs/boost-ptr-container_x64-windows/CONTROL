@@ -1,8 +1,0 @@
-Package: boost-ptr-container
-Version: 1.85.0
-Port-Version: 1
-Depends: boost-array, boost-assert, boost-circular-buffer, boost-cmake, boost-config, boost-core, boost-headers, boost-iterator, boost-mpl, boost-range, boost-smart-ptr, boost-static-assert, boost-type-traits, boost-unordered, boost-utility
-Architecture: x64-windows
-Multi-Arch: same
-Abi: 65d06225e76ec95aa04a793bd995dec698bae3cec19c97e658d3d3742735908c
-Description: Boost ptr_container module

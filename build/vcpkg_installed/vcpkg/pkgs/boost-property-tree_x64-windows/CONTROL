@@ -1,8 +1,0 @@
-Package: boost-property-tree
-Version: 1.85.0
-Port-Version: 1
-Depends: boost-any, boost-assert, boost-bind, boost-cmake, boost-config, boost-core, boost-headers, boost-iterator, boost-mpl, boost-multi-index, boost-optional, boost-range, boost-serialization, boost-static-assert, boost-throw-exception, boost-type-traits
-Architecture: x64-windows
-Multi-Arch: same
-Abi: fb810ac5f3a7640ac92c17a88e6cdc6b3946040f15270196937fdcdf22836166
-Description: Boost property_tree module

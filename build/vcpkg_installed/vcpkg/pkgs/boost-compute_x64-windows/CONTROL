@@ -1,8 +1,0 @@
-Package: boost-compute
-Version: 1.85.0
-Port-Version: 1
-Depends: boost-algorithm, boost-array, boost-assert, boost-chrono, boost-cmake, boost-config, boost-core, boost-filesystem, boost-function, boost-function-types, boost-fusion, boost-headers, boost-iterator, boost-lexical-cast, boost-mpl, boost-optional, boost-preprocessor, boost-property-tree, boost-proto, boost-range, boost-smart-ptr, boost-static-assert, boost-thread, boost-throw-exception, boost-tuple, boost-type-traits, boost-typeof, boost-utility, boost-uuid
-Architecture: x64-windows
-Multi-Arch: same
-Abi: 427772ecae5efe4052893f8b0115158bdbcf66c2ae1f206e93caa0103b2fd328
-Description: Boost compute module
