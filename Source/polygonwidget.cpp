@@ -369,7 +369,8 @@ void PolygonWidget::onePointQuery(QPointF queryPoint)
 	lca = QPointF(lcaC.x(), lcaC.y());
 
 	std::vector<Point_3> pathCRA = m_shortestPathHandler.findShortestPath(lca, a, polygonC);
-	std::vector<Point_3> pathCRB = m_shortestPathHandler.findShortestPath(lca, b, polygonC);
+	std::vector<Point_3> pathCRB = m_shortestPathHandler.findShortestPath(b, lca, polygonC); // makes the calculations more consistent
+	pathCRB = m_shortestPathHandler.reversePath(pathCRB); // need to reverse to get the path from b to lca
 	pathRA = convertToQT(pathCRA);
 	pathRB = convertToQT(pathCRB);
 

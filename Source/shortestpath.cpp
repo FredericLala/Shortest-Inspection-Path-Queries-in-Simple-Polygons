@@ -10,6 +10,7 @@ void ShortestPath::createMesh(const Polygon_2 &polygon)
     mesh.clear();
     cdt.clear();
     cdt.insert_constraint(polygon.vertices_begin(), polygon.vertices_end(), true);
+    assert(cdt.is_valid());
 
     std::unordered_map<CDT::Face_handle, bool> in_domain_map;
     boost::associative_property_map<std::unordered_map<CDT::Face_handle, bool>>
@@ -49,41 +50,33 @@ const Surface_mesh &ShortestPath::getMesh() const
     return mesh;
 }
 
-Point_3 convertToCGALPoint3D(const QPointF &qtPoint)
-{
-    return Point_3(qtPoint.x(), qtPoint.y(), 0);
-}
-
-
 void ShortestPath::clearTree() {
     tree.clear();
 }
 
-std::vector<Point_3> ShortestPath::findShortestPath(QPointF source_2D, QPointF query_2D, const Polygon_2 &polygon)
+std::vector<Point_3> ShortestPath::findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2 &polygon)
 {
     points.clear();
     shortestPath.clear();
 
-    // Convert to 3D points
-    Point_3 source = convertToCGALPoint3D(source_2D);
-    Point_3 query = convertToCGALPoint3D(query_2D);
+    // construct a shortest path query object and add a source point
+    Surface_mesh_shortest_path shortest_paths(mesh);
 
-    mesh.add_vertex(query);
-    Surface_mesh_shortest_path shortest_path(mesh);
+    // Convert source and query points to 3D points
+    const Point_3 source = Point_3(source2D.x(), source2D.y(), 0);
+    const Point_3 query = Point_3(query2D.x(), query2D.y(), 0);
+    //mesh.add_vertex(query);
+    // Build the AABB tree for the mesh
+    Face_location source_loc = shortest_paths.locate<AABB_face_graph_traits>(source);
 
-
-    Face_location source_loc = shortest_path.locate<AABB_face_graph_traits>(source);
-    // Add source point
-    shortest_path.add_source_point(source_loc.first, source_loc.second);
-
-    if (tree.empty()) {
-        shortest_path.build_aabb_tree(tree);
-    }
+    // Add the source point
+    shortest_paths.add_source_point(source_loc.first, source_loc.second);
     
-    Face_location query_loc = shortest_path.locate<AABB_face_graph_traits>(query);
+    Face_location query_loc = shortest_paths.locate<AABB_face_graph_traits>(query);
 
     // Collect shortest path points
-    shortest_path.shortest_path_points_to_source_points(query_loc.first, query_loc.second, std::back_inserter(points));
+    shortest_paths.shortest_path_points_to_source_points(query_loc.first, query_loc.second, std::back_inserter(points));
+
 
     for (int i = 0; i < points.size(); i++)
     {
