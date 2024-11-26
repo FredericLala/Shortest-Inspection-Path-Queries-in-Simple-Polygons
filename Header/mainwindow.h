@@ -31,6 +31,10 @@ private Q_SLOTS:
     void runStepperMode();
     void runAutorunMode();
 
+    void onPolyChanged(int);
+
+    void drawChosenPolygon();
+
 private:
     // Stepper control buttons
     QPushButton *nextButton;
@@ -60,6 +64,8 @@ private:
     void updateUIForStepQ1();
 
     void tickLabel();
+
+    void polygonMode();
 
 
     //

@@ -17,7 +17,7 @@ class PolygonGen
 public:
     PolygonGen();
     Polygon_2 generateRandomPolygon(int size);
-    //Polygon_2 exampleOne() const;
+    Polygon_2 exampleOne() const;
 
 private:
 
