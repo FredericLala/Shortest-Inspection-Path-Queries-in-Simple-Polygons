@@ -46,10 +46,10 @@ int main(int argc, char *argv[])
     // Create an instance of MainUI
     MainWindow mainWindow;
     mainWindow.setWindowTitle("Polygon Query Application");
-    mainWindow.resize(800, 600); // Set an initial window size
+    //mainWindow.resize(800, 600); // Set an initial window size
 
     // Show the main window
-    mainWindow.show();
+    mainWindow.showMaximized();
 
     // Execute the application
     return app.exec();

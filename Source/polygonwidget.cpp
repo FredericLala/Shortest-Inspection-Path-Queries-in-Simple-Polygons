@@ -40,7 +40,7 @@ void PolygonWidget::constructPolygon(int size)
 
 	case 3:
 		polygonC.clear();
-		for (QPointF vertex : polygonQ) 
+		for (QPointF vertex : polygonQ)
 		{
 			polygonC.push_back(Point_2(vertex.x(), vertex.y()));
 		}
@@ -361,9 +361,9 @@ void PolygonWidget::onePointQuery(QPointF queryPoint)
 	shortestPathSQ = convertToQT(shortestPathSQC);
 
 	// calculate the window
-	QVector<QPointF> window = calculateWindow(shortestPathSQC, queryPoint);
-	a = window.first();
-	b = window.last();
+	QLineF window = calculateWindow(shortestPathSQC, queryPoint);
+	a = window.p1();
+	b = window.p2();
 
 	lcaC = m_shortestPathHandler.getLCA(startingPoint, a, b, polygonC);
 	lca = QPointF(lcaC.x(), lcaC.y());
@@ -400,7 +400,7 @@ void PolygonWidget::computeOptimalPoint()
 	const double anglem = m_onePointHandler.calculateFunnelAngle(pathRB.begin()[0], pathRB.begin()[1], a, b);  // theta_m
 	if (anglem1 == 90 || anglem == 90 || (anglem1 <= 90 && 90 < anglem))
 	{
-		std::cout << "c is at the foot of the perpendicular from root";
+		std::cout << "c is at the foot of the perpendicular from root" << "\n";
 		c = m_onePointHandler.calculateWindowIntersection(lca, a, b);
 		return;
 	}
@@ -414,7 +414,7 @@ void PolygonWidget::computeOptimalPoint()
 	{
 		int vertex = binarySearchByAngle(pathRA);
 		int v = (pathRA.size() - 1) - vertex; // root would be lowest, but needs to be highest
-		std::cout << "c is at the foot of the perpendicular from v" << v;
+		std::cout << "c is at the foot of the perpendicular from v" << v << "\n";
 		c = m_onePointHandler.calculateWindowIntersection(pathRA[vertex], a, b);
 		return;
 	}
@@ -422,7 +422,7 @@ void PolygonWidget::computeOptimalPoint()
 	{
 		int vertex = binarySearchByAngle(pathRB);
 		int v = vertex + (pathRA.size() - 1);
-		std::cout << "c is at the foot of the perpendicular from v" << v;
+		std::cout << "c is at the foot of the perpendicular from v" << v << "\n";
 		c = m_onePointHandler.calculateWindowIntersection(pathRB[vertex], a, b);
 		return;
 	}
@@ -475,13 +475,78 @@ void PolygonWidget::twoPointQuery()
 	shortestPathSQ1 = convertToQT(shortestPathSQ1C);
 	shortestPathSQ2 = convertToQT(shortestPathSQ2C);
 
-	QVector<QPointF> window1 = calculateWindow(shortestPathSQ1C, queryPoint1);
-	a1 = window1.first();
-	b1 = window1.last();
-	QVector<QPointF> window2 = calculateWindow(shortestPathSQ2C, queryPoint2);
-	a2 = window2.first();
-	b2 = window2.last();
+	QLineF window1 = calculateWindow(shortestPathSQ1C, queryPoint1);
+	a1 = window1.p1();
+	b1 = window1.p2();
+	QLineF window2 = calculateWindow(shortestPathSQ2C, queryPoint2);
+	a2 = window2.p1();
+	b2 = window2.p2();
+
+	QPointF intersectionPoint;
+	QLineF::IntersectionType intersection = window1.intersects(window2, &intersectionPoint);
+
+	if (intersection == QLineF::BoundedIntersection)
+	{
+		// Check if the intersection point is not a shared endpoint
+		if (intersectionPoint != window1.p1() && intersectionPoint != window1.p2() &&
+			intersectionPoint != window2.p1() && intersectionPoint != window2.p2())
+		{
+			std::cout << "The windows intersect" << "\n";
+			QPointF visibleEndpoint1;
+			QPointF visibleEndpoint2;
+
+			if (m_onePointHandler.checkVisibilty(a1, queryPoint2, polygonC))
+			{
+				visibleEndpoint1 = a1;
+			}
+			else
+			{
+				visibleEndpoint1 = b1;
+			}
+
+			if (m_onePointHandler.checkVisibilty(a2, queryPoint1, polygonC))
+			{
+				visibleEndpoint2 = a2;
+			}
+			else
+			{
+				visibleEndpoint2 = b2;
+			}
+
+			float minimumPath;
+		}
+	}
+
+	QVector<QPointF> shortestPathSA1 = convertToQT(m_shortestPathHandler.findShortestPath(startingPoint, a1, polygonC));
+	QVector<QPointF> shortestPathSB1 = convertToQT(m_shortestPathHandler.findShortestPath(b1, startingPoint, polygonC));
+	QVector<QPointF> shortestPathSA2 = convertToQT(m_shortestPathHandler.findShortestPath(startingPoint, a2, polygonC));
+	QVector<QPointF> shortestPathSB2 = convertToQT(m_shortestPathHandler.findShortestPath(b2, startingPoint, polygonC));
+
+	if (dominateWindowCheck(window2, shortestPathSA1) && dominateWindowCheck(window2, shortestPathSB1))
+	{
+		std::cout << "w_1 lies behind w_2" << "\n";
+	}
+	else if ((dominateWindowCheck(window1, shortestPathSA2) && dominateWindowCheck(window1, shortestPathSB2)))
+	{
+		std::cout << "w_2 lies behind w_1" << "\n";
+	}
 }
+
+bool PolygonWidget::dominateWindowCheck(QLineF window, QVector<QPointF> shortestPath)
+{
+	for (size_t i = 0; i < shortestPath.size() - 1; ++i) {
+		QLineF segment(shortestPath[i], shortestPath[i + 1]);
+		QLineF::IntersectionType intersection = segment.intersects(window, nullptr);
+		if (intersection == QLineF::BoundedIntersection)
+		{
+			return true; // Intersection found
+		}
+	}
+	return false;
+}
+
+
+
 
 int PolygonWidget::binarySearchByAngle(QVector<QPointF>& path)
 {
@@ -524,7 +589,7 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::white);
 	QPointF tempClick;
-	if (polygonMode == 1) 
+	if (polygonMode == 1)
 	{
 		if (!clicks.isEmpty() && clicks.last() != tempClick) {
 			painter.drawEllipse(clicks[0], 3, 3);
@@ -634,7 +699,7 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 	}
 }
 
-QVector<QPointF> PolygonWidget::calculateWindow(std::vector<Point_3>& path, QPointF queryPoint)
+QLineF PolygonWidget::calculateWindow(std::vector<Point_3>& path, QPointF queryPoint)
 {
 	const Point_2 aC = m_shortestPathHandler.getPenultimate(path, polygonC);
 	QPointF a = QPointF(aC.x(), aC.y());
@@ -644,7 +709,7 @@ QVector<QPointF> PolygonWidget::calculateWindow(std::vector<Point_3>& path, QPoi
 	const Point_2 bC = m_onePointHandler.getIntersection();
 	QPointF b = QPointF(bC.x(), bC.y());
 
-	return { a, b };
+	return QLineF(a, b);
 }
 
 void PolygonWidget::drawLabel(double x, double y, QString label, QPainter& painter)

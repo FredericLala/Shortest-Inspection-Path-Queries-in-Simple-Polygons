@@ -62,7 +62,7 @@ private:
     QPointF queryPoint1;
     QPointF queryPoint2;
 
-    QVector<QPointF> calculateWindow(std::vector<Point_3> &path, QPointF queryPoint);
+    QLineF calculateWindow(std::vector<Point_3> &path, QPointF queryPoint);
     QPointF a;
     QPointF b;
     QPointF a1;
@@ -83,6 +83,7 @@ private:
     QPointF c;
 
     void twoPointQuery();
+    bool dominateWindowCheck(QLineF window, QVector<QPointF> shortestPath);
     bool visibilitySQ;
     bool visibilitySQ1;
     bool visibilitySQ2;
