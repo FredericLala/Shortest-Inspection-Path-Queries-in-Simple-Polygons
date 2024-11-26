@@ -2,21 +2,61 @@
 
 PolygonWidget::PolygonWidget(QWidget* parent) : QWidget(parent)
 {
-	constructPolygon(40);
+	polygonMode = 0;
 	step = 0;
 	hideQuery = false;
 }
 
 void PolygonWidget::constructPolygon(int size)
 {
-	polygonC = m_polygonGenHandler.generateRandomPolygon(size);
-	// Convert CGAL polygon vertices to Qt points
-	for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
+	switch (polygonMode)
 	{
-		polygonQ.append(QPointF(it->x(), it->y()));
-	}
+	case 0:
+		clearCanvas();
+		polygonC = m_polygonGenHandler.generateRandomPolygon(size);
+		// Convert CGAL polygon vertices to Qt points
+		for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
+		{
+			polygonQ.append(QPointF(it->x(), it->y()));
+		}
 
-	update();
+		update();
+		break;
+
+	case 1:
+		clicks.clear();
+		clearCanvas();
+		break;
+
+	case 2:
+		clearCanvas();
+		polygonC = m_polygonGenHandler.exampleOne();
+		for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
+		{
+			polygonQ.append(QPointF(it->x(), it->y()));
+		}
+		update();
+		break;
+
+	case 3:
+		polygonC.clear();
+		for (QPointF vertex : polygonQ) 
+		{
+			polygonC.push_back(Point_2(vertex.x(), vertex.y()));
+		}
+
+		if (!polygonC.is_simple()) {
+			clearCanvas();
+			setPolygonMode(1);
+		}
+		update();
+		break;
+	}
+}
+
+void PolygonWidget::setPolygonMode(int index) {
+	polygonMode = index;
+	constructPolygon(40);
 }
 
 void PolygonWidget::clearCanvas() {
@@ -80,6 +120,12 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 	// Convert the click point to the Cartesian plane system
 	QPointF clickPoint = QPointF(event->pos().x() - width() / 2, height() / 2 - event->pos().y());
 
+	if (polygonMode == 1) {
+		clicks.append(clickPoint);
+		update();
+		return;
+	}
+
 	// Based on the mode, decide what to do with the point selection
 	switch (m_mode)
 	{
@@ -88,11 +134,13 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 		{
 			m_onePointHandler.setStartingPoint(clickPoint);
 			startingPoint = m_onePointHandler.getStartingPoint();
+			std::cout << "QPointF(" << startingPoint.x() << "," << startingPoint.y() << ")" << "\n";
 		}
 		else if (!m_onePointHandler.isQueryPointSet())
 		{
 			m_onePointHandler.setQueryPoint(clickPoint);
 			queryPoint1 = m_onePointHandler.getQueryPoint();
+			std::cout << "QPointF(" << queryPoint1.x() << "," << queryPoint1.y() << ")" << "\n";
 		}
 
 		break;
@@ -471,6 +519,31 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 	painter.translate(width() / 2, height() / 2);
 	painter.scale(1, -1); // Flip y-axis for Cartesian coordinates
 
+
+	painter.setPen(Qt::black);
+	painter.setBrush(Qt::white);
+	QPointF tempClick;
+	if (polygonMode == 1) 
+	{
+		if (!clicks.isEmpty() && clicks.last() != tempClick) {
+			painter.drawEllipse(clicks[0], 3, 3);
+			for (qsizetype i = 1; i < clicks.size(); i++) {
+				painter.drawEllipse(clicks[i], 3, 3);
+				painter.drawLine(clicks[i - 1], clicks[i]);
+			}
+			tempClick = clicks.last();
+			std::cout << "p.push_back(Point_2(" << tempClick.x() << "," << tempClick.y() << "));" << "\n";
+			polygonQ.append(tempClick);
+		}
+		return;
+	}
+	else if (polygonMode == 2)
+	{
+		startingPoint = QPointF(40, -102);
+		queryPoint1 = QPointF(255, -105);
+		update();
+	}
+
 	if (polygonQ.size() > 2)
 	{
 		painter.setPen(Qt::black);
@@ -594,13 +667,13 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 	}
 
 	// Draw the polygon and its Delaunay triangulation
-	painter.setPen(Qt::red);
+	painter.setPen(Qt::darkGray);
 	for (auto edge : m_shortestPathHandler.getMesh().edges())
 	{
 		auto source = m_shortestPathHandler.getMesh().point(m_shortestPathHandler.getMesh().vertex(edge, 0));
 		auto target = m_shortestPathHandler.getMesh().point(m_shortestPathHandler.getMesh().vertex(edge, 1));
 
-		//painter.drawLine(QPointF(source.x(), source.y()), QPointF(target.x(), target.y()));
+		painter.drawLine(QPointF(source.x(), source.y()), QPointF(target.x(), target.y()));
 	}
 
 	// draw shortest path

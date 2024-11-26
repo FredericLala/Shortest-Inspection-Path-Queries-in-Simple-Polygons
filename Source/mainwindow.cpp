@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget* parent)
 	polygonWidget = new PolygonWidget(this);
 
 	// Add widgets to layout
+	polygonMode();
 	mainLayout->addWidget(queryTypeSelector);
 	mainLayout->addWidget(modeSelector);
 	tickLabel();
@@ -216,3 +217,45 @@ void MainWindow::tickLabel() {
 
 	mainLayout->addLayout(tickLabelsLayout);
 }
+
+void MainWindow::polygonMode() {
+	QComboBox *polyMode = new QComboBox();
+	polyMode->addItem("Random Polygon");
+	polyMode->addItem("Click to Create");
+	polyMode->addItem("Predefined Polygons");
+	connect(polyMode, QOverload<int>::of(&QComboBox::currentIndexChanged),
+		this, &MainWindow::onPolyChanged);
+
+	QPushButton *finishPolygon = new QPushButton("Finish Polygon", this);
+	connect(finishPolygon, &QPushButton::clicked, this, &MainWindow::drawChosenPolygon);
+
+
+
+	// set initial polygon construction method
+	mainLayout->addWidget(polyMode);
+	mainLayout->addWidget(finishPolygon);
+	polyMode->setCurrentIndex(0);
+	onPolyChanged(0);
+}
+
+void MainWindow::onPolyChanged(int index) {
+	switch (index) 
+	{
+	case 0:
+		polygonWidget->setPolygonMode(0);
+		break;
+
+	case 1:
+		polygonWidget->setPolygonMode(1);
+		break;
+
+	case 2:
+		polygonWidget->setPolygonMode(2);
+		break;
+	}
+}
+
+void MainWindow::drawChosenPolygon() {
+	polygonWidget->setPolygonMode(3);
+}
+
