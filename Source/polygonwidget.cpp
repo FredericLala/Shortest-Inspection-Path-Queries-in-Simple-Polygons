@@ -641,7 +641,26 @@ void PolygonWidget::drawLabel(double x, double y, QString label, QPainter& paint
 	painter.resetTransform();
 	painter.translate(width() / 2, height() / 2);
 	painter.setPen(Qt::black);
+
+	// Set text size
+	QFont font = painter.font();
+	font.setPointSize(12);
+	painter.setFont(font);
+
+	// Draw text outline manually by offsetting in multiple directions
+	painter.setPen(Qt::white);
+	for (int dx = -1; dx <= 1; ++dx) {
+		for (int dy = -1; dy <= 1; ++dy) {
+			if (dx != 0 || dy != 0) { // Skip the center
+				painter.drawText(x + RADIUS + dx, -y - RADIUS + dy, label);
+			}
+		}
+	}
+
+	// Draw text in black over the outline
+	painter.setPen(Qt::black);
 	painter.drawText(x + RADIUS, -y - RADIUS, label);
+
 	painter.scale(1, -1);
 }
 
@@ -689,7 +708,12 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::black);
 	painter.drawEllipse(lca, 3, 3);
-	drawLabel(lca.x(), lca.y(), QString("r"), painter);
+	if (lca == a || lca == b || lca == startingPoint) {
+		drawLabel(lca.x() + 5, lca.y(), QString(" = r"), painter);
+	}
+	else {
+		drawLabel(lca.x(), lca.y(), QString("r"), painter);
+	}
 
 
 
@@ -712,7 +736,12 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::black);
 	painter.drawEllipse(c, 3, 3);
-	drawLabel(c.x(), c.y(), QString("c"), painter);
+	if (c == a || c == b) {
+		drawLabel(c.x() + 5, c.y(), QString(" = c"), painter);
+	}
+	else {
+		drawLabel(c.x(), c.y(), QString("c"), painter);
+	}
 }
 
 void PolygonWidget::visualizeStep(QPainter& painter)
@@ -761,7 +790,12 @@ void PolygonWidget::visualizeStep(QPainter& painter)
 	if (step >= 5)
 	{
 		painter.drawEllipse(lca, 3, 3);
-		drawLabel(lca.x(), lca.y(), QString("r"), painter);
+		if (lca == a || lca == b || lca == startingPoint) {
+			drawLabel(lca.x() + 5, lca.y(), QString(" = r"), painter);
+		}
+		else {
+			drawLabel(lca.x(), lca.y(), QString("r"), painter);
+		}
 	}
 
 	if (step >= 6)
@@ -784,7 +818,12 @@ void PolygonWidget::visualizeStep(QPainter& painter)
 		painter.setPen(Qt::red);
 		painter.setBrush(Qt::red);
 		painter.drawEllipse(c, 3, 3);
-		drawLabel(c.x(), c.y(), QString("c"), painter);
+		if (c == a || c == b) {
+			drawLabel(c.x() + 5, c.y(), QString(" = c"), painter);
+		}
+		else {
+			drawLabel(c.x(), c.y(), QString("c"), painter);
+		}
 	}
 }
 
