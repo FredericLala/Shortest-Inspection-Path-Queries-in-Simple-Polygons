@@ -5,6 +5,8 @@
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 
 #include <QPoint>
+#include <QVector>
+#include <QLine>
 
 #include <iostream>
 #include <vector>

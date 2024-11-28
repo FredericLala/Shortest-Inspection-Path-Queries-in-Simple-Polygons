@@ -17,6 +17,8 @@
 #include <fstream>
 #include <iterator>
 
+#include <QLineF>
+
 // Mesh
 typedef K::Point_3 Point_3;
 typedef CGAL::Constrained_Delaunay_triangulation_2<K> CDT;

@@ -11,7 +11,6 @@
 #include <QVector>
 #include <QPainter>
 #include <QMouseEvent>
-#include <QWidget>
 #include <CGAL/AABB_tree.h>
 #include <CGAL/AABB_traits_2.h>
 #include <QTimer>
@@ -32,18 +31,17 @@ public:
     void clearCanvas();
     void onePointQuery(QPointF queryPoint);
     void setStep(int step);
-    void computeOptimalPoint();
 
     void startStepperQ1();
     void startAutoQ1(int interval);
     void startAutoQ2(int interval);
     void increaseStep();
     void decreaseStep();
+    QVector<QPointF> convertToQT(std::vector<Point_3> points);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
-    QVector<QPointF> convertToQT(std::vector<Point_3> points);
 
 private:
     Polygon_2 polygonC;
