@@ -374,58 +374,7 @@ void PolygonWidget::onePointQuery(QPointF queryPoint)
 	pathRA = convertToQT(pathCRA);
 	pathRB = convertToQT(pathCRB);
 
-	computeOptimalPoint();
-}
-
-void PolygonWidget::computeOptimalPoint()
-{
-	const double angle0 = m_onePointHandler.calculateFunnelAngle(pathRA.rbegin()[1], pathRA.rbegin()[0], a, b); // theta_0
-	if (angle0 > 90)
-	{
-		std::cout << "c = a";
-		c = a;
-		return;
-	}
-
-	const double anglek = m_onePointHandler.calculateFunnelAngle(pathRB.rbegin()[1], pathRB.rbegin()[0], a, b); // theta_k
-	if (anglek < 90)
-	{
-		std::cout << "c = b";
-		c = b;
-		return;
-	}
-	//
-	//
-	const double anglem1 = m_onePointHandler.calculateFunnelAngle(pathRA.begin()[0], pathRA.begin()[1], a, b); // theta_m-1
-	const double anglem = m_onePointHandler.calculateFunnelAngle(pathRB.begin()[0], pathRB.begin()[1], a, b);  // theta_m
-	if (anglem1 == 90 || anglem == 90 || (anglem1 <= 90 && 90 < anglem))
-	{
-		std::cout << "c is at the foot of the perpendicular from root" << "\n";
-		c = m_onePointHandler.calculateWindowIntersection(lca, a, b);
-		return;
-	}
-	//
-	//
-	// muss man nur machen wenn man A benutzt und nicht die shortest paths (A sind alle Knoten von P)
-	/*     if (lca == startingPoint && !polygonC.has_on_boundary(Point_2(startingPoint.x(), startingPoint.y()))) {
-
-		} */
-	if (anglem1 > 90)
-	{
-		int vertex = binarySearchByAngle(pathRA);
-		int v = (pathRA.size() - 1) - vertex; // root would be lowest, but needs to be highest
-		std::cout << "c is at the foot of the perpendicular from v" << v << "\n";
-		c = m_onePointHandler.calculateWindowIntersection(pathRA[vertex], a, b);
-		return;
-	}
-	else
-	{
-		int vertex = binarySearchByAngle(pathRB);
-		int v = vertex + (pathRA.size() - 1);
-		std::cout << "c is at the foot of the perpendicular from v" << v << "\n";
-		c = m_onePointHandler.calculateWindowIntersection(pathRB[vertex], a, b);
-		return;
-	}
+	c = m_onePointHandler.computeOptimalPoint(pathRA, pathRB, window);
 }
 
 void PolygonWidget::increaseStep()
@@ -513,7 +462,12 @@ void PolygonWidget::twoPointQuery()
 				visibleEndpoint2 = b2;
 			}
 
-			float minimumPath;
+			QVector<QPointF> path1 = m_twoPointHandler.shortestPathToSegment(startingPoint, QLineF(visibleEndpoint1, intersectionPoint), polygonC);
+			int sizePath1 = path1.size();
+			QVector<QPointF> path2 = m_twoPointHandler.shortestPathToSegment(startingPoint, QLineF(visibleEndpoint2, intersectionPoint), polygonC);
+			int sizePath2 = path2.size();
+			std::cout << "Size of Path 1: " << sizePath1 << "\n";
+			std::cout << "Size of Path 2: " << sizePath2 << "\n";
 		}
 	}
 
@@ -543,38 +497,6 @@ bool PolygonWidget::dominateWindowCheck(QLineF window, QVector<QPointF> shortest
 		}
 	}
 	return false;
-}
-
-
-
-
-int PolygonWidget::binarySearchByAngle(QVector<QPointF>& path)
-{
-	int left = 0;
-	int right = path.size() - 1;
-
-	while (right - left > 1)
-	{ // Continue until the interval is narrowed down to two successive vertices
-		int mid = left + (right - left) / 2;
-
-		// Compute angle at the midpoint
-		double theta_mid = m_onePointHandler.calculateFunnelAngle(path[mid - 1], path[mid], a, b);
-
-		// Use the angle to decide search direction
-		if (theta_mid > 90)
-		{
-			// Move to the left side
-			right = mid;
-		}
-		else
-		{
-			// Move to the right side
-			left = mid;
-		}
-	}
-
-	// After loop ends, `left` and `right` are successive vertices
-	return left; // Return the index of the narrowed-down interval's start vertex
 }
 
 void PolygonWidget::paintEvent(QPaintEvent* event)
@@ -906,8 +828,8 @@ void PolygonWidget::visualizeAuto2(QPainter& painter)
 
 	painter.drawEllipse(b2, 3, 3);
 	drawLabel(b2.x(), b2.y(), QString("b2"), painter);
-	painter.setPen(Qt::green);
-	painter.setBrush(Qt::green);
+	painter.setPen(Qt::darkGreen);
+	painter.setBrush(Qt::darkGreen);
 
 	painter.drawLine(a2, b2);
 }

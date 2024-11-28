@@ -166,20 +166,6 @@ Point_2 OnePointQuery::getIntersection()
 	return b;
 }
 
-/* AABB_tree OnePointQuery::constructTree(Polygon_2 &polygon)
-{
-	// Extract edges of the polygon into a segment vector
-	std::vector<Segment_2> edges;
-	for (Polygon_2::Edge_const_iterator edge = polygon.edges_begin(); edge != polygon.edges_end(); ++edge)
-	{
-		edges.push_back(*edge);
-	}
-
-	// Create AABB tree
-	AABB_tree tree(edges.begin(), edges.end());
-	return tree;
-} */
-
 // Helper function to calculate angle between two vectors in radians
 double OnePointQuery::calculateAngle(const K::Vector_2& v1, const K::Vector_2& v2)
 {
@@ -246,4 +232,82 @@ QPointF OnePointQuery::calculateWindowIntersection(const QPointF& pathPoint, con
 		// No intersection found, return an invalid point
 		return QPointF(); // Empty QPointF indicates no intersection
 	}
+}
+
+QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPointF>& pathRB, QLineF& window)
+{
+	QPointF a = window.p1();
+	QPointF b = window.p2();
+	const QPointF lca = pathRA.first();
+	const double angle0 = calculateFunnelAngle(pathRA.rbegin()[1], pathRA.rbegin()[0], a, b); // theta_0
+	if (angle0 > 90)
+	{
+		std::cout << "c = a";
+		return a;
+	}
+
+	const double anglek = calculateFunnelAngle(pathRB.rbegin()[1], pathRB.rbegin()[0], a, b); // theta_k
+	if (anglek < 90)
+	{
+		std::cout << "c = b";
+		return b;
+	}
+	//
+	//
+	const double anglem1 = calculateFunnelAngle(pathRA.begin()[0], pathRA.begin()[1], a, b); // theta_m-1
+	const double anglem = calculateFunnelAngle(pathRB.begin()[0], pathRB.begin()[1], a, b);  // theta_m
+	if (anglem1 == 90 || anglem == 90 || (anglem1 <= 90 && 90 < anglem))
+	{
+		std::cout << "c is at the foot of the perpendicular from root" << "\n";
+		return calculateWindowIntersection(lca, a, b);
+	}
+	//
+	//
+	// muss man nur machen wenn man A benutzt und nicht die shortest paths (A sind alle Knoten von P)
+	/*     if (lca == startingPoint && !polygonC.has_on_boundary(Point_2(startingPoint.x(), startingPoint.y()))) {
+
+		} */
+	if (anglem1 > 90)
+	{
+		int vertex = binarySearchByAngle(pathRA, a, b);
+		int v = (pathRA.size() - 1) - vertex; // root would be lowest, but needs to be highest
+		std::cout << "c is at the foot of the perpendicular from v" << v << "\n";
+		return calculateWindowIntersection(pathRA[vertex], a, b);
+	}
+	else
+	{
+		int vertex = binarySearchByAngle(pathRB, a, b);
+		int v = vertex + (pathRA.size() - 1);
+		std::cout << "c is at the foot of the perpendicular from v" << v << "\n";
+		return calculateWindowIntersection(pathRB[vertex], a, b);
+	}
+}
+
+int OnePointQuery::binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPointF& b)
+{
+	int left = 0;
+	int right = path.size() - 1;
+
+	while (right - left > 1)
+	{ // Continue until the interval is narrowed down to two successive vertices
+		int mid = left + (right - left) / 2;
+
+		// Compute angle at the midpoint
+		double theta_mid = calculateFunnelAngle(path[mid - 1], path[mid], a, b);
+
+		// Use the angle to decide search direction
+		if (theta_mid > 90)
+		{
+			// Move to the left side
+			right = mid;
+		}
+		else
+		{
+			// Move to the right side
+			left = mid;
+		}
+	}
+
+	// After loop ends, `left` and `right` are successive vertices
+	return left; // Return the index of the narrowed-down interval's start vertex
 }

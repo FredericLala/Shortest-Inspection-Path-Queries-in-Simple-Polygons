@@ -52,6 +52,10 @@ public:
 	double calculateFunnelAngle(const QPointF& point1, const QPointF& point2, const QPointF& a, const QPointF& b);
 	QPointF calculateWindowIntersection(const QPointF& pathPoint, const QPointF& windowStart, const QPointF& windowEnd);
 
+	QPointF computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPointF>& pathRB, QLineF& window);
+
+	int binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPointF& b);
+
 private:
 	QPointF m_startingPoint;
 	QPointF m_queryPoint;
