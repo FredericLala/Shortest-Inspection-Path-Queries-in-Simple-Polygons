@@ -56,6 +56,10 @@ public:
 
 	int binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPointF& b);
 
+	QString getLog();
+
+	void resetLog();
+
 private:
 	QPointF m_startingPoint;
 	QPointF m_queryPoint;
@@ -66,6 +70,7 @@ private:
 	AABB_tree tree;
 	std::vector<Segment_2> edges;
 	double calculateAngle(const K::Vector_2& v1, const K::Vector_2& v2);
+	QString logQ1;
 };
 
 #endif
