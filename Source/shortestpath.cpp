@@ -65,7 +65,6 @@ std::vector<Point_3> ShortestPath::findShortestPath(QPointF source2D, QPointF qu
     // Convert source and query points to 3D points
     const Point_3 source = Point_3(source2D.x(), source2D.y(), 0);
     const Point_3 query = Point_3(query2D.x(), query2D.y(), 0);
-    //mesh.add_vertex(query);
     // Build the AABB tree for the mesh
     Face_location source_loc = shortest_paths.locate<AABB_face_graph_traits>(source);
 

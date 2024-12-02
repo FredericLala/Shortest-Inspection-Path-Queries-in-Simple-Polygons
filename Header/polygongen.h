@@ -19,6 +19,12 @@ public:
     Polygon_2 generateRandomPolygon(int size);
     Polygon_2 exampleOne() const;
 
+    Polygon_2 exampleTwo() const;
+
+    Polygon_2 exampleThree() const;
+
+    Polygon_2 exampleFour() const;
+
 private:
 
 };

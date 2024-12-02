@@ -29,6 +29,7 @@ public:
     void clearPoints();     // Clear all selected points
     void constructPolygon(int size);
     void setPolygonMode(int index);
+    void drawGivenPolygon(int index);
     void clearCanvas();
     void onePointQuery(QPointF queryPoint);
     void setStep(int step);
@@ -83,6 +84,7 @@ private:
 
     void twoPointQuery();
     bool dominateWindowCheck(QLineF window, QVector<QPointF> shortestPath);
+    double calculatePathLength(const QVector<QPointF>& path);
     bool visibilitySQ;
     bool visibilitySQ1;
     bool visibilitySQ2;

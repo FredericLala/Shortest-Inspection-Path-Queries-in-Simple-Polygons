@@ -373,6 +373,22 @@ void MainWindow::setupGivenPolygon()
 {
 	givenLayoutWidget = new QWidget(this);
 	QVBoxLayout* givenLayout = new QVBoxLayout(givenLayoutWidget);
+
+	QComboBox* givenPolygonSelector = new QComboBox(this);
+	givenPolygonSelector->addItem("Test1");
+	givenPolygonSelector->addItem("Q2: Window Intersection");
+	givenPolygonSelector->addItem("Q2: Window Domination");
+	givenPolygonSelector->addItem("Q2: General Case");
+	connect(givenPolygonSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
+		this, &MainWindow::onGivenPolygonChanged);
+
+	onGivenPolygonChanged(0);
+	givenLayout->addWidget(givenPolygonSelector);
+}
+
+void MainWindow::onGivenPolygonChanged(int index)
+{
+	polygonWidget->drawGivenPolygon(index);
 }
 
 ////////////////////////////////////////////////////////////////

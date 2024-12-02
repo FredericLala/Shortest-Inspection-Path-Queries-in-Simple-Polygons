@@ -103,4 +103,5 @@ private Q_SLOTS:
 	void drawChosenPolygon();
 
 	void setupGivenPolygon();
+	void onGivenPolygonChanged(int index);
 };
