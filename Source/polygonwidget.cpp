@@ -17,8 +17,10 @@ void PolygonWidget::constructPolygon(int size)
 		// Convert CGAL polygon vertices to Qt points
 		for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
 		{
+			//std::cout << "p.push_back(Point_2(" << it->x() << "," << it->y() << "));" << "\n";
 			polygonQ.append(QPointF(it->x(), it->y()));
 		}
+		//std::cout << "" << "\n";
 
 		update();
 		break;
@@ -57,6 +59,37 @@ void PolygonWidget::constructPolygon(int size)
 void PolygonWidget::setPolygonMode(int index) {
 	polygonMode = index;
 	constructPolygon(40);
+}
+
+void PolygonWidget::drawGivenPolygon(int index)
+{
+	clearCanvas();
+
+	switch (index)
+	{
+	case 0:
+		polygonC = m_polygonGenHandler.exampleOne();
+		break;
+	case 1:
+		polygonC = m_polygonGenHandler.exampleTwo();
+		break;
+	case 2:
+		polygonC = m_polygonGenHandler.exampleThree();
+		break;
+	case 3:
+		polygonC = m_polygonGenHandler.exampleFour();
+		break;
+	default:
+		polygonC = m_polygonGenHandler.generateRandomPolygon(40);
+		break;
+	}
+
+	for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
+	{
+		polygonQ.append(QPointF(it->x(), it->y()));
+	}
+
+	update();
 }
 
 void PolygonWidget::clearCanvas() {
@@ -435,6 +468,7 @@ void PolygonWidget::twoPointQuery()
 		if (intersectionPoint != window1.p1() && intersectionPoint != window1.p2() &&
 			intersectionPoint != window2.p1() && intersectionPoint != window2.p2())
 		{
+			std::cout << "intersect";
 			errorMessage = "The Windows Intersect eachother";
 			QPointF visibleEndpoint1;
 			QPointF visibleEndpoint2;
@@ -456,11 +490,11 @@ void PolygonWidget::twoPointQuery()
 			{
 				visibleEndpoint2 = b2;
 			}
-
+			
 			QVector<QPointF> path1 = m_twoPointHandler.shortestPathToSegment(startingPoint, QLineF(visibleEndpoint1, intersectionPoint), polygonC);
-			int sizePath1 = path1.size();
+			double sizePath1 = calculatePathLength(path1);
 			QVector<QPointF> path2 = m_twoPointHandler.shortestPathToSegment(startingPoint, QLineF(visibleEndpoint2, intersectionPoint), polygonC);
-			int sizePath2 = path2.size();
+			double sizePath2 = calculatePathLength(path2);
 			std::cout << "Size of Path 1: " << sizePath1 << "\n";
 			std::cout << "Size of Path 2: " << sizePath2 << "\n";
 		}
@@ -494,6 +528,19 @@ bool PolygonWidget::dominateWindowCheck(QLineF window, QVector<QPointF> shortest
 	return false;
 }
 
+double PolygonWidget::calculatePathLength(const QVector<QPointF>& path) {
+	double length = 0.0;
+	for (int i = 1; i < path.size(); ++i) {
+		// Distance between consecutive points
+		double dx = path[i].x() - path[i - 1].x();
+		double dy = path[i].y() - path[i - 1].y();
+		length += std::sqrt(dx * dx + dy * dy);
+	}
+	return length;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PolygonWidget::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
@@ -520,12 +567,12 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		}
 		return;
 	}
-	else if (polygonMode == 2)
+	/*else if (polygonMode == 2)
 	{
 		startingPoint = QPointF(40, -102);
 		queryPoint1 = QPointF(255, -105);
 		update();
-	}
+	}*/
 
 	if (polygonQ.size() > 2)
 	{

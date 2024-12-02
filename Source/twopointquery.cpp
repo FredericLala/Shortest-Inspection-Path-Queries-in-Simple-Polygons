@@ -78,6 +78,8 @@ QVector<QPointF> TwoPointQuery::shortestPathToSegment(QPointF start, QLineF segm
     const QPointF a = segment.p1();
     const QPointF b = segment.p2();
 
+    shortestPathHandler.createMesh(polygon); // TODO: give mesh and not recalculate it
+
     const Point_2 lcaC = shortestPathHandler.getLCA(start, a, b, polygon);
     const QPointF lca = QPointF(lcaC.x(), lcaC.y());
 
