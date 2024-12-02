@@ -3,6 +3,7 @@
 OnePointQuery::OnePointQuery()
 	: m_startSelected(false), m_querySelected(false)
 {
+	logQ1 = "";
 }
 
 void OnePointQuery::setStartingPoint(const QPointF& point)
@@ -242,14 +243,14 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	const double angle0 = calculateFunnelAngle(pathRA.rbegin()[1], pathRA.rbegin()[0], a, b); // theta_0
 	if (angle0 > 90)
 	{
-		std::cout << "c = a";
+		logQ1 = "c = a";
 		return a;
 	}
 
 	const double anglek = calculateFunnelAngle(pathRB.rbegin()[1], pathRB.rbegin()[0], a, b); // theta_k
 	if (anglek < 90)
 	{
-		std::cout << "c = b";
+		logQ1 = "c = b";
 		return b;
 	}
 	//
@@ -258,7 +259,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	const double anglem = calculateFunnelAngle(pathRB.begin()[0], pathRB.begin()[1], a, b);  // theta_m
 	if (anglem1 == 90 || anglem == 90 || (anglem1 <= 90 && 90 < anglem))
 	{
-		std::cout << "c is at the foot of the perpendicular from root" << "\n";
+		logQ1 = "c is at the foot of the perpendicular from root";
 		return calculateWindowIntersection(lca, a, b);
 	}
 	//
@@ -271,14 +272,15 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	{
 		int vertex = binarySearchByAngle(pathRA, a, b);
 		int v = (pathRA.size() - 1) - vertex; // root would be lowest, but needs to be highest
-		std::cout << "c is at the foot of the perpendicular from v" << v << "\n";
+
+		logQ1 = "c is at the foot of the perpendicular from v" + v;
 		return calculateWindowIntersection(pathRA[vertex], a, b);
 	}
 	else
 	{
 		int vertex = binarySearchByAngle(pathRB, a, b);
 		int v = vertex + (pathRA.size() - 1);
-		std::cout << "c is at the foot of the perpendicular from v" << v << "\n";
+		logQ1 = "c is at the foot of the perpendicular from v" + v;
 		return calculateWindowIntersection(pathRB[vertex], a, b);
 	}
 }
@@ -311,3 +313,15 @@ int OnePointQuery::binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPoin
 	// After loop ends, `left` and `right` are successive vertices
 	return left; // Return the index of the narrowed-down interval's start vertex
 }
+
+QString OnePointQuery::getLog()
+{
+	return logQ1;
+}
+
+void OnePointQuery::resetLog()
+{
+	logQ1 = "";
+}
+
+

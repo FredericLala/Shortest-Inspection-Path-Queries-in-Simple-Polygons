@@ -67,6 +67,8 @@ void PolygonWidget::clearCanvas() {
 	clearPoints();
 	step = 0;
 	hideQuery = true;
+	errorMessage = "";
+	m_onePointHandler.resetLog();
 	update();
 }
 
@@ -183,10 +185,6 @@ void PolygonWidget::startStepperQ1()
 		onePointQuery(queryPoint1);
 		update();
 	}
-	else
-	{
-		std::cout << errorMessage << "\n";
-	}
 }
 
 void PolygonWidget::startAutoQ1(int interval)
@@ -198,10 +196,6 @@ void PolygonWidget::startAutoQ1(int interval)
 		onePointQuery(queryPoint1);
 		update();
 	}
-	else
-	{
-		std::cout << errorMessage << "\n";
-	}
 }
 
 void PolygonWidget::startAutoQ2(int interval)
@@ -212,10 +206,6 @@ void PolygonWidget::startAutoQ2(int interval)
 		stepmode = false;
 		twoPointQuery();
 		update();
-	}
-	else
-	{
-		std::cout << errorMessage << "\n";
 	}
 }
 
@@ -288,6 +278,11 @@ void PolygonWidget::pointCheck()
 	// no error
 	errorMessage = "";
 	valid = true;
+}
+
+QString PolygonWidget::updateLog()
+{
+	return errorMessage + m_onePointHandler.getLog();
 }
 
 /* void PolygonWidget::startAutoQ1(int interval)
@@ -400,12 +395,12 @@ void PolygonWidget::twoPointQuery()
 	visibilitySQ2 = m_onePointHandler.checkVisibilty(startingPoint, queryPoint2, polygonC);
 	if (visibilitySQ1 && visibilitySQ2)
 	{
-		std::cout << "both visible";
+		errorMessage = "Both Query Points are Visible from the Starting Point";
 		return;
 	}
 	else if (visibilitySQ1)
 	{
-		std::cout << "Q1 is visible" << "\n";
+		errorMessage = "Q1 is visible from the Starting Point";
 		onePointQuery(queryPoint2);
 		return;
 	}
@@ -440,7 +435,7 @@ void PolygonWidget::twoPointQuery()
 		if (intersectionPoint != window1.p1() && intersectionPoint != window1.p2() &&
 			intersectionPoint != window2.p1() && intersectionPoint != window2.p2())
 		{
-			std::cout << "The windows intersect" << "\n";
+			errorMessage = "The Windows Intersect eachother";
 			QPointF visibleEndpoint1;
 			QPointF visibleEndpoint2;
 
@@ -478,11 +473,11 @@ void PolygonWidget::twoPointQuery()
 
 	if (dominateWindowCheck(window2, shortestPathSA1) && dominateWindowCheck(window2, shortestPathSB1))
 	{
-		std::cout << "w_1 lies behind w_2" << "\n";
+		errorMessage = "Window1 lies behind Window2";
 	}
 	else if ((dominateWindowCheck(window1, shortestPathSA2) && dominateWindowCheck(window1, shortestPathSB2)))
 	{
-		std::cout << "w_2 lies behind w_1" << "\n";
+		errorMessage = "Window2 lies behind Window1";
 	}
 }
 
@@ -668,7 +663,7 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 {
 	if (visibilitySQ)
 	{
-		std::cout << "q is visible from s -> c = s" << "\n";
+		errorMessage = "The Query Point is Visible from the Starting Point";
 		drawLabel(startingPoint.x() + 1, startingPoint.y() - 1, QString("c"), painter);
 		return;
 	}
@@ -750,8 +745,8 @@ void PolygonWidget::visualizeStep(QPainter& painter)
 	{
 		if (visibilitySQ)
 		{
-			std::cout << "q is visible from s -> c = s" << "\n";
-			drawLabel(startingPoint.x() + 1, startingPoint.y() - 1, QString("c"), painter);
+			errorMessage = "The Query Point is Visible from the Starting Point";
+			drawLabel(startingPoint.x() + 5, startingPoint.y() - 1, QString(" = c"), painter);
 			return;
 		}
 	}

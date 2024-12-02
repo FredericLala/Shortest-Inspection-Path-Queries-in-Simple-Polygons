@@ -14,6 +14,7 @@
 #include <CGAL/AABB_tree.h>
 #include <CGAL/AABB_traits_2.h>
 #include <QTimer>
+#include <QObject>
 
 #include <list>
 
@@ -38,6 +39,7 @@ public:
     void increaseStep();
     void decreaseStep();
     QVector<QPointF> convertToQT(std::vector<Point_3> points);
+    QString updateLog();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -76,7 +78,6 @@ private:
     QVector<QPointF> pathRA;
     QVector<QPointF> pathRB;
     void drawLabel(double x, double y, QString label, QPainter &painter);
-    int binarySearchByAngle(QVector<QPointF> &path);
 
     QPointF c;
 
@@ -94,7 +95,7 @@ private:
     // Q_SLOT void startSingleQuery();
     void pointCheck();
     bool valid;
-    std::string errorMessage;
+    QString errorMessage;
     bool hideQuery;
 
     int polygonMode;
