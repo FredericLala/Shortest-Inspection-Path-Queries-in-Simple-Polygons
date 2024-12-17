@@ -56,6 +56,10 @@ QPointF OnePointQuery::convertToQTPoint(const Point_2& cgalPoint)
 
 bool OnePointQuery::checkVisibilty(const QPointF& point1, const QPointF& point2, Polygon_2& polygon)
 {
+	if (point1 == point2) {
+		return true;
+	}
+
 	// Convert points and create segment query
 	Point_2 a = convertToCGALPoint(point1);
 	Point_2 b = convertToCGALPoint(point2);
@@ -72,8 +76,37 @@ bool OnePointQuery::checkVisibilty(const QPointF& point1, const QPointF& point2,
 	}
 	tree.accelerate_distance_queries();
 
-	// Return visibility
-	return !tree.do_intersect(segment_query);
+	// Check for intersections
+	std::list<Segment_intersection> intersections;
+	tree.all_intersections(segment_query, std::back_inserter(intersections));
+
+	for (const auto& intersection : intersections)
+	{
+		if (!intersection) {
+			// Skip invalid intersection objects
+			continue;
+		}
+
+		const Point_2* p = std::get_if<Point_2>(&(intersection->first));
+		if (!p) {
+			// If std::get_if failed, it means `intersection->first` is not a Point_2.
+			continue;
+		}
+
+		if (*p == a || *p == b) {
+			// Intersection is at one of the segment endpoints; skip it.
+			continue;
+		}
+
+		return false; // Non-endpoint intersection found; visibility check fails.
+	}
+
+	Point_2 midpoint = Point_2((a.x() + b.x()) / 2.0, (a.y() + b.y()) / 2.0);
+	if (polygon.has_on_unbounded_side(midpoint)) {
+		return false;
+	}
+
+	return true;
 }
 
 void OnePointQuery::clearTree() {
@@ -237,6 +270,7 @@ QPointF OnePointQuery::calculateWindowIntersection(const QPointF& pathPoint, con
 
 QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPointF>& pathRB, QLineF& window)
 {
+	aSide = false;
 	QPointF a = window.p1();
 	QPointF b = window.p2();
 	const QPointF lca = pathRA.first();
@@ -244,6 +278,8 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	if (angle0 > 90)
 	{
 		logQ1 = "c = a";
+		aSide = true;
+		vertexOnPath = a;
 		return a;
 	}
 
@@ -251,6 +287,8 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	if (anglek < 90)
 	{
 		logQ1 = "c = b";
+		aSide = false;
+		vertexOnPath = b;
 		return b;
 	}
 	//
@@ -260,6 +298,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	if (anglem1 == 90 || anglem == 90 || (anglem1 <= 90 && 90 < anglem))
 	{
 		logQ1 = "c is at the foot of the perpendicular from root";
+		vertexOnPath = lca;
 		return calculateWindowIntersection(lca, a, b);
 	}
 	//
@@ -274,6 +313,8 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 		int v = (pathRA.size() - 1) - vertex; // root would be lowest, but needs to be highest
 
 		logQ1 = "c is at the foot of the perpendicular from v" + v;
+		aSide = true;
+		vertexOnPath = pathRA[vertex];
 		return calculateWindowIntersection(pathRA[vertex], a, b);
 	}
 	else
@@ -281,8 +322,18 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 		int vertex = binarySearchByAngle(pathRB, a, b);
 		int v = vertex + (pathRA.size() - 1);
 		logQ1 = "c is at the foot of the perpendicular from v" + v;
+		aSide = false;
+		vertexOnPath = pathRB[vertex];
 		return calculateWindowIntersection(pathRB[vertex], a, b);
 	}
+}
+
+bool OnePointQuery::getASide() {
+	return aSide;
+}
+
+QPointF OnePointQuery::getVertexOnPath() {
+	return vertexOnPath;
 }
 
 int OnePointQuery::binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPointF& b)

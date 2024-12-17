@@ -53,8 +53,8 @@ void MainWindow::runSelection()
 	QRadioButton* runRadio1 = new QRadioButton("Stepper", this);
 	QRadioButton* runRadio2 = new QRadioButton("Autorun", this);
 
-	runRadio1->setChecked(true); // Default to "Stepper"
-	updateRunSelection(STEPPER);
+	runRadio2->setChecked(true); // Default to "Stepper"
+	updateRunSelection(AUTO);
 
 	// Group Buttons
 	QButtonGroup* runButtons = new QButtonGroup();
@@ -189,8 +189,8 @@ void MainWindow::querySelection()
 	// Create a group of radio buttons for mode selection
 	QRadioButton* queryRadio1 = new QRadioButton("One Point Query", this);
 	QRadioButton* queryRadio2 = new QRadioButton("Two Point Query", this);
-	queryRadio1->setChecked(true); // Default to "One Point Query"
-	updateQuerySelection(ONE);
+	queryRadio2->setChecked(true); // Default to "One Point Query"
+	updateQuerySelection(TWO);
 
 	// Group Buttons
 	QButtonGroup* queryButtons = new QButtonGroup();
@@ -243,8 +243,8 @@ void MainWindow::polygonSelection()
 	QRadioButton* polyRadio1 = new QRadioButton("Random Polygon", this);
 	QRadioButton* polyRadio2 = new QRadioButton("Draw a Polygon", this);
 	QRadioButton* polyRadio3 = new QRadioButton("Pick a Polygon", this);
-	polyRadio1->setChecked(true); // Default to "Random Polygon"
-	updatePolySelection(RANDOM);
+	polyRadio3->setChecked(true); // Default to "Random Polygon"
+	updatePolySelection(PICK);
 
 	// Group Buttons
 	QButtonGroup* polyButtons = new QButtonGroup();
@@ -379,6 +379,7 @@ void MainWindow::setupGivenPolygon()
 	givenPolygonSelector->addItem("Q2: Window Intersection");
 	givenPolygonSelector->addItem("Q2: Window Domination");
 	givenPolygonSelector->addItem("Q2: General Case");
+	givenPolygonSelector->addItem("Q2: TEST");
 	connect(givenPolygonSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
 		this, &MainWindow::onGivenPolygonChanged);
 

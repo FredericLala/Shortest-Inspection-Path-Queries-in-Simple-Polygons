@@ -54,6 +54,10 @@ public:
 
 	QPointF computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPointF>& pathRB, QLineF& window);
 
+	bool getASide();
+
+	QPointF getVertexOnPath();
+
 	int binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPointF& b);
 
 	QString getLog();
@@ -71,6 +75,8 @@ private:
 	std::vector<Segment_2> edges;
 	double calculateAngle(const K::Vector_2& v1, const K::Vector_2& v2);
 	QString logQ1;
+	bool aSide;
+	QPointF vertexOnPath;
 };
 
 #endif
