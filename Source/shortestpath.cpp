@@ -76,15 +76,18 @@ std::vector<Point_3> ShortestPath::findShortestPath(QPointF source2D, QPointF qu
     // Collect shortest path points
     shortest_paths.shortest_path_points_to_source_points(query_loc.first, query_loc.second, std::back_inserter(points));
 
+    std::set<Point_2> polygonVertices;
+    for (auto vertex = polygon.vertices_begin(); vertex != polygon.vertices_end(); ++vertex) {
+        polygonVertices.insert(*vertex);
+    }
 
-    for (int i = 0; i < points.size(); i++)
-    {
-        if (polygon.has_on_boundary(Point_2(points[i].x(), points[i].y())) || i == 0 || i == points.size() - 1)
-        {
+    for (int i = 0; i < points.size(); i++) {
+        Point_2 currentPoint(points[i].x(), points[i].y());
+        if (polygonVertices.count(currentPoint) > 0 || i == 0 || i == points.size() - 1) {
             shortestPath.push_back(points[i]);
         }
     }
-
+    
     shortestPath = reversePath(shortestPath); // Path is now from source to query
     return shortestPath;
 }
@@ -119,7 +122,8 @@ std::vector<Point_3> ShortestPath::reversePath(std::vector<Point_3> path)
 Point_2 ShortestPath::getLCA(QPointF start, QPointF a, QPointF b, const Polygon_2 &polygon)
 {
     std::vector<Point_3> path1 = findShortestPath(start, a, polygon);
-    std::vector<Point_3> path2 = findShortestPath(start, b, polygon);
+    std::vector<Point_3> path2 = findShortestPath(b, start, polygon);
+    path2 = reversePath(path2);
 
     // Initialize a variable to store the Last Common Ancestor
     Point_3 lca;

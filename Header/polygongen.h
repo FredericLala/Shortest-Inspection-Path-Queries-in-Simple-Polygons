@@ -25,6 +25,8 @@ public:
 
     Polygon_2 exampleFour() const;
 
+    Polygon_2 exampleFive() const;
+
 private:
 
 };

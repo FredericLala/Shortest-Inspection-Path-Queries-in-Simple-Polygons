@@ -141,4 +141,51 @@ Polygon_2 PolygonGen::exampleFour() const
     return p;
 }
 
+Polygon_2 PolygonGen::exampleFive() const
+{
+    Polygon_2 p;
+    p.push_back(Point_2(-120, -28));
+    p.push_back(Point_2(63, -46));
+    p.push_back(Point_2(-193, -8));
+    p.push_back(Point_2(-261, 54));
+    p.push_back(Point_2(-221, 13));
+    p.push_back(Point_2(-204, 63));
+    p.push_back(Point_2(-190, 10));
+    p.push_back(Point_2(-178, 62));
+    p.push_back(Point_2(-150, 39));
+    p.push_back(Point_2(-129, 40));
+    p.push_back(Point_2(-158, 65));
+    p.push_back(Point_2(-103, 72));
+    p.push_back(Point_2(-98, 34));
+    p.push_back(Point_2(-69, 65));
+    p.push_back(Point_2(-14, 26));
+    p.push_back(Point_2(-89, -28));
+    p.push_back(Point_2(-93, -1));
+    p.push_back(Point_2(-106, -9));
+    p.push_back(Point_2(-95, -71));
+    p.push_back(Point_2(-113, -76));
+    p.push_back(Point_2(-117, -57));
+    p.push_back(Point_2(-125, -78));
+    p.push_back(Point_2(-143, -80));
+    p.push_back(Point_2(-136, -96));
+    p.push_back(Point_2(-118, -96));
+    p.push_back(Point_2(-102, -115));
+    p.push_back(Point_2(-181, -141));
+    p.push_back(Point_2(-276, -29));
+    p.push_back(Point_2(-249, -16));
+    p.push_back(Point_2(-224, -15));
+    p.push_back(Point_2(-231, -28));
+    p.push_back(Point_2(-207, -20));
+    p.push_back(Point_2(-175, -31));
+    p.push_back(Point_2(-171, -9));
+    p.push_back(Point_2(-143, -27));
+    p.push_back(Point_2(-144, -8));
+    p.push_back(Point_2(-163, -4));
+    p.push_back(Point_2(-177, 9));
+    p.push_back(Point_2(-200, -3));
+    p.push_back(Point_2(-256, -7));
+    p.push_back(Point_2(-272, 22));
+
+    return p;
+}
 
