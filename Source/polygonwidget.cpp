@@ -79,6 +79,9 @@ void PolygonWidget::drawGivenPolygon(int index)
 	case 3:
 		polygonC = m_polygonGenHandler.exampleFour();
 		break;
+	case 4:
+		polygonC = m_polygonGenHandler.exampleFive();
+		break;
 	default:
 		polygonC = m_polygonGenHandler.generateRandomPolygon(40);
 		break;
@@ -260,6 +263,11 @@ void PolygonWidget::pointCheck()
 			return;
 		}
 
+		if (m_onePointHandler.getStartingPoint() == m_onePointHandler.getQueryPoint()) {
+			std::cout << "Starting Point is the Optimal Point c";
+			return;
+		}
+
 		break;
 
 	case 2:
@@ -429,17 +437,20 @@ void PolygonWidget::twoPointQuery()
 	if (visibilitySQ1 && visibilitySQ2)
 	{
 		errorMessage = "Both Query Points are Visible from the Starting Point";
+		std::cout << "Both Query Points are Visible from the Starting Point";
 		return;
 	}
 	else if (visibilitySQ1)
 	{
 		errorMessage = "Q1 is visible from the Starting Point";
+		std::cout << "Q1 is visible from the Starting Point";
 		onePointQuery(queryPoint2);
 		return;
 	}
 	else if (visibilitySQ2)
 	{
 		onePointQuery(queryPoint1);
+		std::cout << "Q2 is visible from the Starting Point";
 		return;
 	}
 
@@ -459,6 +470,25 @@ void PolygonWidget::twoPointQuery()
 	a2 = window2.p1();
 	b2 = window2.p2();
 
+	currentCase = NONE;
+	intersectionCase(window1, window2);
+
+	if (currentCase == NONE) {
+		dominationCase(window1, window2);
+	}
+
+	if (currentCase == NONE) {
+		generalCase(window1, window2, polygonC);
+	}
+}
+
+void PolygonWidget::intersectionCase(QLineF& window1, QLineF& window2) {
+	std::cout << "intersect";
+	errorMessage = "The Windows Intersect eachother";
+	QPointF visibleEndpoint1;
+	QPointF visibleEndpoint2;
+	QPointF invisibleEndpoint1;
+	QPointF invisibleEndpoint2;
 	QPointF intersectionPoint;
 	QLineF::IntersectionType intersection = window1.intersects(window2, &intersectionPoint);
 
@@ -468,76 +498,330 @@ void PolygonWidget::twoPointQuery()
 		if (intersectionPoint != window1.p1() && intersectionPoint != window1.p2() &&
 			intersectionPoint != window2.p1() && intersectionPoint != window2.p2())
 		{
-			std::cout << "intersect";
-			errorMessage = "The Windows Intersect eachother";
-			QPointF visibleEndpoint1;
-			QPointF visibleEndpoint2;
+			currentCase = INTERSECTION;
 
 			if (m_onePointHandler.checkVisibilty(a1, queryPoint2, polygonC))
 			{
 				visibleEndpoint1 = a1;
+				invisibleEndpoint1 = b1;
 			}
 			else
 			{
 				visibleEndpoint1 = b1;
+				invisibleEndpoint1 = a1;
 			}
 
 			if (m_onePointHandler.checkVisibilty(a2, queryPoint1, polygonC))
 			{
 				visibleEndpoint2 = a2;
+				invisibleEndpoint2 = b2;
 			}
 			else
 			{
 				visibleEndpoint2 = b2;
+				invisibleEndpoint2 = a2;
 			}
-			
-			QVector<QPointF> path1 = m_twoPointHandler.shortestPathToSegment(startingPoint, QLineF(visibleEndpoint1, intersectionPoint), polygonC);
-			double sizePath1 = calculatePathLength(path1);
-			QVector<QPointF> path2 = m_twoPointHandler.shortestPathToSegment(startingPoint, QLineF(visibleEndpoint2, intersectionPoint), polygonC);
-			double sizePath2 = calculatePathLength(path2);
+
+			intersectionPath1 = m_twoPointHandler.shortestPathToSegment(startingPoint, QLineF(visibleEndpoint1, intersectionPoint), polygonC);
+			double sizePath1 = m_twoPointHandler.calculatePathLength(intersectionPath1);
+
+			intersectionPath2 = m_twoPointHandler.shortestPathToSegment(startingPoint, QLineF(visibleEndpoint2, intersectionPoint), polygonC);
+			double sizePath2 = m_twoPointHandler.calculatePathLength(intersectionPath2);
+
+			QLineF segWindow1 = QLineF(invisibleEndpoint1, intersectionPoint);
+			QLineF segWindow2 = QLineF(invisibleEndpoint2, intersectionPoint);
+			generalCase(segWindow1, segWindow2, polygonC);
+			intersectionPath3 = optimalPath;
+			double sizePath3 = m_twoPointHandler.calculatePathLength(intersectionPath3);
+
+			double minPath = std::min({ sizePath1, sizePath2, sizePath3 });
+			if (minPath == sizePath1 && minPath == sizePath2) {
+				optimalPath = intersectionPath1;
+				std::cout << "Path 1 and 2 are shortest \n";
+			}
+			else if (minPath == sizePath1) {
+				optimalPath = intersectionPath1;
+				std::cout << "Path 1 is shortest \n";
+			}
+			else if (minPath == sizePath2) {
+				optimalPath = intersectionPath2;
+				std::cout << "Path 2 is shortest \n";
+			}
+			else if (minPath == sizePath3) {
+				optimalPath = intersectionPath3;
+				std::cout << "Path 3 is shortest \n";
+			}
+
 			std::cout << "Size of Path 1: " << sizePath1 << "\n";
 			std::cout << "Size of Path 2: " << sizePath2 << "\n";
+			std::cout << "Size of Path 3: " << sizePath3 << "\n";
+			return;
 		}
 	}
+}
 
+void PolygonWidget::dominationCase(QLineF& window1, QLineF& window2) {
 	QVector<QPointF> shortestPathSA1 = convertToQT(m_shortestPathHandler.findShortestPath(startingPoint, a1, polygonC));
 	QVector<QPointF> shortestPathSB1 = convertToQT(m_shortestPathHandler.findShortestPath(b1, startingPoint, polygonC));
 	QVector<QPointF> shortestPathSA2 = convertToQT(m_shortestPathHandler.findShortestPath(startingPoint, a2, polygonC));
 	QVector<QPointF> shortestPathSB2 = convertToQT(m_shortestPathHandler.findShortestPath(b2, startingPoint, polygonC));
 
-	if (dominateWindowCheck(window2, shortestPathSA1) && dominateWindowCheck(window2, shortestPathSB1))
+	if (m_twoPointHandler.dominateWindowCheck(window2, shortestPathSA1) && m_twoPointHandler.dominateWindowCheck(window2, shortestPathSB1))
 	{
 		errorMessage = "Window1 lies behind Window2";
+		std::cout << "Window1 lies behind Window2";
+		currentCase = DOMINATION;
+		optimalPath = m_twoPointHandler.shortestPathToSegment(startingPoint, window1, polygonC);
 	}
-	else if ((dominateWindowCheck(window1, shortestPathSA2) && dominateWindowCheck(window1, shortestPathSB2)))
+	else if ((m_twoPointHandler.dominateWindowCheck(window1, shortestPathSA2) && m_twoPointHandler.dominateWindowCheck(window1, shortestPathSB2)))
 	{
 		errorMessage = "Window2 lies behind Window1";
+		std::cout << "Window2 lies behind Window1";
+		currentCase = DOMINATION;
+		optimalPath = m_twoPointHandler.shortestPathToSegment(startingPoint, window2, polygonC);
 	}
+
+	return;
 }
 
-bool PolygonWidget::dominateWindowCheck(QLineF window, QVector<QPointF> shortestPath)
+
+void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& polygon)
 {
-	for (size_t i = 0; i < shortestPath.size() - 1; ++i) {
-		QLineF segment(shortestPath[i], shortestPath[i + 1]);
-		QLineF::IntersectionType intersection = segment.intersects(window, nullptr);
-		if (intersection == QLineF::BoundedIntersection)
-		{
-			return true; // Intersection found
+	std::cout << "General case: " << "\n";
+	currentCase = GENERAL;
+	QPointF a1 = window1.p1();
+	QPointF b1 = window1.p2();
+	QPointF a2 = window2.p1();
+	QPointF b2 = window2.p2();
+
+
+	std::vector<Point_3> PathSA1 = m_shortestPathHandler.findShortestPath(startingPoint, a1, polygon);
+	std::vector<Point_3> PathSB1 = m_shortestPathHandler.findShortestPath(b1, startingPoint, polygon);
+	PathSB1 = m_shortestPathHandler.reversePath(PathSB1);
+
+	pathSA1 = convertToQT(PathSA1);
+	pathSB1 = convertToQT(PathSB1);
+	QPointF hatS1 = pathSA1.begin()[1];
+	QPointF hatS2 = pathSB1.begin()[1];
+	//QPointF root;
+
+	if (hatS1 != hatS2)
+	{
+		root = startingPoint;
+	}
+	else
+	{
+		Point_2 rootP = m_shortestPathHandler.getLCA(startingPoint, a1, b1, polygon);
+		root = QPointF(rootP.x(), rootP.y());
+	}
+
+
+	funnelSide1 = convertToQT(m_shortestPathHandler.findShortestPath(root, a1, polygon));
+	funnelSide2 = convertToQT(m_shortestPathHandler.reversePath(m_shortestPathHandler.findShortestPath(b1, root, polygon)));
+
+	hourglassSide1 = convertToQT(m_shortestPathHandler.findShortestPath(a1, a2, polygon));
+	hourglassSide2 = convertToQT(m_shortestPathHandler.findShortestPath(b1, b2, polygon));
+
+	QVector<QPointF> hourglassSide1Alt = convertToQT(m_shortestPathHandler.findShortestPath(a1, b2, polygon));
+	QVector<QPointF> hourglassSide2Alt = convertToQT(m_shortestPathHandler.findShortestPath(b1, a2, polygon));
+
+	bool isHourglassOpen = m_twoPointHandler.hourglassOpen(hourglassSide1, hourglassSide2);
+
+	if (isHourglassOpen) {
+		std::cout << "open hourglass \n";
+	}
+	else {
+		std::cout << "closed hourglass \n";
+		if (m_twoPointHandler.hourglassOpen(hourglassSide1Alt, hourglassSide2Alt)) {
+			std::cout << "alt hourglass is open \n";
+			hourglassSide1 = hourglassSide1Alt;
+			hourglassSide2 = hourglassSide2Alt;
+			isHourglassOpen = true;
 		}
 	}
-	return false;
+
+	tangent1 = m_twoPointHandler.tangentBinary(funnelSide1, hourglassSide1, window1, polygon);
+	tangent2 = m_twoPointHandler.tangentBinary(funnelSide1, hourglassSide2, window1, polygon);
+	tangent3 = m_twoPointHandler.tangentBinary(funnelSide2, hourglassSide1, window1, polygon);
+	tangent4 = m_twoPointHandler.tangentBinary(funnelSide2, hourglassSide2, window1, polygon);
+
+	bool isOuterTangent1Blocked = false;
+	bool isOuterTangent2Blocked = false;
+	bool rootInFunnel1 = false;
+	int m2Index;
+	int m4Index;
+
+	if (tangent1.isEmpty()) {
+		isOuterTangent1Blocked = true;
+	}
+
+	if (tangent4.isEmpty()) {
+		isOuterTangent2Blocked = true;
+	}
+
+	if (!isHourglassOpen) {
+		if (!tangent1.isEmpty()) {
+			std::cout << "1 not empty \n";
+			concatenatedSide1 = m_twoPointHandler.concatenateClosed(funnelSide1, hourglassSide1, tangent1);
+		}
+		else if (!tangent2.isEmpty()) {
+			std::cout << "2 not empty \n";
+			concatenatedSide1 = m_twoPointHandler.concatenateClosed(funnelSide1, hourglassSide2, tangent2);
+		}
+
+		m1 = m_twoPointHandler.getMFunnel();
+		m2 = m_twoPointHandler.getMHourglass();
+
+		if (!tangent4.isEmpty()) {
+			std::cout << "4 not empty \n";
+			concatenatedSide2 = m_twoPointHandler.concatenateClosed(funnelSide2, hourglassSide2, tangent4);
+		}
+		else if (!tangent3.isEmpty()) {
+			std::cout << "3 not empty \n";
+			concatenatedSide2 = m_twoPointHandler.concatenateClosed(funnelSide2, hourglassSide1, tangent3);
+		}
+
+		m3 = m_twoPointHandler.getMFunnel();
+		m4 = m_twoPointHandler.getMHourglass();
+
+		rootInFunnel1 = false;
+	}
+	else {
+		if (isOuterTangent1Blocked || isOuterTangent2Blocked) {
+			if (!tangent2.isEmpty()) {
+				std::cout << "Open: 2 not empty \n";
+				concatenatedSide1 = m_twoPointHandler.concatenateOpen1(funnelSide1, hourglassSide1, tangent2);
+				m1 = m_twoPointHandler.getMFunnel();
+				m2 = m_twoPointHandler.getMHourglass();
+				concatenatedSide2 = m_twoPointHandler.concatenateOpen2(funnelSide2, hourglassSide2, tangent2);
+				m3 = m_twoPointHandler.getMFunnel();
+				m4 = m_twoPointHandler.getMHourglass();
+			}
+			else if (!tangent3.isEmpty()) {
+				std::cout << "Open: 3 not empty \n";
+				concatenatedSide1 = m_twoPointHandler.concatenateOpen2(funnelSide1, hourglassSide1, tangent3);
+				m1 = m_twoPointHandler.getMFunnel();
+				m2 = m_twoPointHandler.getMHourglass();
+				concatenatedSide2 = m_twoPointHandler.concatenateOpen1(funnelSide2, hourglassSide2, tangent3);
+				m3 = m_twoPointHandler.getMFunnel();
+				m4 = m_twoPointHandler.getMHourglass();
+			}
+
+			rootInFunnel1 = false;
+		}
+		else {
+			std::cout << "Open \n";
+			concatenatedSide1 = m_twoPointHandler.concatenateClosed(funnelSide1, hourglassSide1, tangent1);
+			m1 = m_twoPointHandler.getMFunnel();
+			m2 = m_twoPointHandler.getMHourglass();
+			m2Index = m_twoPointHandler.getHourglassIndex();
+			concatenatedSide2 = m_twoPointHandler.concatenateClosed(funnelSide2, hourglassSide2, tangent4);
+			m3 = m_twoPointHandler.getMFunnel();
+			m4 = m_twoPointHandler.getMHourglass();
+			m4Index = m_twoPointHandler.getHourglassIndex();
+
+			rootInFunnel1 = true;
+
+		}
+	}
+
+	QPointF rootStar;
+	int rootStarIndex;
+	//QVector<QPointF> pathRA2;
+	//QVector<QPointF> pathRB2;
+
+	if (rootInFunnel1) {
+		QPointF mirrorM1 = m_twoPointHandler.mirrorPoint(m1, window1);
+		QPointF mirrorM3 = m_twoPointHandler.mirrorPoint(m3, window1);
+		bool searchFirstHalf1 = m_twoPointHandler.searchFirstHalf(m2, m2Index, concatenatedSide1, mirrorM1, window2);
+		bool searchFirstHalf2 = m_twoPointHandler.searchFirstHalf(m4, m4Index, concatenatedSide2, mirrorM3, window2);
+
+
+
+		// root start calculations
+		size_t minLength = std::min(concatenatedSide1.size(), concatenatedSide2.size());
+		for (size_t i = 0; i < minLength; ++i)
+		{
+			if (concatenatedSide1[i] == concatenatedSide2[i])
+			{
+				rootStar = concatenatedSide1[i];
+				rootStarIndex = i;
+			}
+			else
+			{
+				break; // Paths diverge, stop the search
+			}
+		}
+
+		for (size_t i = rootStarIndex; i < concatenatedSide1.size(); ++i) {
+			pathRA2.append(concatenatedSide1[i]);
+		}
+
+		for (size_t i = rootStarIndex; i < concatenatedSide2.size(); ++i) {
+			pathRB2.append(concatenatedSide2[i]);
+		}
+
+		for (size_t i = 0; i <= rootStarIndex; ++i) {
+			optimalPath.append(concatenatedSide1[i]);
+		}
+
+		optimalPath.append(m_twoPointHandler.computeOptimalPathQ2(pathRA2, pathRB2, m1, m2, m3, m4, window1, searchFirstHalf1, searchFirstHalf2));
+	}
+	else {
+		rootStarIndex = 0;
+		rootStar = m4;
+
+		for (int i = concatenatedSide1.size() - 1; i >= 0; --i) {
+			if (concatenatedSide1[i] == rootStar) {
+				rootStarIndex = i;
+				break;
+			}
+		}
+		for (size_t i = rootStarIndex; i < concatenatedSide1.size(); ++i) {
+			pathRA2.append(concatenatedSide1[i]);
+		}
+
+		for (int i = concatenatedSide2.size() - 1; i >= 0; --i) {
+			if (concatenatedSide2[i] == rootStar) {
+				rootStarIndex = i;
+				break;
+			}
+		}
+		for (size_t i = rootStarIndex; i < concatenatedSide2.size(); ++i) {
+			pathRB2.append(concatenatedSide2[i]);
+		}
+
+		c = m_onePointHandler.computeOptimalPoint(pathRA2, pathRB2, window2);
+		if (m_onePointHandler.getASide()) {
+			for (QPointF point : concatenatedSide1) {
+				if (point != m_onePointHandler.getVertexOnPath()) {
+					optimalPath.append(point);
+				}
+				else {
+					optimalPath.append(point);
+					break;
+				}
+			}
+		}
+		else {
+			for (QPointF point : concatenatedSide2) {
+				if (point != m_onePointHandler.getVertexOnPath()) {
+					optimalPath.append(point);
+				}
+				else {
+					optimalPath.append(point);
+					break;
+				}
+			}
+		}
+
+		if (c != optimalPath.rbegin()[0]) {
+			optimalPath.append(c);
+		}
+	}
 }
 
-double PolygonWidget::calculatePathLength(const QVector<QPointF>& path) {
-	double length = 0.0;
-	for (int i = 1; i < path.size(); ++i) {
-		// Distance between consecutive points
-		double dx = path[i].x() - path[i - 1].x();
-		double dy = path[i].y() - path[i - 1].y();
-		length += std::sqrt(dx * dx + dy * dy);
-	}
-	return length;
-}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -871,19 +1155,21 @@ void PolygonWidget::visualizeStep(QPainter& painter)
 
 void PolygonWidget::visualizeAuto2(QPainter& painter)
 {
+	QPen thinPen = QPen((Qt::blue));
+
 	// draw shortest paths
 	painter.setPen(Qt::blue);
 	painter.setBrush(Qt::blue);
 	for (size_t i = 1; i < shortestPathSQ1.size(); ++i)
 	{
-		painter.drawLine(shortestPathSQ1[i - 1], shortestPathSQ1[i]);
+		//painter.drawLine(shortestPathSQ1[i - 1], shortestPathSQ1[i]);
 	}
 
 	painter.setPen(Qt::red);
 	painter.setBrush(Qt::red);
 	for (size_t i = 1; i < shortestPathSQ2.size(); ++i)
 	{
-		painter.drawLine(shortestPathSQ2[i - 1], shortestPathSQ2[i]);
+		//painter.drawLine(shortestPathSQ2[i - 1], shortestPathSQ2[i]);
 	}
 
 	painter.setPen(Qt::black);
@@ -913,4 +1199,186 @@ void PolygonWidget::visualizeAuto2(QPainter& painter)
 	painter.setBrush(Qt::darkGreen);
 
 	painter.drawLine(a2, b2);
+
+	switch (currentCase)
+	{
+	case NONE:
+		break;
+	case INTERSECTION:
+		painter.setPen(Qt::blue);
+		for (size_t i = 1; i < intersectionPath1.size(); ++i)
+		{
+			painter.drawLine(intersectionPath1[i - 1], intersectionPath1[i]);
+		}
+
+		painter.setPen(Qt::red);
+		for (size_t i = 1; i < intersectionPath2.size(); ++i)
+		{
+			painter.drawLine(intersectionPath2[i - 1], intersectionPath2[i]);
+		}
+
+		painter.setPen(Qt::yellow);
+		for (size_t i = 1; i < intersectionPath3.size(); ++i)
+		{
+			painter.drawLine(intersectionPath3[i - 1], intersectionPath3[i]);
+		}
+
+		painter.setPen(QPen(Qt::magenta, 2));
+		for (size_t i = 1; i < optimalPath.size(); ++i)
+		{
+			painter.drawLine(optimalPath[i - 1], optimalPath[i]);
+		}
+
+		break;
+	case DOMINATION:
+		for (size_t i = 1; i < optimalPath.size(); ++i)
+		{
+			painter.drawLine(optimalPath[i - 1], optimalPath[i]);
+		}
+
+		c = optimalPath.rbegin()[0];
+		painter.drawEllipse(c, 3, 3);
+
+		if (c == a2 || c == b2 || c == a1 || c == b1) {
+			drawLabel(c.x() + 5, c.y(), QString(" = c"), painter);
+		}
+		else {
+			drawLabel(c.x(), c.y(), QString("c"), painter);
+		}
+
+		break;
+	case GENERAL:
+		visualizeGeneralCase(painter);
+		break;
+	default:
+		break;
+	}
+
+
+}
+
+void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
+	QPen thinPen = QPen((Qt::blue));
+
+	painter.drawEllipse(root, 3, 3);
+	drawLabel(root.x(), root.y(), QString("LCA1"), painter);
+
+
+	painter.setPen(Qt::red);
+	painter.setBrush(Qt::red);
+	for (size_t i = 1; i < funnelSide1.size(); ++i)
+	{
+		painter.drawLine(funnelSide1[i - 1], funnelSide1[i]);
+		painter.drawEllipse(funnelSide1[i - 1], 3, 3);
+	}
+
+
+	for (size_t i = 1; i < funnelSide2.size(); ++i)
+	{
+		painter.drawLine(funnelSide2[i - 1], funnelSide2[i]);
+		painter.drawEllipse(funnelSide2[i - 1], 3, 3);
+	}
+
+	painter.setPen(QPen(Qt::blue, 2));
+
+	for (size_t i = 1; i < hourglassSide1.size(); ++i)
+	{
+		painter.setPen(QPen(Qt::blue, 2));
+		painter.drawLine(hourglassSide1[i - 1], hourglassSide1[i]);
+		painter.setPen(QPen(Qt::yellow, 2));
+		painter.drawLine(m_twoPointHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a1, b1)), m_twoPointHandler.mirrorPoint(hourglassSide1[i], QLineF(a1, b1)));
+		painter.drawEllipse(m_twoPointHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a1, b1)), 3, 3);
+	}
+
+	for (size_t i = 1; i < hourglassSide2.size(); ++i)
+	{
+		painter.setPen(QPen(Qt::blue, 2));
+		painter.drawLine(hourglassSide2[i - 1], hourglassSide2[i]);
+		painter.setPen(QPen(Qt::red, 2));
+		painter.drawLine(m_twoPointHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a1, b1)), m_twoPointHandler.mirrorPoint(hourglassSide2[i], QLineF(a1, b1)));
+		painter.drawEllipse(m_twoPointHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a1, b1)), 3, 3);
+	}
+
+
+
+	painter.setPen(QPen(Qt::green, 2));
+
+	for (size_t i = 1; i < tangent1.size(); ++i)
+	{
+		painter.drawLine(tangent1[i - 1], tangent1[i]);
+	}
+
+	painter.setPen(QPen(Qt::gray, 2));
+
+	for (size_t i = 1; i < tangent2.size(); ++i)
+	{
+		painter.drawLine(tangent2[i - 1], tangent2[i]);
+	}
+
+	painter.setPen(QPen(Qt::darkCyan, 2));
+
+	for (size_t i = 1; i < tangent3.size(); ++i)
+	{
+		painter.drawLine(tangent3[i - 1], tangent3[i]);
+	}
+
+	painter.setPen(QPen(Qt::cyan, 2));
+
+	for (size_t i = 1; i < tangent4.size(); ++i)
+	{
+		painter.drawLine(tangent4[i - 1], tangent4[i]);
+	}
+
+	for (size_t i = 1; i < concatenatedSide1.size(); ++i)
+	{
+		painter.setPen(QPen(Qt::darkMagenta, 2));
+		painter.drawLine(concatenatedSide1[i - 1], concatenatedSide1[i]);
+	}
+
+	for (size_t i = 1; i < concatenatedSide2.size(); ++i)
+	{
+		painter.setPen(QPen(Qt::darkMagenta, 2));
+		painter.drawLine(concatenatedSide2[i - 1], concatenatedSide2[i]);
+	}
+
+	painter.drawEllipse(m1, 3, 3);
+	drawLabel(m1.x(), m1.y(), QString("m1"), painter);
+
+	painter.drawEllipse(m2, 3, 3);
+	drawLabel(m2.x(), m2.y(), QString("m2"), painter);
+
+	painter.drawEllipse(m1, 3, 3);
+	drawLabel(m3.x(), m3.y(), QString("m3"), painter);
+
+	painter.drawEllipse(m1, 3, 3);
+	drawLabel(m4.x(), m4.y(), QString("m4"), painter);
+
+	/*for (size_t i = 1; i < optimalPath.size(); ++i)
+	{
+		painter.setPen(QPen(Qt::darkGray, 2));
+		painter.drawLine(optimalPath[i - 1], optimalPath[i]);
+	}*/
+
+	for (size_t i = 1; i < pathRA2.size(); ++i)
+	{
+		painter.setPen(QPen(Qt::darkGray, 2));
+		painter.drawLine(pathRA2[i - 1], pathRA2[i]);
+	}
+
+	for (size_t i = 1; i < pathRB2.size(); ++i)
+	{
+		painter.setPen(QPen(Qt::black, 2));
+		painter.drawLine(pathRB2[i - 1], pathRB2[i]);
+	}
+
+
+	painter.drawEllipse(c, 3, 3);
+
+	if (c == a2 || c == b2) {
+		drawLabel(c.x() + 5, c.y(), QString(" = c"), painter);
+	}
+	else {
+		drawLabel(c.x(), c.y(), QString("c"), painter);
+	}
+
 }
