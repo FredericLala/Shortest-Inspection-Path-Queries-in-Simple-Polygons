@@ -85,7 +85,9 @@ private:
     void twoPointQuery();
     void intersectionCase(QLineF& window1, QLineF& window2);
     void dominationCase(QLineF& window1, QLineF& window2);
+    void computeGeneralCase(QLineF& window1, QLineF& window2, Polygon_2& polygon);
     void generalCase(QLineF& window1, QLineF& window2, Polygon_2& polygon);
+    bool constructHourglass(QPointF& a1, QPointF& a2, QPointF& b1, QPointF& b2, Polygon_2& polygon);
     bool visibilitySQ;
     bool visibilitySQ1;
     bool visibilitySQ2;

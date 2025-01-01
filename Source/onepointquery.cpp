@@ -278,6 +278,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	if (angle0 > 90)
 	{
 		logQ1 = "c = a";
+		std::cout << "c = a \n";
 		aSide = true;
 		vertexOnPath = a;
 		return a;
@@ -287,6 +288,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	if (anglek < 90)
 	{
 		logQ1 = "c = b";
+		std::cout << "c = b \n";
 		aSide = false;
 		vertexOnPath = b;
 		return b;
@@ -298,6 +300,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	if (anglem1 == 90 || anglem == 90 || (anglem1 <= 90 && 90 < anglem))
 	{
 		logQ1 = "c is at the foot of the perpendicular from root";
+		std::cout << "foot of root \n";
 		vertexOnPath = lca;
 		return calculateWindowIntersection(lca, a, b);
 	}
@@ -313,6 +316,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 		int v = (pathRA.size() - 1) - vertex; // root would be lowest, but needs to be highest
 
 		logQ1 = "c is at the foot of the perpendicular from v" + v;
+		std::cout << "c is foot from " + v << "\n";
 		aSide = true;
 		vertexOnPath = pathRA[vertex];
 		return calculateWindowIntersection(pathRA[vertex], a, b);
@@ -322,6 +326,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 		int vertex = binarySearchByAngle(pathRB, a, b);
 		int v = vertex + (pathRA.size() - 1);
 		logQ1 = "c is at the foot of the perpendicular from v" + v;
+		std::cout << "c is foot from " + v << "\n";
 		aSide = false;
 		vertexOnPath = pathRB[vertex];
 		return calculateWindowIntersection(pathRB[vertex], a, b);
