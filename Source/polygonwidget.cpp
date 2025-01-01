@@ -188,16 +188,19 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 		{
 			m_twoPointHandler.setStartingPoint(clickPoint);
 			startingPoint = m_twoPointHandler.getStartingPoint();
+			std::cout << "QPointF(" << startingPoint.x() << "," << startingPoint.y() << ")" << "\n";
 		}
 		else if (!m_twoPointHandler.isQueryPoint1Set())
 		{
 			m_twoPointHandler.setQueryPoint1(clickPoint);
 			queryPoint1 = m_twoPointHandler.getQueryPoint1();
+			std::cout << "QPointF(" << queryPoint1.x() << "," << queryPoint1.y() << ")" << "\n";
 		}
 		else if (!m_twoPointHandler.isQueryPoint2Set())
 		{
 			m_twoPointHandler.setQueryPoint2(clickPoint);
 			queryPoint2 = m_twoPointHandler.getQueryPoint2();
+			std::cout << "QPointF(" << queryPoint2.x() << "," << queryPoint2.y() << ")" << "\n";
 		}
 
 		break;
@@ -478,13 +481,11 @@ void PolygonWidget::twoPointQuery()
 	}
 
 	if (currentCase == NONE) {
-		generalCase(window1, window2, polygonC);
+		computeGeneralCase(window1, window2, polygonC);
 	}
 }
 
 void PolygonWidget::intersectionCase(QLineF& window1, QLineF& window2) {
-	std::cout << "intersect";
-	errorMessage = "The Windows Intersect eachother";
 	QPointF visibleEndpoint1;
 	QPointF visibleEndpoint2;
 	QPointF invisibleEndpoint1;
@@ -498,7 +499,8 @@ void PolygonWidget::intersectionCase(QLineF& window1, QLineF& window2) {
 		if (intersectionPoint != window1.p1() && intersectionPoint != window1.p2() &&
 			intersectionPoint != window2.p1() && intersectionPoint != window2.p2())
 		{
-			currentCase = INTERSECTION;
+			std::cout << "intersect";
+			errorMessage = "The Windows Intersect eachother";
 
 			if (m_onePointHandler.checkVisibilty(a1, queryPoint2, polygonC))
 			{
@@ -530,7 +532,7 @@ void PolygonWidget::intersectionCase(QLineF& window1, QLineF& window2) {
 
 			QLineF segWindow1 = QLineF(invisibleEndpoint1, intersectionPoint);
 			QLineF segWindow2 = QLineF(invisibleEndpoint2, intersectionPoint);
-			generalCase(segWindow1, segWindow2, polygonC);
+			computeGeneralCase(window1, window2, polygonC);
 			intersectionPath3 = optimalPath;
 			double sizePath3 = m_twoPointHandler.calculatePathLength(intersectionPath3);
 
@@ -555,6 +557,7 @@ void PolygonWidget::intersectionCase(QLineF& window1, QLineF& window2) {
 			std::cout << "Size of Path 1: " << sizePath1 << "\n";
 			std::cout << "Size of Path 2: " << sizePath2 << "\n";
 			std::cout << "Size of Path 3: " << sizePath3 << "\n";
+			currentCase = INTERSECTION;
 			return;
 		}
 	}
@@ -584,6 +587,20 @@ void PolygonWidget::dominationCase(QLineF& window1, QLineF& window2) {
 	return;
 }
 
+void PolygonWidget::computeGeneralCase(QLineF& window1, QLineF& window2, Polygon_2& polygon) {
+	generalCase(window1, window2, polygon);
+	QPointF tempC = c;
+	QVector<QPointF> tempOptimalPath = optimalPath;
+	double tempOptimalPathLength1 = m_twoPointHandler.calculatePathLength(tempOptimalPath);
+	//clearCanvas();
+
+	generalCase(window2, window1, polygon);
+	double tempOptimalPathLength2 = m_twoPointHandler.calculatePathLength(optimalPath);
+	if (tempOptimalPathLength2 >= tempOptimalPathLength1) {
+		c = tempC;
+		optimalPath = tempOptimalPath;
+	}
+}
 
 void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& polygon)
 {
@@ -619,6 +636,7 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 	funnelSide1 = convertToQT(m_shortestPathHandler.findShortestPath(root, a1, polygon));
 	funnelSide2 = convertToQT(m_shortestPathHandler.reversePath(m_shortestPathHandler.findShortestPath(b1, root, polygon)));
 
+	/*
 	hourglassSide1 = convertToQT(m_shortestPathHandler.findShortestPath(a1, a2, polygon));
 	hourglassSide2 = convertToQT(m_shortestPathHandler.findShortestPath(b1, b2, polygon));
 
@@ -639,6 +657,9 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 			isHourglassOpen = true;
 		}
 	}
+	*/
+
+	bool isHourglassOpen = constructHourglass(a1, a2, b1, b2, polygon);
 
 	tangent1 = m_twoPointHandler.tangentBinary(funnelSide1, hourglassSide1, window1, polygon);
 	tangent2 = m_twoPointHandler.tangentBinary(funnelSide1, hourglassSide2, window1, polygon);
@@ -731,6 +752,7 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 	//QVector<QPointF> pathRB2;
 
 	if (rootInFunnel1) {
+		std::cout << "root in funnel \n";
 		QPointF mirrorM1 = m_twoPointHandler.mirrorPoint(m1, window1);
 		QPointF mirrorM3 = m_twoPointHandler.mirrorPoint(m3, window1);
 		bool searchFirstHalf1 = m_twoPointHandler.searchFirstHalf(m2, m2Index, concatenatedSide1, mirrorM1, window2);
@@ -766,8 +788,13 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 		}
 
 		optimalPath.append(m_twoPointHandler.computeOptimalPathQ2(pathRA2, pathRB2, m1, m2, m3, m4, window1, searchFirstHalf1, searchFirstHalf2));
+		c = optimalPath.rbegin()[0];
 	}
+	// root is in the hourglass
 	else {
+		std::cout << "root in hourglass \n";
+		pathRA2.clear();
+		pathRB2.clear();
 		rootStarIndex = 0;
 		rootStar = m4;
 
@@ -777,7 +804,7 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 				break;
 			}
 		}
-		for (size_t i = rootStarIndex; i < concatenatedSide1.size(); ++i) {
+		for (int i = rootStarIndex; i < concatenatedSide1.size(); ++i) {
 			pathRA2.append(concatenatedSide1[i]);
 		}
 
@@ -787,30 +814,32 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 				break;
 			}
 		}
-		for (size_t i = rootStarIndex; i < concatenatedSide2.size(); ++i) {
+		for (int i = rootStarIndex; i < concatenatedSide2.size(); ++i) {
 			pathRB2.append(concatenatedSide2[i]);
 		}
 
 		c = m_onePointHandler.computeOptimalPoint(pathRA2, pathRB2, window2);
+
+		bool start = false;
 		if (m_onePointHandler.getASide()) {
-			for (QPointF point : concatenatedSide1) {
-				if (point != m_onePointHandler.getVertexOnPath()) {
-					optimalPath.append(point);
+			for (int i = concatenatedSide1.size() - 1; i >= 0; --i) {
+				if (concatenatedSide1[i] == m_onePointHandler.getVertexOnPath()) {
+					start = true;
 				}
-				else {
-					optimalPath.append(point);
-					break;
+
+				if (start) {
+					optimalPath.append(concatenatedSide1[i]);
 				}
 			}
 		}
 		else {
-			for (QPointF point : concatenatedSide2) {
-				if (point != m_onePointHandler.getVertexOnPath()) {
-					optimalPath.append(point);
+			for (int i = concatenatedSide2.size() - 1; i >= 0; --i) {
+				if (concatenatedSide2[i] == m_onePointHandler.getVertexOnPath()) {
+					start = true;
 				}
-				else {
-					optimalPath.append(point);
-					break;
+
+				if (start) {
+					optimalPath.append(concatenatedSide2[i]);
 				}
 			}
 		}
@@ -819,6 +848,46 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 			optimalPath.append(c);
 		}
 	}
+}
+
+
+bool PolygonWidget::constructHourglass(QPointF& a1, QPointF& a2, QPointF& b1, QPointF& b2, Polygon_2& polygon) {
+	hourglassSide1 = convertToQT(m_shortestPathHandler.findShortestPath(a1, a2, polygon));
+	hourglassSide2 = convertToQT(m_shortestPathHandler.findShortestPath(b1, b2, polygon));
+
+	QVector<QPointF> hourglassSide1Alt = convertToQT(m_shortestPathHandler.findShortestPath(a1, b2, polygon));
+	QVector<QPointF> hourglassSide2Alt = convertToQT(m_shortestPathHandler.findShortestPath(b1, a2, polygon));
+
+	bool sideOneDegen = std::adjacent_find(hourglassSide1.begin(), hourglassSide1.end(), std::not_equal_to<>()) == hourglassSide1.end();
+	bool sideTwoDegen = std::adjacent_find(hourglassSide2.begin(), hourglassSide2.end(), std::not_equal_to<>()) == hourglassSide2.end();
+
+	if (sideOneDegen || sideTwoDegen) {
+		std::cout << "one side is degen \n";
+		return true;
+	}
+
+
+	if (hourglassSide1.size() == 1 || hourglassSide2.size() == 1) {
+		std::cout << "one side is degen \n";
+		return true;
+	}
+
+	bool isHourglassOpen = m_twoPointHandler.hourglassOpen(hourglassSide1, hourglassSide2);
+
+	if (isHourglassOpen) {
+		std::cout << "open hourglass \n";
+	}
+	else {
+		std::cout << "closed hourglass \n";
+		if (m_twoPointHandler.hourglassOpen(hourglassSide1Alt, hourglassSide2Alt)) {
+			std::cout << "alt hourglass is open \n";
+			hourglassSide1 = hourglassSide1Alt;
+			hourglassSide2 = hourglassSide2Alt;
+			isHourglassOpen = true;
+		}
+	}
+
+	return isHourglassOpen;
 }
 
 
@@ -851,12 +920,24 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		}
 		return;
 	}
-	/*else if (polygonMode == 2)
-	{
-		startingPoint = QPointF(40, -102);
-		queryPoint1 = QPointF(255, -105);
+	/*
+	else if (polygonMode == 2) {
+		startingPoint = QPointF(205, 169);
+		queryPoint1 = QPointF(-105, -5);
+		queryPoint2 = QPointF(-157, 108);
 		update();
-	}*/
+		*/
+
+
+
+		/*
+		startingPoint = QPointF(203, 169);
+		queryPoint1 = QPointF(-70, -3);
+		queryPoint2 = QPointF(-162, 105);
+		update();
+		*/
+		//}
+
 
 	if (polygonQ.size() > 2)
 	{
@@ -1205,6 +1286,7 @@ void PolygonWidget::visualizeAuto2(QPainter& painter)
 	case NONE:
 		break;
 	case INTERSECTION:
+		/*
 		painter.setPen(Qt::blue);
 		for (size_t i = 1; i < intersectionPath1.size(); ++i)
 		{
@@ -1228,6 +1310,9 @@ void PolygonWidget::visualizeAuto2(QPainter& painter)
 		{
 			painter.drawLine(optimalPath[i - 1], optimalPath[i]);
 		}
+		*/
+
+		visualizeGeneralCase(painter);
 
 		break;
 	case DOMINATION:
@@ -1300,7 +1385,7 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 	}
 
 
-
+	/*
 	painter.setPen(QPen(Qt::green, 2));
 
 	for (size_t i = 1; i < tangent1.size(); ++i)
@@ -1329,6 +1414,7 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 		painter.drawLine(tangent4[i - 1], tangent4[i]);
 	}
 
+	*/
 	for (size_t i = 1; i < concatenatedSide1.size(); ++i)
 	{
 		painter.setPen(QPen(Qt::darkMagenta, 2));
@@ -1337,7 +1423,7 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 
 	for (size_t i = 1; i < concatenatedSide2.size(); ++i)
 	{
-		painter.setPen(QPen(Qt::darkMagenta, 2));
+		painter.setPen(QPen(Qt::magenta, 2));
 		painter.drawLine(concatenatedSide2[i - 1], concatenatedSide2[i]);
 	}
 
@@ -1353,22 +1439,26 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 	painter.drawEllipse(m1, 3, 3);
 	drawLabel(m4.x(), m4.y(), QString("m4"), painter);
 
-	/*for (size_t i = 1; i < optimalPath.size(); ++i)
-	{
-		painter.setPen(QPen(Qt::darkGray, 2));
-		painter.drawLine(optimalPath[i - 1], optimalPath[i]);
-	}*/
 
 	for (size_t i = 1; i < pathRA2.size(); ++i)
 	{
 		painter.setPen(QPen(Qt::darkGray, 2));
 		painter.drawLine(pathRA2[i - 1], pathRA2[i]);
+		painter.drawEllipse(pathRA2[i - 1], 3, 3);
 	}
 
 	for (size_t i = 1; i < pathRB2.size(); ++i)
 	{
-		painter.setPen(QPen(Qt::black, 2));
+		painter.setPen(QPen(Qt::darkRed, 2));
 		painter.drawLine(pathRB2[i - 1], pathRB2[i]);
+		painter.drawEllipse(pathRB2[i - 1], 3, 3);
+	}
+
+
+	for (size_t i = 1; i < optimalPath.size(); ++i)
+	{
+		painter.setPen(QPen(Qt::darkYellow, 2));
+		painter.drawLine(optimalPath[i - 1], optimalPath[i]);
 	}
 
 
@@ -1380,5 +1470,4 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 	else {
 		drawLabel(c.x(), c.y(), QString("c"), painter);
 	}
-
 }

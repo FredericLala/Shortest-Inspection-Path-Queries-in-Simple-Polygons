@@ -59,9 +59,19 @@ public:
 
 	void findTangent(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
 
+	void findTangentEdgeHourglass(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
+
+	void findTangentEdgeFunnel(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
+
+	void findTangentEdgeBoth(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
+
+	void findTangentEdgeCase(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
+
 	int numberOfIntersections(const QLineF& line, const QVector<QPointF>& side);
 
 	QVector<QPointF> tangentBinary(const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
+
+	QVector<QPointF> removeElementFromVector(QVector<QPointF> vector, int index);
 
 	bool isTangent(const QLineF& line, const QVector<QPointF>& side, const Polygon_2& polygon);
 
@@ -95,7 +105,7 @@ private:
 	OnePointQuery onePointHandler;
 	QVector<QPointF> m_tangent;
 
-	enum FailureCondition { NONE, FUNNEL, HOURGLASS, FUNNEL_HOURGLASS};
+	enum FailureCondition { NONE, FUNNEL, HOURGLASS, FUNNEL_HOURGLASS, VISIBILITY};
 	FailureCondition failure;
 	int funnelIntersections;
 	int hourglassIntersections;
