@@ -173,6 +173,9 @@ void MainWindow::onStartClicked()
 		case MainWindow::TWO:
 			polygonWidget->startAutoQ2(1000);
 			break;
+		case MainWindow::APPROX:
+			polygonWidget->startAutoApproximate(1000);
+			break;
 		default:
 			break;
 		}
@@ -189,18 +192,21 @@ void MainWindow::querySelection()
 	// Create a group of radio buttons for mode selection
 	QRadioButton* queryRadio1 = new QRadioButton("One Point Query", this);
 	QRadioButton* queryRadio2 = new QRadioButton("Two Point Query", this);
-	queryRadio2->setChecked(true); // Default to "One Point Query"
-	updateQuerySelection(TWO);
+	QRadioButton* queryRadio3 = new QRadioButton("Approximate Query", this);
+	queryRadio3->setChecked(true); // Default to "Approximate Query"
+	updateQuerySelection(APPROX);
 
 	// Group Buttons
 	QButtonGroup* queryButtons = new QButtonGroup();
 	queryButtons->addButton(queryRadio1);
 	queryButtons->addButton(queryRadio2);
+	queryButtons->addButton(queryRadio3);
 
 	// Add Buttons to a Layout
 	QHBoxLayout* queryLayout = new QHBoxLayout();
 	queryLayout->addWidget(queryRadio1);
 	queryLayout->addWidget(queryRadio2);
+	queryLayout->addWidget(queryRadio3);
 
 	// Connect the radio buttons to handle mode switching
 	connect(queryRadio1, &QRadioButton::toggled, this, [=](bool checked) {
@@ -208,6 +214,9 @@ void MainWindow::querySelection()
 		});
 	connect(queryRadio2, &QRadioButton::toggled, this, [=](bool checked) {
 		if (checked) updateQuerySelection(TWO);
+		});
+	connect(queryRadio3, &QRadioButton::toggled, this, [=](bool checked) {
+		if (checked) updateQuerySelection(APPROX);
 		});
 
 	mainLayout->addLayout(queryLayout);
@@ -222,6 +231,9 @@ void MainWindow::updateQuerySelection(QueryMode mode)
 		break;
 	case TWO:
 		polygonWidget->setMode(2);
+		break;
+	case APPROX:
+		polygonWidget->setMode(3);
 		break;
 	}
 }

@@ -6,6 +6,7 @@
 #include "OnePointQuery.h"
 #include "TwoPointQuery.h"
 #include "ShortestPath.h"
+#include "approximatequery.h"
 
 #include <QWidget>
 #include <QVector>
@@ -31,12 +32,12 @@ public:
     void setPolygonMode(int index);
     void drawGivenPolygon(int index);
     void clearCanvas();
-    void onePointQuery(QPointF queryPoint);
     void setStep(int step);
 
     void startStepperQ1();
     void startAutoQ1(int interval);
     void startAutoQ2(int interval);
+    void startAutoApproximate(int interval);
     void increaseStep();
     void decreaseStep();
     QVector<QPointF> convertToQT(std::vector<Point_3> points);
@@ -54,6 +55,7 @@ private:
     OnePointQuery m_onePointHandler;
     TwoPointQuery m_twoPointHandler;
     ShortestPath m_shortestPathHandler;
+    ApproximateQuery m_approximateHandler;
 
     int m_mode; // Mode 1 or 2
     int m_step;
@@ -63,7 +65,6 @@ private:
     QPointF queryPoint1;
     QPointF queryPoint2;
 
-    QLineF calculateWindow(std::vector<Point_3> &path, QPointF queryPoint);
     QPointF a;
     QPointF b;
     QPointF a1;
@@ -98,6 +99,7 @@ private:
     void visualizeStep(QPainter &painter);
     void visualizeAuto2(QPainter &painter);
     void visualizeGeneralCase(QPainter& painter);
+    void visualizeApprox(QPainter& painter);
     // Q_SLOT void startSingleQuery();
     void pointCheck();
     bool valid;
@@ -110,6 +112,9 @@ private:
 
     enum Q2CASE { NONE, INTERSECTION, DOMINATION, GENERAL };
     Q2CASE currentCase;
+
+    OnePointQuery::QueryResult resultQ1;
+    ApproximateQuery::ApproximateResult resultApprox;
 
 
     ////////////////////

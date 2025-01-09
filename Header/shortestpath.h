@@ -48,11 +48,11 @@ public:
     void createMesh(const Polygon_2 &polygon);
     const Surface_mesh &getMesh() const;
     void clearTree();
-    std::vector<Point_3> findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2 &polygon);
-    const std::vector<Point_3> &getShortestPath() const;
+    QVector<QPointF> findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2 &polygon);
+    QVector<QPointF> point3VectorToQtVector(std::vector<Point_3>& points);
     const Point_2 &getPenultimate(const std::vector<Point_3> &path, const Polygon_2 &polygon) const;
-    std::vector<Point_3> reversePath(std::vector<Point_3> path);
-    Point_2 getLCA(QPointF start, QPointF a, QPointF b, const Polygon_2 &polygon);
+    QVector<QPointF> reversePath(QVector<QPointF>& path);
+    QPointF getLCA(QPointF& start, QPointF& a, QPointF& b, Polygon_2& polygon);
 
 private:
     Surface_mesh mesh;

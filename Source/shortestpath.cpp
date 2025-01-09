@@ -54,7 +54,7 @@ void ShortestPath::clearTree() {
     tree.clear();
 }
 
-std::vector<Point_3> ShortestPath::findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2 &polygon)
+QVector<QPointF> ShortestPath::findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2 &polygon)
 {
     points.clear();
     shortestPath.clear();
@@ -88,8 +88,21 @@ std::vector<Point_3> ShortestPath::findShortestPath(QPointF source2D, QPointF qu
         }
     }
     
-    shortestPath = reversePath(shortestPath); // Path is now from source to query
-    return shortestPath;
+    QVector<QPointF> shortestPathQt = point3VectorToQtVector(shortestPath);
+    return reversePath(shortestPathQt);
+}
+
+QVector<QPointF> ShortestPath::point3VectorToQtVector(std::vector<Point_3>& points)
+{
+    QVector<QPointF> qtPoints;
+    qtPoints.reserve(points.size());
+
+    for (const auto& point : points)
+    {
+        qtPoints.append(QPointF(point.x(), point.y()));
+    }
+
+    return qtPoints;
 }
 
 const Point_2 &ShortestPath::getPenultimate(const std::vector<Point_3> &path, const Polygon_2 &polygon) const
@@ -113,20 +126,19 @@ const Point_2 &ShortestPath::getPenultimate(const std::vector<Point_3> &path, co
     return Point_2(lastPoint_3.x(), lastPoint_3.y());
 }
 
-std::vector<Point_3> ShortestPath::reversePath(std::vector<Point_3> path)
+QVector<QPointF> ShortestPath::reversePath(QVector<QPointF>& path)
 {
     std::reverse(path.begin(), path.end());
     return path;
 }
 
-Point_2 ShortestPath::getLCA(QPointF start, QPointF a, QPointF b, const Polygon_2 &polygon)
+QPointF ShortestPath::getLCA(QPointF& start, QPointF& a, QPointF& b, Polygon_2& polygon)
 {
-    std::vector<Point_3> path1 = findShortestPath(start, a, polygon);
-    std::vector<Point_3> path2 = findShortestPath(b, start, polygon);
+    QVector<QPointF> path1 = findShortestPath(start, a, polygon);
+    QVector<QPointF> path2 = findShortestPath(b, start, polygon);
     path2 = reversePath(path2);
 
-    // Initialize a variable to store the Last Common Ancestor
-    Point_3 lca;
+    QPointF lca;
 
     // Iterate over both paths until they diverge
     size_t minLength = std::min(path1.size(), path2.size());
@@ -141,5 +153,6 @@ Point_2 ShortestPath::getLCA(QPointF start, QPointF a, QPointF b, const Polygon_
             break; // Paths diverge, stop the search
         }
     }
-    return Point_2(lca.x(), lca.y());
+
+    return lca;
 }
