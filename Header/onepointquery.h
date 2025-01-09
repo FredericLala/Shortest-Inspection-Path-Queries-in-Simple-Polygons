@@ -2,6 +2,7 @@
 #define ONEPOINTQUERY_H
 
 #include "common.h"
+#include "ShortestPath.h"
 
 #include <CGAL/AABB_tree.h>
 #include <CGAL/AABB_traits_2.h>
@@ -10,7 +11,7 @@
 #include <CGAL/Ray_2.h>
 #include <CGAL/Line_2.h>
 
-typedef K::Point_3 Point;
+typedef K::Point_3 Point_3;
 typedef K::Segment_2 Segment_2;
 typedef K::Line_2 Line_2;
 
@@ -52,11 +53,11 @@ public:
 	double calculateFunnelAngle(const QPointF& point1, const QPointF& point2, const QPointF& a, const QPointF& b);
 	QPointF calculateWindowIntersection(const QPointF& pathPoint, const QPointF& windowStart, const QPointF& windowEnd);
 
-	QPointF computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPointF>& pathRB, QLineF& window);
+	QPointF computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPointF>& pathRB, QPointF& lca, QLineF& window);
 
-	bool getASide();
+	bool getOnPathRootToA();
 
-	QPointF getVertexOnPath();
+	QPointF getVertexPerpendicularToC();
 
 	int binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPointF& b);
 
@@ -64,7 +65,27 @@ public:
 
 	void resetLog();
 
+	void executeOnePointQuery(QPointF& startingPoint, QPointF& queryPoint, Polygon_2& polygon);
+
+	struct QueryResult {
+		bool visibility;
+		QVector<QPointF> pathStartToQuery;
+		QLineF window;
+		QVector<QPointF> pathRootToA;
+		QVector<QPointF> pathRootToB;
+		QPointF lca;
+		QPointF optimalPoint;
+		QVector<QPointF> optimalPath;
+	};
+
+	const QueryResult getResult() const;
+	QLineF calculateWindow(QVector<QPointF>& path, QPointF& queryPoint, Polygon_2& polygon);
+
+
+
 private:
+	ShortestPath m_shortestPathHandler;
+
 	QPointF m_startingPoint;
 	QPointF m_queryPoint;
 	bool m_startSelected; // Whether the starting point is set
@@ -75,8 +96,12 @@ private:
 	std::vector<Segment_2> edges;
 	double calculateAngle(const K::Vector_2& v1, const K::Vector_2& v2);
 	QString logQ1;
-	bool aSide;
-	QPointF vertexOnPath;
+	bool onPathRootToA;
+	QPointF vertexPerpendicularToC;
+
+	QueryResult result;
+
+	QVector<QPointF> computeOptimalPath(QVector<QPointF>& pathStartToQuery, QVector<QPointF>& pathRootToWindowEndpoint, QPointF& lca, QPointF& c);
 };
 
 #endif

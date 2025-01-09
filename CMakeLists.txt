@@ -25,6 +25,7 @@ set(SOURCES
     Source/polygongen.cpp
     Source/shortestpath.cpp
     Source/twopointquery.cpp
+    Source/approximatequery.cpp
 )
 
 # List each header file explicitly
@@ -36,6 +37,7 @@ set(HEADERS
     Header/polygongen.h
     Header/shortestpath.h
     Header/twopointquery.h
+    Header/approximatequery.h
 )
 
 # Add the collected source files to the executable or library

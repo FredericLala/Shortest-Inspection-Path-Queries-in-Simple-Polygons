@@ -73,7 +73,7 @@ private:
 	int index;
 	QString queryMode;
 	QSlider* slider;
-	enum QueryMode {ONE, TWO};
+	enum QueryMode {ONE, TWO, APPROX};
 	enum RunMode {STEPPER, AUTO};
 	enum PolyMode {RANDOM, DRAW, PICK};
 

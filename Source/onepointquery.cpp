@@ -195,11 +195,6 @@ void OnePointQuery::shootRayExtended(const QPointF& point1, const QPointF& point
 	}
 }
 
-Point_2 OnePointQuery::getIntersection()
-{
-	return b;
-}
-
 // Helper function to calculate angle between two vectors in radians
 double OnePointQuery::calculateAngle(const K::Vector_2& v1, const K::Vector_2& v2)
 {
@@ -230,10 +225,6 @@ double OnePointQuery::calculateFunnelAngle(const QPointF& point1, const QPointF&
 
 	angle = 180 - angle;
 
-	/*     if (orientation == CGAL::LEFT_TURN) {
-			angle = 180 - angle;
-		} */
-
 	return angle;
 }
 
@@ -242,6 +233,7 @@ QPointF OnePointQuery::calculateWindowIntersection(const QPointF& pathPoint, con
 	Point_2 p = convertToCGALPoint(pathPoint);
 	Point_2 w1 = convertToCGALPoint(windowStart);
 	Point_2 w2 = convertToCGALPoint(windowEnd);
+	QPointF intersection;
 
 	// Create the window line using the two points
 	Line_2 windowLine(w1, w2);
@@ -252,35 +244,29 @@ QPointF OnePointQuery::calculateWindowIntersection(const QPointF& pathPoint, con
 	// Find the intersection point of the perpendicular line with the window line
 	auto intersectionResult = CGAL::intersection(windowLine, perpendicularLine);
 
-	//if (const Point_2* p = std::get_if<Point_2>(&(intersection->first)))
-
 	if (intersectionResult) {
 		if (const Point_2* intersectionPoint = std::get_if<Point_2>(&*intersectionResult))
 		{
 			// If the intersection is a point, convert it to QPointF and return
-			return convertToQTPoint(*intersectionPoint);
+			intersection = convertToQTPoint(*intersectionPoint);
 		}
 	}
-	else
-	{
-		// No intersection found, return an invalid point
-		return QPointF(); // Empty QPointF indicates no intersection
-	}
+
+	return intersection; // Empty QPointF indicates no intersection
 }
 
-QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPointF>& pathRB, QLineF& window)
+QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPointF>& pathRB, QPointF& lca, QLineF& window)
 {
-	aSide = false;
+	onPathRootToA = false;
 	QPointF a = window.p1();
 	QPointF b = window.p2();
-	const QPointF lca = pathRA.first();
 	const double angle0 = calculateFunnelAngle(pathRA.rbegin()[1], pathRA.rbegin()[0], a, b); // theta_0
 	if (angle0 > 90)
 	{
 		logQ1 = "c = a";
 		std::cout << "c = a \n";
-		aSide = true;
-		vertexOnPath = a;
+		onPathRootToA = true;
+		vertexPerpendicularToC = a;
 		return a;
 	}
 
@@ -289,8 +275,8 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	{
 		logQ1 = "c = b";
 		std::cout << "c = b \n";
-		aSide = false;
-		vertexOnPath = b;
+		onPathRootToA = false;
+		vertexPerpendicularToC = b;
 		return b;
 	}
 	//
@@ -301,15 +287,10 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	{
 		logQ1 = "c is at the foot of the perpendicular from root";
 		std::cout << "foot of root \n";
-		vertexOnPath = lca;
+		vertexPerpendicularToC = lca;
 		return calculateWindowIntersection(lca, a, b);
 	}
-	//
-	//
-	// muss man nur machen wenn man A benutzt und nicht die shortest paths (A sind alle Knoten von P)
-	/*     if (lca == startingPoint && !polygonC.has_on_boundary(Point_2(startingPoint.x(), startingPoint.y()))) {
 
-		} */
 	if (anglem1 > 90)
 	{
 		int vertex = binarySearchByAngle(pathRA, a, b);
@@ -317,8 +298,8 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 
 		logQ1 = "c is at the foot of the perpendicular from v" + v;
 		std::cout << "c is foot from " + v << "\n";
-		aSide = true;
-		vertexOnPath = pathRA[vertex];
+		onPathRootToA = true;
+		vertexPerpendicularToC = pathRA[vertex];
 		return calculateWindowIntersection(pathRA[vertex], a, b);
 	}
 	else
@@ -327,28 +308,29 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 		int v = vertex + (pathRA.size() - 1);
 		logQ1 = "c is at the foot of the perpendicular from v" + v;
 		std::cout << "c is foot from " + v << "\n";
-		aSide = false;
-		vertexOnPath = pathRB[vertex];
+		onPathRootToA = false;
+		vertexPerpendicularToC = pathRB[vertex];
 		return calculateWindowIntersection(pathRB[vertex], a, b);
 	}
 }
 
-bool OnePointQuery::getASide() {
-	return aSide;
+bool OnePointQuery::getOnPathRootToA() {
+	return onPathRootToA;
 }
 
-QPointF OnePointQuery::getVertexOnPath() {
-	return vertexOnPath;
+QPointF OnePointQuery::getVertexPerpendicularToC() {
+	return vertexPerpendicularToC;
 }
 
 int OnePointQuery::binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPointF& b)
 {
 	int left = 0;
 	int right = path.size() - 1;
+	int mid = left + (right - left) / 2;
 
 	while (right - left > 1)
 	{ // Continue until the interval is narrowed down to two successive vertices
-		int mid = left + (right - left) / 2;
+		mid = left + (right - left) / 2;
 
 		// Compute angle at the midpoint
 		double theta_mid = calculateFunnelAngle(path[mid - 1], path[mid], a, b);
@@ -367,7 +349,7 @@ int OnePointQuery::binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPoin
 	}
 
 	// After loop ends, `left` and `right` are successive vertices
-	return left; // Return the index of the narrowed-down interval's start vertex
+	return mid; // Return the index of the narrowed-down interval's start vertex
 }
 
 QString OnePointQuery::getLog()
@@ -379,5 +361,103 @@ void OnePointQuery::resetLog()
 {
 	logQ1 = "";
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void OnePointQuery::executeOnePointQuery(QPointF& startingPoint, QPointF& queryPoint, Polygon_2& polygon)
+{
+	// visibility check
+	bool visibility = checkVisibilty(startingPoint, queryPoint, polygon);
+	result.visibility = visibility;
+
+	if (visibility)
+	{
+		return;
+	}
+
+	m_shortestPathHandler.createMesh(polygon);
+
+	// Find shortest path from s to q
+	QVector<QPointF> pathStartToQuery = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint, polygon);
+	result.pathStartToQuery = pathStartToQuery;
+
+	// calculate the window
+	QLineF window = calculateWindow(pathStartToQuery, queryPoint, polygon);
+	result.window = window;
+	QPointF a = window.p1();
+	QPointF b = window.p2();
+
+	// calculate the LCA / root of the funnel
+	QPointF lca = m_shortestPathHandler.getLCA(startingPoint, a, b, polygon);
+	result.lca = lca;
+
+	// construct the funnel through its sides
+	QVector<QPointF> pathRootToA = m_shortestPathHandler.findShortestPath(lca, a, polygon);
+	result.pathRootToA = pathRootToA;
+	QVector<QPointF> pathBtoRoot = m_shortestPathHandler.findShortestPath(b, lca, polygon);
+	QVector<QPointF> pathRootToB = m_shortestPathHandler.reversePath(pathBtoRoot); // need to reverse to get the path from b to lca
+	result.pathRootToB = pathRootToB;
+
+	QPointF c = computeOptimalPoint(pathRootToA, pathRootToB, lca, window);
+	result.optimalPoint = c;
+
+	QVector<QPointF> optimalPath;
+	if (onPathRootToA) {
+		optimalPath = computeOptimalPath(pathStartToQuery, pathRootToA, lca, c);
+	}
+	else {
+		optimalPath = computeOptimalPath(pathStartToQuery, pathRootToB, lca, c);
+	}
+	result.optimalPath = optimalPath;
+}
+
+const OnePointQuery::QueryResult OnePointQuery::getResult() const { return result; }
+
+QLineF OnePointQuery::calculateWindow(QVector<QPointF>& path, QPointF& queryPoint, Polygon_2& polygon)
+{
+	//const Point_2 aC = m_shortestPathHandler.getPenultimate(path, polygon);
+	// a is the first point before q on the shortest path sq
+	const QPointF a = path.rbegin()[1];
+
+	shootRayExtended(queryPoint, a, polygon);
+
+	const Point_2 bC = b;
+	const QPointF b = QPointF(bC.x(), bC.y());
+
+	return QLineF(a, b);
+}
+
+QVector<QPointF> OnePointQuery::computeOptimalPath(QVector<QPointF>& pathStartToQuery, QVector<QPointF>& pathRootToWindowEndpoint, QPointF& lca, QPointF& c) {
+	bool start = false;
+	QVector<QPointF> optimalPath;
+
+	optimalPath.append(c);
+
+	for (int i = pathRootToWindowEndpoint.size() - 1; i >= 0; --i) {
+		if (pathRootToWindowEndpoint[i] == vertexPerpendicularToC) {
+			start = true;
+		}
+
+		if (start) {
+			optimalPath.append(pathRootToWindowEndpoint[i]);
+		}
+	}
+
+	start = false;
+	for (int i = pathStartToQuery.size() - 1; i >= 0; --i) {
+		if (pathStartToQuery[i] == lca) {
+			start = true;
+		}
+
+		if (start) {
+
+			optimalPath.append(pathStartToQuery[i]);
+		}
+	}
+
+	return m_shortestPathHandler.reversePath(optimalPath);
+}
+
+
 
 

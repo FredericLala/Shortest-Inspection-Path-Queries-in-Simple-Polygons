@@ -148,6 +148,10 @@ void PolygonWidget::clearPoints()
 		m_twoPointHandler.clearPoints();
 		break;
 
+	case 3:
+		m_approximateHandler.clearPoints();
+		break;
+
 	default:
 		break;
 	}
@@ -205,6 +209,28 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 
 		break;
 
+	case 3:
+		if (!m_approximateHandler.isStartingPointSet())
+		{
+			m_approximateHandler.setStartingPoint(clickPoint);
+			startingPoint = m_approximateHandler.getStartingPoint();
+			std::cout << "QPointF(" << startingPoint.x() << "," << startingPoint.y() << ")" << "\n";
+		}
+		else if (!m_approximateHandler.isQueryPoint1Set())
+		{
+			m_approximateHandler.setQueryPoint1(clickPoint);
+			queryPoint1 = m_approximateHandler.getQueryPoint1();
+			std::cout << "QPointF(" << queryPoint1.x() << "," << queryPoint1.y() << ")" << "\n";
+		}
+		else if (!m_approximateHandler.isQueryPoint2Set())
+		{
+			m_approximateHandler.setQueryPoint2(clickPoint);
+			queryPoint2 = m_approximateHandler.getQueryPoint2();
+			std::cout << "QPointF(" << queryPoint2.x() << "," << queryPoint2.y() << ")" << "\n";
+		}
+
+		break;
+
 	default:
 		break;
 	}
@@ -221,7 +247,9 @@ void PolygonWidget::startStepperQ1()
 	{
 		stepmode = true;
 		step = 1;
-		onePointQuery(queryPoint1);
+		hideQuery = false;
+		m_onePointHandler.executeOnePointQuery(startingPoint, queryPoint1, polygonC);
+		resultQ1 = m_onePointHandler.getResult();
 		update();
 	}
 }
@@ -232,7 +260,9 @@ void PolygonWidget::startAutoQ1(int interval)
 	if (valid)
 	{
 		stepmode = false;
-		onePointQuery(queryPoint1);
+		hideQuery = false;
+		m_onePointHandler.executeOnePointQuery(startingPoint, queryPoint1, polygonC);
+		resultQ1 = m_onePointHandler.getResult();
 		update();
 	}
 }
@@ -244,6 +274,16 @@ void PolygonWidget::startAutoQ2(int interval)
 	{
 		stepmode = false;
 		twoPointQuery();
+		update();
+	}
+}
+
+void PolygonWidget::startAutoApproximate(int interval) {
+	pointCheck();
+	if (valid)
+	{
+		stepmode = false;
+		m_approximateHandler.epsilonApproximateQuery(0.3, startingPoint, queryPoint1, queryPoint2, polygonC);
 		update();
 	}
 }
@@ -329,93 +369,6 @@ QString PolygonWidget::updateLog()
 	return errorMessage + m_onePointHandler.getLog();
 }
 
-/* void PolygonWidget::startAutoQ1(int interval)
-{
-	step = 1;
-	stepmode = true;
-	QTimer *timer = new QTimer(this);
-	connect(timer, &QTimer::timeout, this, &PolygonWidget::startSingleQuery);
-	timer->start(interval);
-}
-
-void PolygonWidget::startSingleQuery()
-{
-	std::vector<Point_3> pathCRA;
-	std::vector<Point_3> pathCRB;
-
-	switch (step)
-	{
-	case 1:
-		std::cout << "1";
-		visibility = m_onePointHandler.checkVisibilty(startingPoint, queryPoint1, polygonC);
-		if (visibility)
-		{
-			return;
-		}
-
-		m_shortestPathHandler.createMesh(polygonC);
-		break;
-	case 2:
-		std::cout << "2";
-		shortestPathSQ = convertToQT(m_shortestPathHandler.findShortestPath(startingPoint, queryPoint1, polygonC));
-		break;
-	case 3:
-		setPointA();
-		m_onePointHandler.shootRayExtended(queryPoint1, a, polygonC);
-		break;
-	case 4:
-		setPointB();
-		break;
-	case 5:
-		lcaC = m_shortestPathHandler.getLCA(startingPoint, a, b, polygonC);
-		lca = QPointF(lcaC.x(), lcaC.y());
-		break;
-	case 6:
-		pathCRA = m_shortestPathHandler.findShortestPath(lca, a, polygonC);
-		pathCRB = m_shortestPathHandler.findShortestPath(lca, b, polygonC);
-		pathRA = convertToQT(pathCRA);
-		pathRB = convertToQT(pathCRB);
-		break;
-	case 7:
-		computeOptimalPoint();
-		break;
-	}
-	update();
-	step++;
-} */
-
-void PolygonWidget::onePointQuery(QPointF queryPoint)
-{
-	hideQuery = false;
-	visibilitySQ = m_onePointHandler.checkVisibilty(startingPoint, queryPoint, polygonC);
-	if (visibilitySQ)
-	{
-		return;
-	}
-
-	m_shortestPathHandler.createMesh(polygonC);
-
-	// Find shortest path from s to q
-	std::vector shortestPathSQC = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint, polygonC);
-	shortestPathSQ = convertToQT(shortestPathSQC);
-
-	// calculate the window
-	QLineF window = calculateWindow(shortestPathSQC, queryPoint);
-	a = window.p1();
-	b = window.p2();
-
-	lcaC = m_shortestPathHandler.getLCA(startingPoint, a, b, polygonC);
-	lca = QPointF(lcaC.x(), lcaC.y());
-
-	std::vector<Point_3> pathCRA = m_shortestPathHandler.findShortestPath(lca, a, polygonC);
-	std::vector<Point_3> pathCRB = m_shortestPathHandler.findShortestPath(b, lca, polygonC); // makes the calculations more consistent
-	pathCRB = m_shortestPathHandler.reversePath(pathCRB); // need to reverse to get the path from b to lca
-	pathRA = convertToQT(pathCRA);
-	pathRB = convertToQT(pathCRB);
-
-	c = m_onePointHandler.computeOptimalPoint(pathRA, pathRB, window);
-}
-
 void PolygonWidget::increaseStep()
 {
 	step++;
@@ -447,12 +400,16 @@ void PolygonWidget::twoPointQuery()
 	{
 		errorMessage = "Q1 is visible from the Starting Point";
 		std::cout << "Q1 is visible from the Starting Point";
-		onePointQuery(queryPoint2);
+		hideQuery = false;
+		m_onePointHandler.executeOnePointQuery(startingPoint, queryPoint2, polygonC);
+		resultQ1 = m_onePointHandler.getResult();
 		return;
 	}
 	else if (visibilitySQ2)
 	{
-		onePointQuery(queryPoint1);
+		hideQuery = false;
+		m_onePointHandler.executeOnePointQuery(startingPoint, queryPoint1, polygonC);
+		resultQ1 = m_onePointHandler.getResult();
 		std::cout << "Q2 is visible from the Starting Point";
 		return;
 	}
@@ -460,16 +417,13 @@ void PolygonWidget::twoPointQuery()
 	m_shortestPathHandler.createMesh(polygonC);
 
 	// AABB_tree polygonTree = m_onePointHandler.constructTree(polygonC);
-	std::vector shortestPathSQ1C = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint1, polygonC);
-	std::vector shortestPathSQ2C = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint2, polygonC);
+	shortestPathSQ1 = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint1, polygonC);
+	shortestPathSQ2 = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint2, polygonC);
 
-	shortestPathSQ1 = convertToQT(shortestPathSQ1C);
-	shortestPathSQ2 = convertToQT(shortestPathSQ2C);
-
-	QLineF window1 = calculateWindow(shortestPathSQ1C, queryPoint1);
+	QLineF window1 = m_onePointHandler.calculateWindow(shortestPathSQ1, queryPoint1, polygonC);
 	a1 = window1.p1();
 	b1 = window1.p2();
-	QLineF window2 = calculateWindow(shortestPathSQ2C, queryPoint2);
+	QLineF window2 = m_onePointHandler.calculateWindow(shortestPathSQ2, queryPoint2, polygonC);
 	a2 = window2.p1();
 	b2 = window2.p2();
 
@@ -564,10 +518,10 @@ void PolygonWidget::intersectionCase(QLineF& window1, QLineF& window2) {
 }
 
 void PolygonWidget::dominationCase(QLineF& window1, QLineF& window2) {
-	QVector<QPointF> shortestPathSA1 = convertToQT(m_shortestPathHandler.findShortestPath(startingPoint, a1, polygonC));
-	QVector<QPointF> shortestPathSB1 = convertToQT(m_shortestPathHandler.findShortestPath(b1, startingPoint, polygonC));
-	QVector<QPointF> shortestPathSA2 = convertToQT(m_shortestPathHandler.findShortestPath(startingPoint, a2, polygonC));
-	QVector<QPointF> shortestPathSB2 = convertToQT(m_shortestPathHandler.findShortestPath(b2, startingPoint, polygonC));
+	QVector<QPointF> shortestPathSA1 = m_shortestPathHandler.findShortestPath(startingPoint, a1, polygonC);
+	QVector<QPointF> shortestPathSB1 = m_shortestPathHandler.findShortestPath(b1, startingPoint, polygonC);
+	QVector<QPointF> shortestPathSA2 = m_shortestPathHandler.findShortestPath(startingPoint, a2, polygonC);
+	QVector<QPointF> shortestPathSB2 = m_shortestPathHandler.findShortestPath(b2, startingPoint, polygonC);
 
 	if (m_twoPointHandler.dominateWindowCheck(window2, shortestPathSA1) && m_twoPointHandler.dominateWindowCheck(window2, shortestPathSB1))
 	{
@@ -612,12 +566,10 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 	QPointF b2 = window2.p2();
 
 
-	std::vector<Point_3> PathSA1 = m_shortestPathHandler.findShortestPath(startingPoint, a1, polygon);
-	std::vector<Point_3> PathSB1 = m_shortestPathHandler.findShortestPath(b1, startingPoint, polygon);
-	PathSB1 = m_shortestPathHandler.reversePath(PathSB1);
+	pathSA1 = m_shortestPathHandler.findShortestPath(startingPoint, a1, polygon);
+	QVector<QPointF> pathB1S = m_shortestPathHandler.findShortestPath(b1, startingPoint, polygon);
+	pathSB1 = m_shortestPathHandler.reversePath(pathB1S);
 
-	pathSA1 = convertToQT(PathSA1);
-	pathSB1 = convertToQT(PathSB1);
 	QPointF hatS1 = pathSA1.begin()[1];
 	QPointF hatS2 = pathSB1.begin()[1];
 	//QPointF root;
@@ -628,13 +580,13 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 	}
 	else
 	{
-		Point_2 rootP = m_shortestPathHandler.getLCA(startingPoint, a1, b1, polygon);
-		root = QPointF(rootP.x(), rootP.y());
+		root = m_shortestPathHandler.getLCA(startingPoint, a1, b1, polygon);
 	}
 
 
-	funnelSide1 = convertToQT(m_shortestPathHandler.findShortestPath(root, a1, polygon));
-	funnelSide2 = convertToQT(m_shortestPathHandler.reversePath(m_shortestPathHandler.findShortestPath(b1, root, polygon)));
+	funnelSide1 = m_shortestPathHandler.findShortestPath(root, a1, polygon);
+	QVector<QPointF> funnelSide2R = m_shortestPathHandler.findShortestPath(b1, root, polygon);
+	funnelSide2 = m_shortestPathHandler.reversePath(funnelSide2R);
 
 	/*
 	hourglassSide1 = convertToQT(m_shortestPathHandler.findShortestPath(a1, a2, polygon));
@@ -818,12 +770,12 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 			pathRB2.append(concatenatedSide2[i]);
 		}
 
-		c = m_onePointHandler.computeOptimalPoint(pathRA2, pathRB2, window2);
+		c = m_onePointHandler.computeOptimalPoint(pathRA2, pathRB2, rootStar, window2);
 
 		bool start = false;
-		if (m_onePointHandler.getASide()) {
+		if (m_onePointHandler.getOnPathRootToA()) {
 			for (int i = concatenatedSide1.size() - 1; i >= 0; --i) {
-				if (concatenatedSide1[i] == m_onePointHandler.getVertexOnPath()) {
+				if (concatenatedSide1[i] == m_onePointHandler.getVertexPerpendicularToC()) {
 					start = true;
 				}
 
@@ -834,7 +786,7 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 		}
 		else {
 			for (int i = concatenatedSide2.size() - 1; i >= 0; --i) {
-				if (concatenatedSide2[i] == m_onePointHandler.getVertexOnPath()) {
+				if (concatenatedSide2[i] == m_onePointHandler.getVertexPerpendicularToC()) {
 					start = true;
 				}
 
@@ -852,11 +804,11 @@ void PolygonWidget::generalCase(QLineF& window1, QLineF& window2, Polygon_2& pol
 
 
 bool PolygonWidget::constructHourglass(QPointF& a1, QPointF& a2, QPointF& b1, QPointF& b2, Polygon_2& polygon) {
-	hourglassSide1 = convertToQT(m_shortestPathHandler.findShortestPath(a1, a2, polygon));
-	hourglassSide2 = convertToQT(m_shortestPathHandler.findShortestPath(b1, b2, polygon));
+	hourglassSide1 = m_shortestPathHandler.findShortestPath(a1, a2, polygon);
+	hourglassSide2 = m_shortestPathHandler.findShortestPath(b1, b2, polygon);
 
-	QVector<QPointF> hourglassSide1Alt = convertToQT(m_shortestPathHandler.findShortestPath(a1, b2, polygon));
-	QVector<QPointF> hourglassSide2Alt = convertToQT(m_shortestPathHandler.findShortestPath(b1, a2, polygon));
+	QVector<QPointF> hourglassSide1Alt = m_shortestPathHandler.findShortestPath(a1, b2, polygon);
+	QVector<QPointF> hourglassSide2Alt = m_shortestPathHandler.findShortestPath(b1, a2, polygon);
 
 	bool sideOneDegen = std::adjacent_find(hourglassSide1.begin(), hourglassSide1.end(), std::not_equal_to<>()) == hourglassSide1.end();
 	bool sideTwoDegen = std::adjacent_find(hourglassSide2.begin(), hourglassSide2.end(), std::not_equal_to<>()) == hourglassSide2.end();
@@ -920,23 +872,25 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		}
 		return;
 	}
-	/*
-	else if (polygonMode == 2) {
+	/*else if (polygonMode == 2) {
+		//startingPoint = QPointF(221, 161);
+		//queryPoint1 = QPointF(-29, -150);
+		//update();
+		
 		startingPoint = QPointF(205, 169);
 		queryPoint1 = QPointF(-105, -5);
 		queryPoint2 = QPointF(-157, 108);
 		update();
-		*/
+		
 
 
 
-		/*
-		startingPoint = QPointF(203, 169);
-		queryPoint1 = QPointF(-70, -3);
-		queryPoint2 = QPointF(-162, 105);
-		update();
-		*/
-		//}
+
+		//startingPoint = QPointF(203, 169);
+		//queryPoint1 = QPointF(-70, -3);
+		//queryPoint2 = QPointF(-162, 105);
+		//update();
+	} */
 
 
 	if (polygonQ.size() > 2)
@@ -1023,22 +977,33 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 
 		break;
 
+	case 3:
+		if (m_approximateHandler.isStartingPointSet())
+		{
+			painter.drawEllipse(startingPoint, 3, 3);
+			drawLabel(startingPoint.x(), startingPoint.y(), QString("s"), painter);
+		}
+		if (m_approximateHandler.isQueryPoint1Set())
+		{
+			painter.drawEllipse(queryPoint1, 3, 3);
+			drawLabel(queryPoint1.x(), queryPoint1.y(), QString("q1"), painter);
+		}
+		if (m_approximateHandler.isQueryPoint2Set())
+		{
+			painter.drawEllipse(queryPoint2, 3, 3);
+			drawLabel(queryPoint2.x(), queryPoint2.y(), QString("q2"), painter);
+		}
+
+		if (!stepmode)
+		{
+			visualizeApprox(painter);
+		}
+
+		break;
+
 	default:
 		break;
 	}
-}
-
-QLineF PolygonWidget::calculateWindow(std::vector<Point_3>& path, QPointF queryPoint)
-{
-	const Point_2 aC = m_shortestPathHandler.getPenultimate(path, polygonC);
-	QPointF a = QPointF(aC.x(), aC.y());
-
-	m_onePointHandler.shootRayExtended(queryPoint, a, polygonC);
-
-	const Point_2 bC = m_onePointHandler.getIntersection();
-	QPointF b = QPointF(bC.x(), bC.y());
-
-	return QLineF(a, b);
 }
 
 void PolygonWidget::drawLabel(double x, double y, QString label, QPainter& painter)
@@ -1073,14 +1038,14 @@ void PolygonWidget::drawLabel(double x, double y, QString label, QPainter& paint
 
 void PolygonWidget::visualizeAuto(QPainter& painter)
 {
-	if (visibilitySQ)
+	if (resultQ1.visibility)
 	{
 		errorMessage = "The Query Point is Visible from the Starting Point";
 		drawLabel(startingPoint.x() + 1, startingPoint.y() - 1, QString("c"), painter);
 		return;
 	}
 
-	// Draw the polygon and its Delaunay triangulation
+	// Draw the Polygon and its Delaunay triangulation
 	painter.setPen(Qt::darkGray);
 	for (auto edge : m_shortestPathHandler.getMesh().edges())
 	{
@@ -1090,28 +1055,33 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 		painter.drawLine(QPointF(source.x(), source.y()), QPointF(target.x(), target.y()));
 	}
 
-	// draw shortest path
+	// Draw the Shortest Path
 	painter.setPen(QPen(Qt::red, 2));
-	for (size_t i = 1; i < shortestPathSQ.size(); ++i)
+	QVector<QPointF> pathStartToQuery = resultQ1.pathStartToQuery;
+	for (size_t i = 1; i < pathStartToQuery.size(); ++i)
 	{
-		painter.drawLine(shortestPathSQ[i - 1], shortestPathSQ[i]);
+		painter.drawLine(pathStartToQuery[i - 1], pathStartToQuery[i]);
 	}
 
-	// draw point a
+	// Draw Point A
+	QLineF window = resultQ1.window;
+	QPointF a = window.p1();
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::black);
 	painter.drawEllipse(a, 3, 3);
 	drawLabel(a.x(), a.y(), QString("a"), painter);
 
-	// draw point b and window
+	// Draw Point B and Window
+	QPointF b = window.p2();
 	painter.drawEllipse(b, 3, 3);
 	drawLabel(b.x(), b.y(), QString("b"), painter);
 	painter.setPen(Qt::green);
 	painter.setBrush(Qt::green);
 
-	painter.drawLine(a, b);
+	painter.drawLine(window);
 
-	// draw LCA
+	// Draw LCA
+	QPointF lca = resultQ1.lca;
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::black);
 	painter.drawEllipse(lca, 3, 3);
@@ -1122,8 +1092,8 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 		drawLabel(lca.x(), lca.y(), QString("r"), painter);
 	}
 
-
-
+	// Draw the Path from Root to A
+	QVector<QPointF> pathRA = resultQ1.pathRootToA;
 	for (size_t i = 1; i < pathRA.size(); ++i)
 	{
 		painter.setPen(QPen(Qt::blue, 2));
@@ -1132,14 +1102,18 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 		//painter.drawEllipse(pathRA[i - 1], 5, 5);
 	}
 
+	// Draw the Path from Root to B
+	QVector<QPointF> pathRB = resultQ1.pathRootToB;
 	for (size_t i = 1; i < pathRB.size(); ++i)
 	{
-		painter.setPen(QPen(Qt::magenta, 2));
+		painter.setPen(QPen(Qt::darkBlue, 2));
 		painter.drawLine(pathRB[i - 1], pathRB[i]);
 		//painter.setPen(Qt::green);
 		//painter.drawEllipse(pathRB[i - 1], 5, 5);
 	}
 
+	// Draw the Optimal Point C
+	QPointF c = resultQ1.optimalPoint;
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::black);
 	painter.drawEllipse(c, 3, 3);
@@ -1148,6 +1122,14 @@ void PolygonWidget::visualizeAuto(QPainter& painter)
 	}
 	else {
 		drawLabel(c.x(), c.y(), QString("c"), painter);
+	}
+
+	// Draw the Optimal Path from Start to C
+	QVector<QPointF> optimalPath = resultQ1.optimalPath;
+	painter.setPen(QPen(Qt::magenta, 2));
+	for (size_t i = 1; i < optimalPath.size(); ++i)
+	{
+		painter.drawLine(optimalPath[i - 1], optimalPath[i]);
 	}
 }
 
@@ -1469,5 +1451,50 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 	}
 	else {
 		drawLabel(c.x(), c.y(), QString("c"), painter);
+	}
+}
+
+void PolygonWidget::visualizeApprox(QPainter& painter) {
+	resultApprox = m_approximateHandler.getApproximateResult();
+
+	QVector<QPointF> threeApproxPath = resultApprox.threeApproxPath;
+	painter.setPen(QPen(Qt::yellow, 2));
+	for (size_t i = 1; i < threeApproxPath.size(); ++i)
+	{
+		painter.drawLine(threeApproxPath[i - 1], threeApproxPath[i]);
+	}
+
+	QLineF window1 = resultApprox.window1;
+	QLineF window2 = resultApprox.window2;
+	painter.setPen(QPen(Qt::green));
+	painter.drawLine(window1);
+	painter.drawLine(window2);
+
+	double radius = resultApprox.discRadius;
+	painter.setBrush(Qt::NoBrush); // No filling for the ellipse
+	painter.drawEllipse(startingPoint, radius, radius);
+	QLineF intersectionWindow1 = resultApprox.intersectionWindow1;
+	QLineF intersectionWindow2 = resultApprox.intersectionWindow2;
+	painter.setPen(QPen(Qt::darkGreen));
+	painter.drawLine(intersectionWindow1);
+	painter.drawLine(intersectionWindow2);
+
+	QVector<QPointF> spacedPoints1 = resultApprox.equallySpacedPoints1;
+	QVector<QPointF> spacedPoints2 = resultApprox.equallySpacedPoints2;
+	painter.setPen(QPen(Qt::magenta));
+	for (size_t i = 0; i < spacedPoints1.size(); ++i)
+	{
+		painter.drawEllipse(spacedPoints1[i], 1, 1);
+	}
+	for (size_t i = 0; i < spacedPoints2.size(); ++i)
+	{
+		painter.drawEllipse(spacedPoints2[i], 1, 1);
+	}
+
+	QVector<QPointF> shortestPath = resultApprox.shortestPath;
+	painter.setPen(QPen(Qt::darkRed, 2));
+	for (size_t i = 1; i < shortestPath.size(); ++i)
+	{
+		painter.drawLine(shortestPath[i - 1], shortestPath[i]);
 	}
 }
