@@ -73,15 +73,14 @@ private:
 	int index;
 	QString queryMode;
 	QSlider* slider;
-	enum QueryMode {ONE, TWO, APPROX};
 	enum RunMode {STEPPER, AUTO};
-	enum PolyMode {RANDOM, DRAW, PICK};
+	enum PolyMode { RANDOM, DRAW, PICK };
 
 	void querySelection();
 	void runSelection();
 	void polygonSelection();
 
-	QueryMode queryModeEnum;
+	PolygonWidget::QueryMode queryModeEnum;
 	RunMode runModeEnum;
 
 private Q_SLOTS:
@@ -92,15 +91,15 @@ private Q_SLOTS:
 	void setupRandomPolygon();
 
 	void onStartClicked();
+	void onClearPointsClicked();
 	void onRegenerateClicked();
 	void setupDrawPolygon();
+	void finishDrawnPolygon();
 	void setupAuto();
 
-	void updateQuerySelection(QueryMode mode);
+	void updateQuerySelection(PolygonWidget::QueryMode mode);
 	void updateRunSelection(RunMode mode);
 	void updatePolySelection(PolyMode mode);
-
-	void drawChosenPolygon();
 
 	void setupGivenPolygon();
 	void onGivenPolygonChanged(int index);

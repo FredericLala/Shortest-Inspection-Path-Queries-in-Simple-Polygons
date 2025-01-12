@@ -16,7 +16,12 @@ MainWindow::MainWindow(QWidget* parent)
 	runSelection();
 	mainLayout->addWidget(createLine());
 
-	// Start button
+	// Clear Points Button
+	QPushButton* clearPointsButton = new QPushButton("Clear Points", this);
+	connect(clearPointsButton, &QPushButton::clicked, this, &MainWindow::onClearPointsClicked);
+	mainLayout->addWidget(clearPointsButton);
+
+	// Start Button
 	QPushButton* startButton = new QPushButton("Start", this);
 	connect(startButton, &QPushButton::clicked, this, &MainWindow::onStartClicked);
 	mainLayout->addWidget(startButton);
@@ -150,14 +155,24 @@ void MainWindow::onStartClicked()
 	case MainWindow::STEPPER:
 		switch (queryModeEnum)
 		{
-		case MainWindow::ONE:
-			currentStep = 1;
-			polygonWidget->startStepperQ1();
+		case PolygonWidget::EXACT:
+
+			if (polygonWidget->isQueryPoint2Set()) {
+				currentStep = 1;
+				polygonWidget->startTwoPointQuery(0, true);
+			}
+			else if (polygonWidget->isQueryPoint1Set()) {
+				currentStep = 1;
+				polygonWidget->startOnePointQuery(0, true);
+			}
+
 			updateUIForStepQ1();
 			break;
-		case MainWindow::TWO:
-			currentStep = 1;
-			polygonWidget->startStepperQ1();
+		case PolygonWidget::APPROX:
+			if (polygonWidget->isQueryPoint2Set()) {
+				currentStep = 1;
+				polygonWidget->startApproximateQuery(0, true);
+			}
 			break;
 		default:
 			break;
@@ -167,14 +182,19 @@ void MainWindow::onStartClicked()
 	case MainWindow::AUTO:
 		switch (queryModeEnum)
 		{
-		case MainWindow::ONE:
-			polygonWidget->startAutoQ1(1000);
+		case PolygonWidget::EXACT:
+			if (polygonWidget->isQueryPoint2Set()) {
+				polygonWidget->startTwoPointQuery(1000, false);
+			}
+			else if (polygonWidget->isQueryPoint1Set()) {
+				polygonWidget->startOnePointQuery(1000, false);
+			}
+
 			break;
-		case MainWindow::TWO:
-			polygonWidget->startAutoQ2(1000);
-			break;
-		case MainWindow::APPROX:
-			polygonWidget->startAutoApproximate(1000);
+		case PolygonWidget::APPROX:
+			if (polygonWidget->isQueryPoint2Set()) {
+				polygonWidget->startApproximateQuery(1000, false);
+			}
 			break;
 		default:
 			break;
@@ -185,55 +205,51 @@ void MainWindow::onStartClicked()
 		break;
 	}
 }
+
+void MainWindow::onClearPointsClicked() {
+	polygonWidget->clearComputation();
+}
+
 ////////////////////////////////////////////////////////////////
 
 void MainWindow::querySelection()
 {
 	// Create a group of radio buttons for mode selection
-	QRadioButton* queryRadio1 = new QRadioButton("One Point Query", this);
-	QRadioButton* queryRadio2 = new QRadioButton("Two Point Query", this);
-	QRadioButton* queryRadio3 = new QRadioButton("Approximate Query", this);
-	queryRadio3->setChecked(true); // Default to "Approximate Query"
-	updateQuerySelection(APPROX);
+	QRadioButton* queryRadio1 = new QRadioButton("Exact Query", this);
+	QRadioButton* queryRadio2 = new QRadioButton("Approximate Query", this);
+	queryRadio1->setChecked(true); // Default to "Exact Query"
+	updateQuerySelection(PolygonWidget::EXACT);
 
 	// Group Buttons
 	QButtonGroup* queryButtons = new QButtonGroup();
 	queryButtons->addButton(queryRadio1);
 	queryButtons->addButton(queryRadio2);
-	queryButtons->addButton(queryRadio3);
 
 	// Add Buttons to a Layout
 	QHBoxLayout* queryLayout = new QHBoxLayout();
 	queryLayout->addWidget(queryRadio1);
 	queryLayout->addWidget(queryRadio2);
-	queryLayout->addWidget(queryRadio3);
 
 	// Connect the radio buttons to handle mode switching
 	connect(queryRadio1, &QRadioButton::toggled, this, [=](bool checked) {
-		if (checked) updateQuerySelection(ONE);
+		if (checked) updateQuerySelection(PolygonWidget::EXACT);
 		});
 	connect(queryRadio2, &QRadioButton::toggled, this, [=](bool checked) {
-		if (checked) updateQuerySelection(TWO);
-		});
-	connect(queryRadio3, &QRadioButton::toggled, this, [=](bool checked) {
-		if (checked) updateQuerySelection(APPROX);
+		if (checked) updateQuerySelection(PolygonWidget::APPROX);
 		});
 
 	mainLayout->addLayout(queryLayout);
 }
 
-void MainWindow::updateQuerySelection(QueryMode mode)
+void MainWindow::updateQuerySelection(PolygonWidget::QueryMode mode)
 {
 	queryModeEnum = mode;
 	switch (queryModeEnum) {
-	case ONE:
-		polygonWidget->setMode(1);
+	case PolygonWidget::EXACT:
+		polygonWidget->setQueryMode(PolygonWidget::EXACT);
 		break;
-	case TWO:
-		polygonWidget->setMode(2);
-		break;
-	case APPROX:
-		polygonWidget->setMode(3);
+	case PolygonWidget::APPROX:
+		polygonWidget->setQueryMode(PolygonWidget::APPROX);
 		break;
 	}
 }
@@ -255,7 +271,7 @@ void MainWindow::polygonSelection()
 	QRadioButton* polyRadio1 = new QRadioButton("Random Polygon", this);
 	QRadioButton* polyRadio2 = new QRadioButton("Draw a Polygon", this);
 	QRadioButton* polyRadio3 = new QRadioButton("Pick a Polygon", this);
-	polyRadio3->setChecked(true); // Default to "Random Polygon"
+	polyRadio3->setChecked(true); // Default to "Pick"
 	updatePolySelection(PICK);
 
 	// Group Buttons
@@ -292,17 +308,17 @@ void MainWindow::updatePolySelection(PolyMode mode)
 {
 	switch (mode)
 	{
-	case MainWindow::RANDOM:
+	case RANDOM:
 		polygonModeWidget->setCurrentWidget(randomLayoutWidget);
-		polygonWidget->setPolygonMode(0);
+		polygonWidget->constructRandomPolygon(slider->value());
 		break;
-	case MainWindow::DRAW:
+	case DRAW:
 		polygonModeWidget->setCurrentWidget(drawnLayoutWidget);
-		polygonWidget->setPolygonMode(1);
+		polygonWidget->prepareDrawnPolygon();
 		break;
-	case MainWindow::PICK:
+	case PICK:
 		polygonModeWidget->setCurrentWidget(givenLayoutWidget);
-		polygonWidget->setPolygonMode(2);
+		onGivenPolygonChanged(0);
 		break;
 	default:
 		break;
@@ -360,7 +376,7 @@ QHBoxLayout* MainWindow::createTickLabel()
 void MainWindow::onRegenerateClicked()
 {
 	polygonWidget->clearCanvas();
-	polygonWidget->constructPolygon(slider->value());
+	polygonWidget->constructRandomPolygon(slider->value());
 }
 
 
@@ -370,14 +386,14 @@ void MainWindow::setupDrawPolygon()
 	QVBoxLayout* drawnLayout = new QVBoxLayout(drawnLayoutWidget);
 
 	QPushButton* finishPolygon = new QPushButton("Finish Polygon", this);
-	connect(finishPolygon, &QPushButton::clicked, this, &MainWindow::drawChosenPolygon);
+	connect(finishPolygon, &QPushButton::clicked, this, &MainWindow::finishDrawnPolygon);
 
 	// Add to layout
 	drawnLayout->addWidget(finishPolygon);
 }
 
-void MainWindow::drawChosenPolygon() {
-	polygonWidget->setPolygonMode(3);
+void MainWindow::finishDrawnPolygon() {
+	polygonWidget->finishDrawnPolygon();
 }
 
 
@@ -395,13 +411,12 @@ void MainWindow::setupGivenPolygon()
 	connect(givenPolygonSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
 		this, &MainWindow::onGivenPolygonChanged);
 
-	onGivenPolygonChanged(0);
 	givenLayout->addWidget(givenPolygonSelector);
 }
 
 void MainWindow::onGivenPolygonChanged(int index)
 {
-	polygonWidget->drawGivenPolygon(index);
+	polygonWidget->chooseExamplePolygon(index);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -435,10 +450,13 @@ void MainWindow::updateUIForStepQ1()
 		break;
 	case 6:
 		stepLabel->setText("Calculate Funnel Sides");
-		nextButton->setEnabled(true);
 		break;
 	case 7:
-		stepLabel->setText("Draw Optimal Point c | END");
+		stepLabel->setText("Draw Optimal Point c");
+		nextButton->setEnabled(true);
+		break;
+	case 8:
+		stepLabel->setText("Draw Optimal Path | END");
 		nextButton->setEnabled(false);
 		break;
 	default:
