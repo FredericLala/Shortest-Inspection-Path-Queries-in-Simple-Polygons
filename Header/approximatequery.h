@@ -13,6 +13,8 @@
 #include <CGAL/Circular_arc_2.h>
 #include <CGAL/Line_arc_2.h>
 
+#include <QElapsedTimer>
+
 typedef CGAL::Exact_circular_kernel_2 CK;
 typedef CK::Circle_2 Circle_2;
 typedef CK::Line_2 Line;
@@ -28,28 +30,17 @@ class ApproximateQuery
 {
 public:
 	ApproximateQuery();
-	void setStartingPoint(const QPointF& point);
-	void setQueryPoint1(const QPointF& point);
-	void setQueryPoint2(const QPointF& point);
-
-	void clearPoints();
-
-	QPointF getStartingPoint() const;
-	QPointF getQueryPoint1() const;
-	QPointF getQueryPoint2() const;
-
-	bool isStartingPointSet() const;
-	bool isQueryPoint1Set() const;
-	bool isQueryPoint2Set() const;
 
 	void threeApproximateQuery(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon);
+	QVector<QPointF> nApproximateQuery(QPointF& startingPoint, QVector<QPointF>& queryPoints, Polygon_2& polygon);
+	void nEpsilonApproximateQuery(double epsilon, QPointF& startingPoint, QVector<QPointF>& queryPoints, Polygon_2& polygon);
 	QVector<QPointF> getThreeApproximatePath();
 
 	void epsilonApproximateQuery(double epsilon, QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon);
 
 	Line convertToCLine(QLineF& line);
 
-	QVector<QPointF> computeDiscIntersection(Circle_2& disc, QLineF& window);
+	QVector<QPointF> computeDiscIntersection(QPointF& circleCenter, Circle_2& disc, QLineF& window);
 
 	bool isPointOnLine(const QLineF& line, const QPointF& point);
 
@@ -58,6 +49,8 @@ public:
 	QVector<QPointF> generateEquallySpacedPoints(QLineF& line, double spacedDistance);
 
 	QVector<QPointF> findShortestPathAmongPairs(QVector<QPointF>& spacedPoints1, QVector<QPointF>& spacedPoints2, QPointF& startingPoint, Polygon_2& polygon);
+
+	QVector<QPointF> findShortestPathAmongVectorOfVectors(QVector<QVector<QPointF>>& spacedPointsGroups, QPointF& startingPoint, Polygon_2& polygon);
 
 	struct ApproximateResult {
 		QVector<QPointF> threeApproxPath;
@@ -71,7 +64,17 @@ public:
 		QVector<QPointF> shortestPath;
 	};
 
+	struct NApproximateResult {
+		QVector<QPointF> nApproxPath;
+		QVector<QLineF> windows;
+		double discRadius;
+		QVector<QLineF> intersectionWindows;
+		QVector<QVector<QPointF>> equallySpacedPointsGroup;
+		QVector<QPointF> shortestPath;
+	};
+
 	ApproximateQuery::ApproximateResult getApproximateResult();
+	ApproximateQuery::NApproximateResult getNApproximateResult();
 
 
 private:
@@ -91,6 +94,8 @@ private:
 	QVector<QPointF> threeApproximatePath;
 
 	ApproximateResult approximateResult;
+	NApproximateResult nApproximateResult;
+	QVector<QLineF> windowsVector;
 };
 
 #endif

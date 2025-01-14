@@ -176,6 +176,10 @@ void OnePointQuery::shootRayExtended(const QPointF& point1, const QPointF& point
 				continue;
 			}
 
+			if (polygon.has_on_boundary(*p)) {
+				std::cout << "aaaa \n";
+			}
+
 			// Compute the distance from the source to this intersection point
 			K::FT distance = CGAL::squared_distance(source, *p);
 
@@ -375,8 +379,6 @@ void OnePointQuery::executeOnePointQuery(QPointF& startingPoint, QPointF& queryP
 		return;
 	}
 
-	m_shortestPathHandler.createMesh(polygon);
-
 	// Find shortest path from s to q
 	QVector<QPointF> pathStartToQuery = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint, polygon);
 	result.pathStartToQuery = pathStartToQuery;
@@ -394,8 +396,7 @@ void OnePointQuery::executeOnePointQuery(QPointF& startingPoint, QPointF& queryP
 	// construct the funnel through its sides
 	QVector<QPointF> pathRootToA = m_shortestPathHandler.findShortestPath(lca, a, polygon);
 	result.pathRootToA = pathRootToA;
-	QVector<QPointF> pathBtoRoot = m_shortestPathHandler.findShortestPath(b, lca, polygon);
-	QVector<QPointF> pathRootToB = m_shortestPathHandler.reversePath(pathBtoRoot); // need to reverse to get the path from b to lca
+	QVector<QPointF> pathRootToB = m_shortestPathHandler.findShortestPath(lca, b, polygon);
 	result.pathRootToB = pathRootToB;
 
 	QPointF c = computeOptimalPoint(pathRootToA, pathRootToB, lca, window);

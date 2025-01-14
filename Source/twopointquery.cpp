@@ -22,16 +22,13 @@ QVector<QPointF> TwoPointQuery::shortestPathToSegment(QPointF start, QLineF segm
 	QPointF a = segment.p1();
 	QPointF b = segment.p2();
 
-	m_shortestPathHandler.createMesh(polygon); // TODO: give mesh and not recalculate it
-
 	QPointF lca = m_shortestPathHandler.getLCA(start, a, b, polygon);
 
-	QVector<QPointF> pathRA = m_shortestPathHandler.findShortestPath(lca, a, polygon);
-	QVector<QPointF> pathBR = m_shortestPathHandler.findShortestPath(b, lca, polygon); // makes the calculations more consistent
-	QVector<QPointF> pathRB = m_shortestPathHandler.reversePath(pathBR); // need to reverse to get the path from b to lca
+	QVector<QPointF> pathRootToA = m_shortestPathHandler.findShortestPath(lca, a, polygon);
+	QVector<QPointF> pathRootToB = m_shortestPathHandler.findShortestPath(lca, b, polygon); 
 
 
-	const QPointF c = m_onePointHandler.computeOptimalPoint(pathRA, pathRB, lca, segment);
+	const QPointF c = m_onePointHandler.computeOptimalPoint(pathRootToA, pathRootToB, lca, segment);
 
 	const QVector<QPointF> pathSC = m_shortestPathHandler.findShortestPath(start, c, polygon);
 	return pathSC;
@@ -890,7 +887,6 @@ void TwoPointQuery::executeTwoPointQuery(QPointF& startingPoint, QPointF& queryP
 		return;
 	}
 
-	m_shortestPathHandler.createMesh(polygon);
 
 	QVector<QPointF> shortestPathSQ1 = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint1, polygon);
 	QVector<QPointF> shortestPathSQ2 = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint2, polygon);
@@ -1072,8 +1068,7 @@ void TwoPointQuery::generalCase(QPointF& startingPoint, QLineF& window1, QLineF&
 	QPointF b2 = window2.p2();
 
 	QVector<QPointF> pathStartToA1 = m_shortestPathHandler.findShortestPath(startingPoint, a1, polygon);
-	QVector<QPointF> pathB1ToStart = m_shortestPathHandler.findShortestPath(b1, startingPoint, polygon);
-	QVector<QPointF> pathStartToB1 = m_shortestPathHandler.reversePath(pathB1ToStart);
+	QVector<QPointF> pathStartToB1 = m_shortestPathHandler.findShortestPath(startingPoint, b1, polygon);
 
 	QPointF penultimatePointSToA1 = pathStartToA1.begin()[1];
 	QPointF penultimatePointSToB1 = pathStartToB1.begin()[1];
@@ -1091,8 +1086,7 @@ void TwoPointQuery::generalCase(QPointF& startingPoint, QLineF& window1, QLineF&
 
 	QVector<QPointF> funnelSideA = m_shortestPathHandler.findShortestPath(funnelRoot, a1, polygon);
 	resultGeneral.funnelSideA = funnelSideA;
-	QVector<QPointF> funnelSideBReversed = m_shortestPathHandler.findShortestPath(b1, funnelRoot, polygon);
-	QVector<QPointF> funnelSideB = m_shortestPathHandler.reversePath(funnelSideBReversed);
+	QVector<QPointF> funnelSideB = m_shortestPathHandler.findShortestPath(funnelRoot, b1, polygon);
 	resultGeneral.funnelSideB = funnelSideB;
 
 	constructHourglass(window1, window2, polygon);
