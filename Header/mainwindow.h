@@ -42,6 +42,10 @@ private:
 	QWidget* drawnLayoutWidget;
 	QWidget* givenLayoutWidget;
 
+	QStackedWidget* queryModeWidget;
+	QWidget* approximateLayoutWidget;
+	QWidget* exactLayoutWidget;
+
 
 	// Stepper control buttons
 	QPushButton* nextButton;
@@ -73,6 +77,8 @@ private:
 	int index;
 	QString queryMode;
 	QSlider* slider;
+	QSlider* epsilonSlider;
+	QSlider* intervalSlider;
 	enum RunMode {STEPPER, AUTO};
 	enum PolyMode { RANDOM, DRAW, PICK };
 
@@ -98,6 +104,8 @@ private Q_SLOTS:
 	void setupAuto();
 
 	void updateQuerySelection(PolygonWidget::QueryMode mode);
+	void setupApproximateQuery();
+	void setupExactQuery();
 	void updateRunSelection(RunMode mode);
 	void updatePolySelection(PolyMode mode);
 

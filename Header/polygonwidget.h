@@ -46,7 +46,8 @@ public:
 
     void startOnePointQuery(int interval, bool stepMode);
     void startTwoPointQuery(int interval, bool stepMode);
-    void startApproximateQuery(int interval, bool stepMode);
+    void startApproximateQuery(int interval, bool stepMode, double epsilon);
+    void startNApproximateQuery(int interval, bool stepMode, double epsilon);
     bool withinBoundaryCheck();
     void increaseStep();
     void decreaseStep();
@@ -111,12 +112,15 @@ private:
     bool drawOwnPolygon;
     bool fixedPoints;
 
+    QVector<QPointF> approxQueryPoints;
+
     void visualizeOnePointQuery(QPainter& painter);
     void visualizeTwoPointQuery(QPainter& painter);
     void visualizeIntersection(QPainter& painter);
     void visualizeDomination(QPainter& painter);
     void visualizeGeneralCase(QPainter& painter);
     void visualizeApprox(QPainter& painter);
+    void visualizeNApprox(QPainter& painter);
     // Q_SLOT void startSingleQuery();
     QString errorMessage;
 
@@ -128,6 +132,7 @@ private:
     TwoPointQuery::IntersectionResult resultIntersection;
     TwoPointQuery::DominationResult resultDomination;
     ApproximateQuery::ApproximateResult resultApprox;
+    ApproximateQuery::NApproximateResult resultNApprox;
 };
 
 #endif // POLYGONWIDGET_H

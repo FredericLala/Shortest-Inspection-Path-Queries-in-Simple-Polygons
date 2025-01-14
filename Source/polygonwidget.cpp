@@ -178,6 +178,7 @@ void PolygonWidget::clearCanvas() {
 	polygonC.clear();
 	polygonQ.clear();
 	drawOwnPolygon = false;
+	m_shortestPathHandler.clearMesh();
 	clearComputation();
 	update();
 }
@@ -192,7 +193,8 @@ void PolygonWidget::clearComputation() {
 	resultGeneral = TwoPointQuery::GeneralCaseResult();
 	resultIntersection = TwoPointQuery::IntersectionResult();
 	resultDomination = TwoPointQuery::DominationResult();
-	resultApprox = ApproximateQuery::ApproximateResult();
+	//resultApprox = ApproximateQuery::ApproximateResult();
+	resultNApprox = ApproximateQuery::NApproximateResult();
 	errorMessage = "";
 	m_onePointHandler.resetLog();
 	update();
@@ -202,30 +204,32 @@ void PolygonWidget::clearPoints() {
 	startSelected = false;
 	query1Selected = false;
 	query2Selected = false;
+	approxQueryPoints.clear();
 }
 
 ////////////////////////////////////////////////////////////////
 
 bool PolygonWidget::withinBoundaryCheck()
 {
-	if (!polygonC.has_on_bounded_side(Point_2(queryPoint2.x(), queryPoint2.y())))
+	if (query2Selected && !polygonC.has_on_bounded_side(Point_2(queryPoint2.x(), queryPoint2.y())))
 	{
-		errorMessage = "Query Point 2 needs to be Inside of the Polygon";
+		std::cout << "Query Point 2 needs to be Inside of the Polygon \n";
 		clearPoints();
 		update();
 		return false;
 	}
 
-	if (!polygonC.has_on_bounded_side(Point_2(startingPoint.x(), startingPoint.y())))
+	if (startSelected && !polygonC.has_on_bounded_side(Point_2(startingPoint.x(), startingPoint.y())))
 	{
-		errorMessage = "Starting Point needs to be Inside of the Polygon";
+		std::cout << "Starting Point needs to be Inside of the Polygon \n";
 		clearPoints();
 		update();
 		return false;
 	}
-	else if (!polygonC.has_on_bounded_side(Point_2(queryPoint1.x(), queryPoint1.y())))
+
+	if (query1Selected && !polygonC.has_on_bounded_side(Point_2(queryPoint1.x(), queryPoint1.y())))
 	{
-		errorMessage = "Query Point 1 needs to be Inside of the Polygon";
+		std::cout << "Query Point 1 needs to be Inside of the Polygon \n";
 		clearPoints();
 		update();
 		return false;
@@ -289,12 +293,27 @@ void PolygonWidget::startTwoPointQuery(int interval, bool stepMode) {
 
 }
 
-void PolygonWidget::startApproximateQuery(int interval, bool stepMode) {
+void PolygonWidget::startApproximateQuery(int interval, bool stepMode, double epsilon) {
 	const int maxSteps = 6;
 	if (withinBoundaryCheck()) {
 		stepmode = stepMode;
 		step = 1;
-		m_approximateHandler.epsilonApproximateQuery(0.3, startingPoint, queryPoint1, queryPoint2, polygonC);
+		m_approximateHandler.epsilonApproximateQuery(epsilon, startingPoint, queryPoint1, queryPoint2, polygonC);
+
+		if (!stepMode) {
+			timedStepper(maxSteps, interval);
+		}
+
+		update();
+	}
+}
+
+void PolygonWidget::startNApproximateQuery(int interval, bool stepMode, double epsilon) {
+	const int maxSteps = 6;
+	if (withinBoundaryCheck()) {
+		stepmode = stepMode;
+		step = 1;
+		m_approximateHandler.nEpsilonApproximateQuery(epsilon, startingPoint, approxQueryPoints, polygonC);
 
 		if (!stepMode) {
 			timedStepper(maxSteps, interval);
@@ -320,9 +339,11 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 	if (m_queryMode == EXACT) {
 		if (!startSelected) {
 			setStartingPoint(clickPoint);
+			std::cout << "startingPoint = QPointF(" << startingPoint.x() << ", " << startingPoint.y() << "); \n";
 		}
 		else if (!query1Selected) {
 			setQueryPoint1(clickPoint);
+			std::cout << "queryPoint1 = QPointF(" << queryPoint1.x() << ", " << queryPoint1.y() << "); \n";
 		}
 		else if (!query2Selected) {
 			setQueryPoint2(clickPoint);
@@ -332,11 +353,8 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 		if (!startSelected) {
 			setStartingPoint(clickPoint);
 		}
-		else if (!query1Selected) {
-			setQueryPoint1(clickPoint);
-		}
-		else if (!query2Selected) {
-			setQueryPoint2(clickPoint);
+		else {
+			approxQueryPoints.append(clickPoint);
 		}
 	}
 
@@ -431,8 +449,12 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		painter.drawPolygon(polygonQ);
 	}
 
+	//fixedPoints = true;
 	if (fixedPoints) {
-		setFixedPoints(startingPoint = QPointF(205, 169), queryPoint1 = QPointF(-105, -5), queryPoint2 = QPointF(-157, 108));
+		startingPoint = QPointF(53, -127);
+		queryPoint1 = QPointF(-118, 156);
+		update();
+		//setFixedPoints(startingPoint = QPointF(205, 169), queryPoint1 = QPointF(-105, -5), queryPoint2 = QPointF(-157, 108));
 	}
 
 	painter.setPen(Qt::black);
@@ -453,6 +475,14 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		drawLabel(queryPoint2.x(), queryPoint2.y(), QString("q2"), painter);
 	}
 
+	int size = 0;
+	if (m_queryMode == APPROX) {
+		for (QPointF point : approxQueryPoints) {
+			painter.drawEllipse(point, 3, 3);
+			drawLabel(point.x(), point.y(), QString("q"), painter);
+		}
+	}
+
 
 	switch (m_queryMode)
 	{
@@ -471,7 +501,8 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		break;
 
 	case APPROX:
-		visualizeApprox(painter);
+		//visualizeApprox(painter);
+		visualizeNApprox(painter);
 		break;
 
 	default:
@@ -911,6 +942,59 @@ void PolygonWidget::visualizeApprox(QPainter& painter) {
 
 	if (step == 6) {
 		QVector<QPointF> shortestPath = resultApprox.shortestPath;
+		painter.setPen(QPen(Qt::darkRed, 2));
+		for (size_t i = 1; i < shortestPath.size(); ++i)
+		{
+			painter.drawLine(shortestPath[i - 1], shortestPath[i]);
+		}
+	}
+}
+
+
+void PolygonWidget::visualizeNApprox(QPainter& painter) {
+	resultNApprox = m_approximateHandler.getNApproximateResult();
+
+	QVector<QPointF> nApproxPath = resultNApprox.nApproxPath;
+	if (step >= 1) {
+		painter.setPen(QPen(Qt::yellow, 2));
+		for (size_t i = 1; i < nApproxPath.size(); ++i)
+		{
+			painter.drawLine(nApproxPath[i - 1], nApproxPath[i]);
+		}
+	}
+
+	if (step >= 2) {
+		painter.setPen(QPen(Qt::green));
+		for (const QLineF window : resultNApprox.windows) {
+			painter.drawLine(window);
+		}
+	}
+
+	double radius = resultNApprox.discRadius;
+	if (step >= 3) {
+		painter.setBrush(Qt::NoBrush); // No filling for the ellipse
+		painter.drawEllipse(startingPoint, radius, radius);
+	}
+
+	if (step >= 4) {
+		painter.setPen(QPen(Qt::darkGreen));
+		for (const QLineF intersectionWindow : resultNApprox.intersectionWindows) {
+			painter.drawLine(intersectionWindow);
+		}
+	}
+
+	if (step >= 5) {
+		painter.setPen(QPen(Qt::magenta));
+
+		for (size_t i = 0; i < resultNApprox.equallySpacedPointsGroup.size(); ++i) {
+			for (size_t j = 0; j < resultNApprox.equallySpacedPointsGroup[i].size(); ++j) {
+				painter.drawEllipse(resultNApprox.equallySpacedPointsGroup[i][j], 1, 1);
+			}
+		}
+	}
+
+	if (step == 6) {
+		QVector<QPointF> shortestPath = resultNApprox.shortestPath;
 		painter.setPen(QPen(Qt::darkRed, 2));
 		for (size_t i = 1; i < shortestPath.size(); ++i)
 		{

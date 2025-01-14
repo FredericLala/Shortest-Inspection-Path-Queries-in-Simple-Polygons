@@ -144,6 +144,21 @@ void MainWindow::setupAuto()
 {
 	autoLayoutWidget = new QWidget(this);
 	QHBoxLayout* autoLayout = new QHBoxLayout(autoLayoutWidget);
+
+	// Create the slider
+	intervalSlider = new QSlider(Qt::Horizontal);
+	// Add ticks to the slider
+	intervalSlider->setTickPosition(QSlider::TicksAbove);
+	intervalSlider->setTickInterval(100);
+	intervalSlider->setRange(0, 1000); // Range of epsilon values
+	intervalSlider->setValue(500);    // Default value
+
+	// Create labels for the ticks
+	QHBoxLayout* tickLabelsLayout = createTickLabel();
+
+
+	// Add to layout
+	autoLayout->addWidget(intervalSlider);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -171,8 +186,9 @@ void MainWindow::onStartClicked()
 		case PolygonWidget::APPROX:
 			if (polygonWidget->isQueryPoint2Set()) {
 				currentStep = 1;
-				polygonWidget->startApproximateQuery(0, true);
+				polygonWidget->startApproximateQuery(0, true, epsilonSlider->value() / static_cast<double>(100));
 			}
+			polygonWidget->startNApproximateQuery(0, true, epsilonSlider->value() / static_cast<double>(100));
 			break;
 		default:
 			break;
@@ -184,17 +200,19 @@ void MainWindow::onStartClicked()
 		{
 		case PolygonWidget::EXACT:
 			if (polygonWidget->isQueryPoint2Set()) {
-				polygonWidget->startTwoPointQuery(1000, false);
+				polygonWidget->startTwoPointQuery(intervalSlider->value(), false);
 			}
 			else if (polygonWidget->isQueryPoint1Set()) {
-				polygonWidget->startOnePointQuery(1000, false);
+				polygonWidget->startOnePointQuery(intervalSlider->value(), false);
 			}
 
 			break;
 		case PolygonWidget::APPROX:
 			if (polygonWidget->isQueryPoint2Set()) {
-				polygonWidget->startApproximateQuery(1000, false);
+				polygonWidget->startApproximateQuery(intervalSlider->value(), false, epsilonSlider->value() / static_cast<double>(100));
 			}
+
+			polygonWidget->startNApproximateQuery(intervalSlider->value(), false, epsilonSlider->value() / static_cast<double>(100));
 			break;
 		default:
 			break;
@@ -214,6 +232,13 @@ void MainWindow::onClearPointsClicked() {
 
 void MainWindow::querySelection()
 {
+	queryModeWidget = new QStackedWidget(this);
+	queryModeWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	setupApproximateQuery();
+	setupExactQuery();
+	queryModeWidget->addWidget(approximateLayoutWidget);
+	queryModeWidget->addWidget(exactLayoutWidget);
+
 	// Create a group of radio buttons for mode selection
 	QRadioButton* queryRadio1 = new QRadioButton("Exact Query", this);
 	QRadioButton* queryRadio2 = new QRadioButton("Approximate Query", this);
@@ -239,6 +264,7 @@ void MainWindow::querySelection()
 		});
 
 	mainLayout->addLayout(queryLayout);
+	mainLayout->addWidget(queryModeWidget);
 }
 
 void MainWindow::updateQuerySelection(PolygonWidget::QueryMode mode)
@@ -247,11 +273,38 @@ void MainWindow::updateQuerySelection(PolygonWidget::QueryMode mode)
 	switch (queryModeEnum) {
 	case PolygonWidget::EXACT:
 		polygonWidget->setQueryMode(PolygonWidget::EXACT);
+		queryModeWidget->setCurrentWidget(exactLayoutWidget);
 		break;
 	case PolygonWidget::APPROX:
 		polygonWidget->setQueryMode(PolygonWidget::APPROX);
+		queryModeWidget->setCurrentWidget(approximateLayoutWidget);
 		break;
 	}
+}
+
+void MainWindow::setupApproximateQuery() {
+	approximateLayoutWidget = new QWidget(this);
+	QVBoxLayout* approximateLayout = new QVBoxLayout(approximateLayoutWidget);
+
+	// Create the slider
+	epsilonSlider = new QSlider(Qt::Horizontal);
+	// Add ticks to the slider
+	epsilonSlider->setTickPosition(QSlider::TicksAbove);
+	epsilonSlider->setTickInterval(10);
+	epsilonSlider->setRange(10, 100); // Range of epsilon values
+	epsilonSlider->setValue(50);    // Default value
+
+	// Create labels for the ticks
+	QHBoxLayout* tickLabelsLayout = createTickLabel();
+
+
+	// Add to layout
+	approximateLayout->addWidget(epsilonSlider);
+}
+
+void MainWindow::setupExactQuery() {
+	exactLayoutWidget = new QWidget(this);
+	QVBoxLayout* exactLayout = new QVBoxLayout(exactLayoutWidget);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -324,7 +377,7 @@ void MainWindow::updatePolySelection(PolyMode mode)
 		break;
 	}
 }
-
+///
 void MainWindow::setupRandomPolygon()
 {
 	randomLayoutWidget = new QWidget(this);
