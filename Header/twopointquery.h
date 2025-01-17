@@ -11,68 +11,93 @@ class TwoPointQuery
 public:
 	TwoPointQuery();
 
+	struct HourglassStruct {
+		QVector<QPointF> hourglassSide1;
+		QVector<QPointF> hourglassSide2;
+		bool isOpen = false;
+	};
+
+	struct FunnelStruct {
+		QVector<QPointF> funnelSideA;
+		QVector<QPointF> funnelSideB;
+	};
+
+	enum FailureCondition { NONE, FUNNEL, HOURGLASS, FUNNEL_HOURGLASS, VISIBILITY };
+
+	struct TangentStruct {
+		FailureCondition failure = NONE;
+		int funnelIntersections = 0;
+		int hourglassIntersections = 0;
+		QVector<QPointF> tangentPath;
+	};
+
+	struct ConcatenatedSideStruct {
+		QVector<QPointF> concatenatedSide;
+		int mFunnelIndex = 0;
+		int mHourglassIndex = 0;
+		QPointF mFunnelPoint;
+		QPointF mHourglassPoint;
+	};
+
+	struct FunnelStar {
+		QVector<QPointF> funnelStarSide1;
+		QVector<QPointF> funnelStarSide2;
+		QPointF m1;
+		QPointF m2;
+		QPointF m3;
+		QPointF m4;
+		int m2Index = 0;
+		int m4Index = 0;
+		bool isRootInFunnel = false;
+		
+	};
+
+	TwoPointQuery::HourglassStruct constructHourglass(QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh);
+
 	QVector<QPointF> convertToQT(std::vector<Point_3> points);
 
-	QVector<QPointF> shortestPathToSegment(QPointF start, QLineF segment, Polygon_2& polygon);
+	QVector<QPointF> shortestPathToSegment(QPointF start, QLineF segment, Polygon_2& polygon, Surface_mesh& mesh);
 
 	bool dominateWindowCheck(QLineF window, QVector<QPointF> shortestPath);
 
 	double calculatePathLength(const QVector<QPointF>& path);
 
-	bool hourglassOpen(QVector<QPointF>& hourglassSide1, QVector<QPointF>& hourglassSide2);
+	bool isHourglassOpenCheck(QVector<QPointF>& hourglassSide1, QVector<QPointF>& hourglassSide2);
 
 	QPointF mirrorPoint(const QPointF& point, const QLineF& window);
 
-	QVector<QPointF> concatenateClosed(QVector<QPointF> funnelSide, QVector<QPointF> hourglassSide, QVector<QPointF> tangent);
+	ConcatenatedSideStruct concatenateClosed(QVector<QPointF> funnelSide, QVector<QPointF> hourglassSide, QVector<QPointF> tangent);
+	ConcatenatedSideStruct concatenateOpen1(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
+	ConcatenatedSideStruct concatenateOpen2(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
+	FunnelStar concatenateClosedHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
+	FunnelStar concatenateBlockedOpenHourglass(QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, FunnelStruct& funnel, HourglassStruct& hourglass);
+	FunnelStar concatenateOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
 
-	QVector<QPointF> concatenateOpen1(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
-
-	QVector<QPointF> concatenateOpen2(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
-
-	QPointF getMFunnel();
-
-	QPointF getMHourglass();
-
-	int getFunnelIndex();
-
-	int getHourglassIndex();
 
 	bool searchFirstHalf(QPointF& m, int& mIndex, QVector<QPointF>& concatenatedSide, QPointF& mirrorPoint, QLineF& window2);
 
 	QVector<QPointF> computeOptimalPathQ2(QVector<QPointF>& pathRA2, QVector<QPointF>& pathRB2, QPointF& m1, QPointF& m2, QPointF& m3, QPointF& m4, QLineF& window1, bool searchFirstHalf1, bool searchFirstHalf2);
 
-	void executeTwoPointQuery(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon);
+	void executeTwoPointQuery(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon, Surface_mesh& mesh);
 
-	void intersectionCase(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, QLineF& window1, QLineF& window2, Polygon_2& polygon);
+	void intersectionCase(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh);
 
-	void dominationCase(QPointF& startingPoint, QLineF& window1, QLineF& window2, Polygon_2& polygon);
+	void dominationCase(QPointF& startingPoint, QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh mesh);
 
-	void computeGeneralCase(QPointF& startingPoint, QLineF& window1, QLineF& window2, Polygon_2& polygon);
+	void computeGeneralCase(QPointF& startingPoint, QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh);
+
+	void generalCase(QPointF& startingPoint, QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh);
 
 
-	void concatenateClosedHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4);
+	QVector<QPointF> computeOptimalPathRootInFunnel(QLineF& window1, QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot);
+	QVector<QPointF> computeOptimalPathRootInHourglass(QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot);
 
-	void concatenateBlockedOpenHourglass(QVector<QPointF>& tangent2, QVector<QPointF>& tangent3);
-
-	void concatenateOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent4);
-
-	void computeOptimalPathRootInFunnel(QLineF& window1, QLineF& window2);
-
-	void computeOptimalPathRootInHourglass(QLineF& window2);
-
-	void constructHourglass(QLineF& window1, QLineF& window2, Polygon_2& polygon);
-
-	//void generalCase(QLineF& window1, QLineF& window2, Polygon_2& polygon);
-
-	void findTangent(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
-
-	void findTangentEdgeHourglass(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
-
-	void findTangentEdgeFunnel(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
-
-	void findTangentEdgeBoth(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
-
-	void findTangentEdgeCase(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
+	TangentStruct findTangent(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
+	TangentStruct findTangentEdgeHourglass(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
+	bool isTangentEdgeHourglass(const QLineF& line, const QVector<QPointF>& side, const Polygon_2& polygon);
+	TangentStruct findTangentEdgeFunnel(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
+	bool isTangentEdgeFunnel(const QLineF& line, const QVector<QPointF>& side, const Polygon_2& polygon);
+	TangentStruct findTangentEdgeBoth(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon);
 
 	int numberOfIntersections(const QLineF& line, const QVector<QPointF>& side);
 
@@ -85,12 +110,21 @@ public:
 	bool doSegmentsOverlap(const QLineF& line1, const QLineF& line2);
 
 	struct GeneralCaseResult {
+		QPointF funnelRoot;
 		QVector<QPointF> funnelSideA;
 		QVector<QPointF> funnelSideB;
 		QVector<QPointF> hourglassSide1;
 		QVector<QPointF> hourglassSide2;
+		QVector<QPointF> tangent1;
+		QVector<QPointF> tangent2;
+		QVector<QPointF> tangent3;
+		QVector<QPointF> tangent4;
 		QVector<QPointF> concatenatedSide1;
 		QVector<QPointF> concatenatedSide2;
+		QPointF m1;
+		QPointF m2;
+		QPointF m3;
+		QPointF m4;
 		QVector<QPointF> optimalPath;
 		QPointF optimalPoint;
 	};
@@ -109,11 +143,11 @@ public:
 	enum Q2CASE { QNONE, INTERSECTION, DOMINATION, GENERAL };
 
 	struct QueryResult {
-		bool visibility;
+		bool visibility = false;
 		OnePointQuery::QueryResult resultQ1;
 		QLineF window1;
 		QLineF window2;
-		Q2CASE currentCase;
+		Q2CASE currentCase = QNONE;
 	};
 
 	GeneralCaseResult getGeneralCaseResult();
@@ -121,28 +155,24 @@ public:
 	DominationResult getDominationResult();
 	QueryResult getQ2Result();
 
-
-
+	///////////
+	//TEST
+	QLineF line;
+	QLineF firstWindow;
+	QVector<QPointF> funnelSideTest;
+	QVector<QPointF> funnelVecSideTest;
+	QPointF starRoot;
+	QVector<QPointF> PRAT;
+	QVector<QPointF> PRBT;
+	///////////
 
 private:
 	ShortestPath m_shortestPathHandler;
 	OnePointQuery m_onePointHandler;
-	QVector<QPointF> m_tangent;
-
-	enum FailureCondition { NONE, FUNNEL, HOURGLASS, FUNNEL_HOURGLASS, VISIBILITY};
-	FailureCondition failure;
-	int funnelIntersections;
-	int hourglassIntersections;
-
-	QPointF mFunnel;
-	QPointF mHourglass;
-	int mFunnelIndex;
-	int mHourglassIndex;
 
 	OnePointQuery::QueryResult resultQ1;
 
 	Q2CASE currentCase;
-
 
 	GeneralCaseResult resultGeneral;
 
@@ -151,34 +181,6 @@ private:
 	DominationResult resultDomination;
 
 	QueryResult resultQ2;
-
-
-	bool m_isHourglassOpen;
-	QVector<QPointF> hourglassSide1;
-	QVector<QPointF> hourglassSide2;
-
-	QPointF m1;
-	QPointF m2;
-	QPointF m3;
-	QPointF m4;
-
-	bool rootInFunnel1;
-
-	QVector<QPointF> concatenatedSide1;
-	QVector<QPointF> concatenatedSide2;
-
-	int m2Index;
-	int m4Index;
-
-	QPointF rootStar;
-	int rootStarIndex;
-	QVector<QPointF> pathRA2;
-	QVector<QPointF> pathRB2;
-	QVector<QPointF> optimalPath;
-
-	QPointF c;
-
-	void generalCase(QPointF& startingPoint, QLineF& window1, QLineF& window2, Polygon_2& polygon);
 };
 
-#endif // TwoPointQuery_H
+#endif

@@ -34,22 +34,13 @@ class OnePointQuery
 {
 public:
 	OnePointQuery();
-	void setStartingPoint(const QPointF& point);
-	void setQueryPoint(const QPointF& point);
-	void clearPoints();
-	QPointF getStartingPoint() const;
-	QPointF getQueryPoint() const;
-
-	// Check if points are set
-	bool isStartingPointSet() const;
-	bool isQueryPointSet() const;
-
 	bool checkVisibilty(const QPointF& point1, const QPointF& point2, Polygon_2& polygon);
+	bool areEqual(Point_2 a, Point_2 b);
 	void clearTree();
-	void shootRayExtended(const QPointF& point1, const QPointF& point2, Polygon_2& polygon);
+	QPointF shootRayExtended(const QPointF& point1, const QPointF& point2, Polygon_2& polygon);
+	QPointF snapPointInPolygon(const Point_2& query, const Point_2& source, const Polygon_2& polygon);
 	Point_2 convertToCGALPoint(const QPointF& qtPoint);
 	QPointF convertToQTPoint(const Point_2& cgalPoint);
-	Point_2 getIntersection();
 	double calculateFunnelAngle(const QPointF& point1, const QPointF& point2, const QPointF& a, const QPointF& b);
 	QPointF calculateWindowIntersection(const QPointF& pathPoint, const QPointF& windowStart, const QPointF& windowEnd);
 
@@ -65,8 +56,6 @@ public:
 
 	void resetLog();
 
-	void executeOnePointQuery(QPointF& startingPoint, QPointF& queryPoint, Polygon_2& polygon);
-
 	struct QueryResult {
 		bool visibility;
 		QVector<QPointF> pathStartToQuery;
@@ -77,6 +66,8 @@ public:
 		QPointF optimalPoint;
 		QVector<QPointF> optimalPath;
 	};
+
+	void executeOnePointQuery(QPointF& startingPoint, QPointF& queryPoint, Polygon_2& polygon, const Surface_mesh& mesh);
 
 	const QueryResult getResult() const;
 	QLineF calculateWindow(QVector<QPointF>& path, QPointF& queryPoint, Polygon_2& polygon);
@@ -91,7 +82,6 @@ private:
 	bool m_startSelected; // Whether the starting point is set
 	bool m_querySelected; // Whether the first query point is set
 	bool visibilty;       // Whether q is visible from s
-	Point_2 b;
 	AABB_tree tree;
 	std::vector<Segment_2> edges;
 	double calculateAngle(const K::Vector_2& v1, const K::Vector_2& v2);

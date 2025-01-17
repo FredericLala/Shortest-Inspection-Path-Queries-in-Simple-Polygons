@@ -151,7 +151,7 @@ void MainWindow::setupAuto()
 	intervalSlider->setTickPosition(QSlider::TicksAbove);
 	intervalSlider->setTickInterval(100);
 	intervalSlider->setRange(0, 1000); // Range of epsilon values
-	intervalSlider->setValue(500);    // Default value
+	intervalSlider->setValue(0);    // Default value
 
 	// Create labels for the ticks
 	QHBoxLayout* tickLabelsLayout = createTickLabel();
@@ -371,7 +371,7 @@ void MainWindow::updatePolySelection(PolyMode mode)
 		break;
 	case PICK:
 		polygonModeWidget->setCurrentWidget(givenLayoutWidget);
-		onGivenPolygonChanged(0);
+		onGivenPolygonChanged(3);
 		break;
 	default:
 		break;
