@@ -7,7 +7,6 @@
 #include <CGAL/Delaunay_mesh_face_base_2.h>
 #include <CGAL/Delaunay_mesh_size_criteria_2.h>
 #include <CGAL/mark_domain_in_triangulation.h>
-#include <CGAL/Surface_mesh.h>
 #include <CGAL/Surface_mesh_shortest_path.h>
 
 #include <boost/lexical_cast.hpp>
@@ -25,7 +24,6 @@ typedef CGAL::Constrained_Delaunay_triangulation_2<K> CDT;
 typedef CDT::Face_handle Face_handle;
 
 // Shortest Path
-typedef CGAL::Surface_mesh<Point_3> Surface_mesh;
 typedef CGAL::Surface_mesh_shortest_path_traits<K, Surface_mesh> Traits;
 typedef CGAL::Surface_mesh_shortest_path<Traits> Surface_mesh_shortest_path;
 typedef Surface_mesh_shortest_path::Face_location Face_location;
@@ -45,21 +43,18 @@ class ShortestPath
 {
 public:
     ShortestPath();
-    void createMesh(const Polygon_2 &polygon);
-    const Surface_mesh &getMesh() const;
+    Surface_mesh createMesh(const Polygon_2 &polygon);
     void clearTree();
-    void clearMesh();
     bool is_point_on_polygon_edge(const Polygon_2& polygon, const Point_2& point);
-    QVector<QPointF> findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2 &polygon);
-    double findShortestPathLength(QPointF source2D, QPointF query2D, const Polygon_2& polygon);
+    QVector<QPointF> findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2 &polygon, const Surface_mesh& mesh);
+    double findShortestPathLength(QPointF source2D, QPointF query2D, const Polygon_2& polygon, const Surface_mesh& mesh);
     Point_2 snapQueryInsidePolygon(QPointF& queryPoint, const Polygon_2& polygon);
     QVector<QPointF> point3VectorToQtVector(std::vector<Point_3>& points);
     const Point_2 &getPenultimate(const std::vector<Point_3> &path, const Polygon_2 &polygon) const;
     QVector<QPointF> reversePath(QVector<QPointF>& path);
-    QPointF getLCA(QPointF& start, QPointF& a, QPointF& b, Polygon_2& polygon);
+    QPointF getLCA(QVector<QPointF>& path1, QVector<QPointF>& path2);
 
 private:
-    Surface_mesh mesh;
     bool pointsSet;
     CDT cdt;
     std::vector<Point_3> points;

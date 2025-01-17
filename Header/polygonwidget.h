@@ -69,6 +69,7 @@ private:
     QVector<QPointF> clicks;
     Polygon_2 polygonC;
     QVector<QPointF> polygonQ;
+    Surface_mesh m_mesh;
 
     PolygonGen m_polygonGenHandler;
     OnePointQuery m_onePointHandler;

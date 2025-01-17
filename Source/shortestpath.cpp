@@ -5,9 +5,9 @@ ShortestPath::ShortestPath()
 {
 }
 
-void ShortestPath::createMesh(const Polygon_2& polygon)
+Surface_mesh ShortestPath::createMesh(const Polygon_2& polygon)
 {
-	mesh.clear();
+	Surface_mesh mesh;
 	cdt.clear();
 	cdt.insert_constraint(polygon.vertices_begin(), polygon.vertices_end(), true);
 	assert(cdt.is_valid());
@@ -43,19 +43,12 @@ void ShortestPath::createMesh(const Polygon_2& polygon)
 		// Add the triangular face to the mesh
 		mesh.add_face(v0, v1, v2);
 	}
-}
 
-const Surface_mesh& ShortestPath::getMesh() const
-{
 	return mesh;
 }
 
 void ShortestPath::clearTree() {
 	tree.clear();
-}
-
-void ShortestPath::clearMesh() {
-	mesh.clear();
 }
 
 bool ShortestPath::is_point_on_polygon_edge(const Polygon_2& polygon, const Point_2& point) {
@@ -67,7 +60,7 @@ bool ShortestPath::is_point_on_polygon_edge(const Polygon_2& polygon, const Poin
 	return false;
 }
 
-QVector<QPointF> ShortestPath::findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2& polygon)
+QVector<QPointF> ShortestPath::findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2& polygon, const Surface_mesh& mesh)
 {
 	points.clear();
 	shortestPath.clear();
@@ -76,7 +69,7 @@ QVector<QPointF> ShortestPath::findShortestPath(QPointF source2D, QPointF query2
 		createMesh(polygon);
 	}
 
-	Point_2 query2 = snapQueryInsidePolygon(query2D, polygon);
+	Point_2 query2 = Point_2(query2D.x(), query2D.y());
 
 	// construct a shortest path query object and add a source point
 	Surface_mesh_shortest_path shortest_paths(mesh);
@@ -111,13 +104,14 @@ QVector<QPointF> ShortestPath::findShortestPath(QPointF source2D, QPointF query2
 	return reversePath(shortestPathQt);
 }
 
-double ShortestPath::findShortestPathLength(QPointF source2D, QPointF query2D, const Polygon_2& polygon)
+double ShortestPath::findShortestPathLength(QPointF source2D, QPointF query2D, const Polygon_2& polygon, const Surface_mesh& mesh)
 {
 	if (mesh.is_empty()) {
 		createMesh(polygon);
 	}
 
-	Point_2 query2 = snapQueryInsidePolygon(query2D, polygon);
+	//Point_2 query2 = snapQueryInsidePolygon(query2D, polygon);
+	Point_2 query2 = Point_2(query2D.x(), query2D.y());
 
 	// Create shortest path query object and add a source point
 	Surface_mesh_shortest_path shortest_paths(mesh);
@@ -137,6 +131,7 @@ double ShortestPath::findShortestPathLength(QPointF source2D, QPointF query2D, c
 	return shortest_paths.shortest_distance_to_source_points(query_loc.first, query_loc.second).first;
 }
 
+// TODO: remove me
 Point_2 ShortestPath::snapQueryInsidePolygon(QPointF& queryPoint, const Polygon_2& polygon) {
 	Point_2 query = Point_2(queryPoint.x(), queryPoint.y());
 
@@ -200,11 +195,8 @@ QVector<QPointF> ShortestPath::reversePath(QVector<QPointF>& path)
 	return path;
 }
 
-QPointF ShortestPath::getLCA(QPointF& start, QPointF& a, QPointF& b, Polygon_2& polygon)
+QPointF ShortestPath::getLCA(QVector<QPointF>& path1, QVector<QPointF>& path2)
 {
-	QVector<QPointF> path1 = findShortestPath(start, a, polygon);
-	QVector<QPointF> path2 = findShortestPath(start, b, polygon);
-
 	QPointF lca;
 
 	// Iterate over both paths until they diverge

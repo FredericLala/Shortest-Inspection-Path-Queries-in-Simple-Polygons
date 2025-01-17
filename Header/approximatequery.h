@@ -31,12 +31,12 @@ class ApproximateQuery
 public:
 	ApproximateQuery();
 
-	void threeApproximateQuery(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon);
-	QVector<QPointF> nApproximateQuery(QPointF& startingPoint, QVector<QPointF>& queryPoints, Polygon_2& polygon);
-	void nEpsilonApproximateQuery(double epsilon, QPointF& startingPoint, QVector<QPointF>& queryPoints, Polygon_2& polygon);
+	void threeApproximateQuery(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon, Surface_mesh& mesh);
+	QVector<QPointF> nApproximateQuery(QPointF& startingPoint, QVector<QPointF>& queryPoints, Polygon_2& polygon, Surface_mesh& mesh);
+	void nEpsilonApproximateQuery(double epsilon, QPointF& startingPoint, QVector<QPointF>& queryPoints, Polygon_2& polygon, Surface_mesh& mesh);
 	QVector<QPointF> getThreeApproximatePath();
 
-	void epsilonApproximateQuery(double epsilon, QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon);
+	void epsilonApproximateQuery(double epsilon, QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon, Surface_mesh& mesh);
 
 	Line convertToCLine(QLineF& line);
 
@@ -48,9 +48,9 @@ public:
 
 	QVector<QPointF> generateEquallySpacedPoints(QLineF& line, double spacedDistance);
 
-	QVector<QPointF> findShortestPathAmongPairs(QVector<QPointF>& spacedPoints1, QVector<QPointF>& spacedPoints2, QPointF& startingPoint, Polygon_2& polygon);
+	QVector<QPointF> findShortestPathAmongPairs(QVector<QPointF>& spacedPoints1, QVector<QPointF>& spacedPoints2, QPointF& startingPoint, Polygon_2& polygon, Surface_mesh& mesh);
 
-	QVector<QPointF> findShortestPathAmongVectorOfVectors(QVector<QVector<QPointF>>& spacedPointsGroups, QPointF& startingPoint, Polygon_2& polygon);
+	QVector<QPointF> findShortestPathAmongVectorOfVectors(QVector<QVector<QPointF>>& spacedPointsGroups, QPointF& startingPoint, Polygon_2& polygon, Surface_mesh& mesh);
 
 	struct ApproximateResult {
 		QVector<QPointF> threeApproxPath;

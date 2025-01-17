@@ -6,44 +6,6 @@ OnePointQuery::OnePointQuery()
 	logQ1 = "";
 }
 
-void OnePointQuery::setStartingPoint(const QPointF& point)
-{
-	m_startingPoint = point;
-	m_startSelected = true;
-}
-
-void OnePointQuery::setQueryPoint(const QPointF& point)
-{
-	m_queryPoint = point;
-	m_querySelected = true;
-}
-
-void OnePointQuery::clearPoints()
-{
-	m_startSelected = false;
-	m_querySelected = false;
-}
-
-QPointF OnePointQuery::getStartingPoint() const
-{
-	return m_startingPoint;
-}
-
-QPointF OnePointQuery::getQueryPoint() const
-{
-	return m_queryPoint;
-}
-
-bool OnePointQuery::isStartingPointSet() const
-{
-	return m_startSelected;
-}
-
-bool OnePointQuery::isQueryPointSet() const
-{
-	return m_querySelected;
-}
-
 Point_2 OnePointQuery::convertToCGALPoint(const QPointF& qtPoint)
 {
 	return Point_2(qtPoint.x(), qtPoint.y());
@@ -54,26 +16,31 @@ QPointF OnePointQuery::convertToQTPoint(const Point_2& cgalPoint)
 	return QPointF(cgalPoint.x(), cgalPoint.y());
 }
 
+// TDOD: dont recalculate tree and edges if not needed (if tree.isempty() does not work)
 bool OnePointQuery::checkVisibilty(const QPointF& point1, const QPointF& point2, Polygon_2& polygon)
 {
 	if (point1 == point2) {
 		return true;
 	}
 
+	std::cout << "source of vis: " << point1.x() << ", " << point1.y() << "\n";
+	std::cout << "end of vis: " << point2.x() << ", " << point2.y() << "\n";
 	// Convert points and create segment query
 	Point_2 a = convertToCGALPoint(point1);
 	Point_2 b = convertToCGALPoint(point2);
 	Segment_2 segment_query(a, b);
 
 	// Build AABB tree if not already initialized
-	if (tree.empty())
+	//if (tree.empty())
+	//{
+	tree.clear();
+	edges.clear();
+	for (auto edge = polygon.edges_begin(); edge != polygon.edges_end(); ++edge)
 	{
-		for (auto edge = polygon.edges_begin(); edge != polygon.edges_end(); ++edge)
-		{
-			edges.push_back(*edge);
-		}
-		tree.rebuild(edges.begin(), edges.end());
+		edges.push_back(*edge);
 	}
+	tree.rebuild(edges.begin(), edges.end());
+	//}
 	tree.accelerate_distance_queries();
 
 	// Check for intersections
@@ -93,11 +60,12 @@ bool OnePointQuery::checkVisibilty(const QPointF& point1, const QPointF& point2,
 			continue;
 		}
 
-		if (*p == a || *p == b) {
+		if (areEqual(a, *p) || areEqual(b, *p)) {
 			// Intersection is at one of the segment endpoints; skip it.
 			continue;
 		}
 
+		std::cout << "obstacle of vis: " << p->x() << ", " << p->y() << "\n";
 		return false; // Non-endpoint intersection found; visibility check fails.
 	}
 
@@ -107,6 +75,14 @@ bool OnePointQuery::checkVisibilty(const QPointF& point1, const QPointF& point2,
 	}
 
 	return true;
+}
+
+bool OnePointQuery::areEqual(Point_2 a, Point_2 b) {
+	const double EPSILON = 1e-9; // A small tolerance value
+	bool equalX = std::abs(a.x() - b.x()) < EPSILON;
+	bool equalY = std::abs(a.y() - b.y()) < EPSILON;
+
+	return (equalX && equalY);
 }
 
 void OnePointQuery::clearTree() {
@@ -134,8 +110,10 @@ struct Skip
 	}
 };
 
-void OnePointQuery::shootRayExtended(const QPointF& point1, const QPointF& point2, Polygon_2& polygon)
+// TDOD: dont recalculate tree and edges if not needed (if tree.isempty() does not work)
+QPointF OnePointQuery::shootRayExtended(const QPointF& point1, const QPointF& point2, Polygon_2& polygon)
 {
+	QPointF intersectionPoint;
 	// Convert points to CGAL types
 	Point_2 source = convertToCGALPoint(point1);
 	Point_2 target = convertToCGALPoint(point2);
@@ -144,16 +122,18 @@ void OnePointQuery::shootRayExtended(const QPointF& point1, const QPointF& point
 	Ray ray_query(source, target);
 
 	// Extract edges of the polygon into a segment vector
-	if (tree.empty())
+	tree.clear();
+	edges.clear();
+	//if (tree.empty())
+	//{
+	for (Polygon_2::Edge_const_iterator edge = polygon.edges_begin(); edge != polygon.edges_end(); ++edge)
 	{
-		for (Polygon_2::Edge_const_iterator edge = polygon.edges_begin(); edge != polygon.edges_end(); ++edge)
-		{
-			edges.push_back(*edge);
-		}
-
-		// Create AABB tree
-		tree.rebuild(edges.begin(), edges.end());
+		edges.push_back(*edge);
 	}
+
+	// Create AABB tree
+	tree.rebuild(edges.begin(), edges.end());
+	//}
 	tree.accelerate_distance_queries();
 
 	// Collect all intersections along the ray
@@ -176,10 +156,6 @@ void OnePointQuery::shootRayExtended(const QPointF& point1, const QPointF& point
 				continue;
 			}
 
-			if (polygon.has_on_boundary(*p)) {
-				std::cout << "aaaa \n";
-			}
-
 			// Compute the distance from the source to this intersection point
 			K::FT distance = CGAL::squared_distance(source, *p);
 
@@ -192,11 +168,41 @@ void OnePointQuery::shootRayExtended(const QPointF& point1, const QPointF& point
 		}
 	}
 
+	Point_2 closestPoint;
 	// Set `b` to the closest intersection point found
 	if (closest_intersection)
 	{
-		b = *closest_intersection;
+		closestPoint = *closest_intersection;
+		intersectionPoint = snapPointInPolygon(closestPoint, source, polygon);
 	}
+
+	return intersectionPoint;
+}
+
+QPointF OnePointQuery::snapPointInPolygon(const Point_2& query, const Point_2& source, const Polygon_2& polygon) {
+	const float epsilon = 0.000001;
+
+	// Compute the direction vector from source to target
+	K::FT dx = query.x() - source.x();
+	K::FT dy = query.y() - source.y();
+
+	// Compute the length of the direction vector
+	K::FT length = std::sqrt(dx * dx + dy * dy);
+
+	// Normalize the direction vector
+	K::FT dirX = dx / length;
+	K::FT dirY = dy / length;
+
+	// Adjust the query point slightly along the direction of the ray
+	Point_2 adjustedPoint(query.x() - epsilon * dirX, query.y() - epsilon * dirY);
+
+	// Check if the adjusted point is inside the polygon
+	if (polygon.has_on_bounded_side(adjustedPoint)) {
+		return QPointF(adjustedPoint.x(), adjustedPoint.y());
+	}
+
+	// If the adjusted point is not inside, return the original query point
+	return QPointF(query.x(), query.y());
 }
 
 // Helper function to calculate angle between two vectors in radians
@@ -366,10 +372,17 @@ void OnePointQuery::resetLog()
 	logQ1 = "";
 }
 
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void OnePointQuery::executeOnePointQuery(QPointF& startingPoint, QPointF& queryPoint, Polygon_2& polygon)
+void OnePointQuery::executeOnePointQuery(QPointF& startingPoint, QPointF& queryPoint, Polygon_2& polygon, const Surface_mesh& mesh)
 {
+	// FOR TESTING
+	m_shortestPathHandler.createMesh(polygon);
+
+
 	// visibility check
 	bool visibility = checkVisibilty(startingPoint, queryPoint, polygon);
 	result.visibility = visibility;
@@ -380,7 +393,7 @@ void OnePointQuery::executeOnePointQuery(QPointF& startingPoint, QPointF& queryP
 	}
 
 	// Find shortest path from s to q
-	QVector<QPointF> pathStartToQuery = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint, polygon);
+	QVector<QPointF> pathStartToQuery = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint, polygon, mesh);
 	result.pathStartToQuery = pathStartToQuery;
 
 	// calculate the window
@@ -390,13 +403,15 @@ void OnePointQuery::executeOnePointQuery(QPointF& startingPoint, QPointF& queryP
 	QPointF b = window.p2();
 
 	// calculate the LCA / root of the funnel
-	QPointF lca = m_shortestPathHandler.getLCA(startingPoint, a, b, polygon);
+	QVector<QPointF> pathStartToA = m_shortestPathHandler.findShortestPath(startingPoint, a, polygon, mesh);
+	QVector<QPointF> pathStartToB = m_shortestPathHandler.findShortestPath(startingPoint, b, polygon, mesh);
+	QPointF lca = m_shortestPathHandler.getLCA(pathStartToA, pathStartToB);
 	result.lca = lca;
 
 	// construct the funnel through its sides
-	QVector<QPointF> pathRootToA = m_shortestPathHandler.findShortestPath(lca, a, polygon);
+	QVector<QPointF> pathRootToA = m_shortestPathHandler.findShortestPath(lca, a, polygon, mesh);
 	result.pathRootToA = pathRootToA;
-	QVector<QPointF> pathRootToB = m_shortestPathHandler.findShortestPath(lca, b, polygon);
+	QVector<QPointF> pathRootToB = m_shortestPathHandler.findShortestPath(lca, b, polygon, mesh);
 	result.pathRootToB = pathRootToB;
 
 	QPointF c = computeOptimalPoint(pathRootToA, pathRootToB, lca, window);
@@ -419,11 +434,7 @@ QLineF OnePointQuery::calculateWindow(QVector<QPointF>& path, QPointF& queryPoin
 	//const Point_2 aC = m_shortestPathHandler.getPenultimate(path, polygon);
 	// a is the first point before q on the shortest path sq
 	const QPointF a = path.rbegin()[1];
-
-	shootRayExtended(queryPoint, a, polygon);
-
-	const Point_2 bC = b;
-	const QPointF b = QPointF(bC.x(), bC.y());
+	const QPointF b = shootRayExtended(queryPoint, a, polygon);
 
 	return QLineF(a, b);
 }
@@ -458,7 +469,3 @@ QVector<QPointF> OnePointQuery::computeOptimalPath(QVector<QPointF>& pathStartTo
 
 	return m_shortestPathHandler.reversePath(optimalPath);
 }
-
-
-
-
