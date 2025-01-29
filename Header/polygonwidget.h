@@ -134,6 +134,8 @@ private:
     TwoPointQuery::DominationResult resultDomination;
     ApproximateQuery::ApproximateResult resultApprox;
     ApproximateQuery::NApproximateResult resultNApprox;
+
+    bool newClickPoint = false;
 };
 
 #endif // POLYGONWIDGET_H

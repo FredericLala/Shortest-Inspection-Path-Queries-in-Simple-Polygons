@@ -23,8 +23,8 @@ bool OnePointQuery::checkVisibilty(const QPointF& point1, const QPointF& point2,
 		return true;
 	}
 
-	std::cout << "source of vis: " << point1.x() << ", " << point1.y() << "\n";
-	std::cout << "end of vis: " << point2.x() << ", " << point2.y() << "\n";
+	//std::cout << "source of vis: " << point1.x() << ", " << point1.y() << "\n";
+	//std::cout << "end of vis: " << point2.x() << ", " << point2.y() << "\n";
 	// Convert points and create segment query
 	Point_2 a = convertToCGALPoint(point1);
 	Point_2 b = convertToCGALPoint(point2);
@@ -65,7 +65,7 @@ bool OnePointQuery::checkVisibilty(const QPointF& point1, const QPointF& point2,
 			continue;
 		}
 
-		std::cout << "obstacle of vis: " << p->x() << ", " << p->y() << "\n";
+		//std::cout << "obstacle of vis: " << p->x() << ", " << p->y() << "\n";
 		return false; // Non-endpoint intersection found; visibility check fails.
 	}
 
@@ -307,7 +307,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 		int v = (pathRA.size() - 1) - vertex; // root would be lowest, but needs to be highest
 
 		logQ1 = "c is at the foot of the perpendicular from v" + v;
-		std::cout << "c is foot from " + v << "\n";
+		std::cout << "c is foot from v" << v << "\n";
 		onPathRootToA = true;
 		vertexPerpendicularToC = pathRA[vertex];
 		return calculateWindowIntersection(pathRA[vertex], a, b);
@@ -317,7 +317,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 		int vertex = binarySearchByAngle(pathRB, a, b);
 		int v = vertex + (pathRA.size() - 1);
 		logQ1 = "c is at the foot of the perpendicular from v" + v;
-		std::cout << "c is foot from " + v << "\n";
+		std::cout << "c is foot from v" << v << "\n";
 		onPathRootToA = false;
 		vertexPerpendicularToC = pathRB[vertex];
 		return calculateWindowIntersection(pathRB[vertex], a, b);
@@ -358,8 +358,7 @@ int OnePointQuery::binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPoin
 		}
 	}
 
-	// After loop ends, `left` and `right` are successive vertices
-	return mid; // Return the index of the narrowed-down interval's start vertex
+	return mid-1; // Return the index of the narrowed-down interval's start vertex
 }
 
 QString OnePointQuery::getLog()

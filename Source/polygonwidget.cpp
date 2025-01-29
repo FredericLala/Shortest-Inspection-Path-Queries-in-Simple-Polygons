@@ -51,7 +51,7 @@ void PolygonWidget::constructRandomPolygon(int size) {
 	// Convert CGAL polygon vertices to Qt points
 	for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
 	{
-		//std::cout << "p.push_back(Point_2(" << it->x() << "," << it->y() << "));" << "\n";
+		std::cout << "p.push_back(Point_2(" << it->x() << "," << it->y() << "));" << "\n";
 		polygonQ.append(QPointF(it->x(), it->y()));
 	}
 	//std::cout << "" << "\n";
@@ -336,7 +336,7 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 
 	if (drawOwnPolygon) {
 		clicks.append(clickPoint);
-		update();
+		newClickPoint = true;
 		return;
 	}
 
@@ -370,19 +370,19 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 ////////////////////////////////////////////////////////////////
 
 void PolygonWidget::drawPolygonPoints(QPainter& painter) {
-	QPointF tempClick;
+	if (!clicks.isEmpty() && newClickPoint) {
+		std::cout << "p.push_back(Point_2(" << clicks.last().x() << "," << clicks.last().y() << "));" << "\n";
+		polygonQ.append(clicks.last());
+		newClickPoint = false;
+	}
 
-	if (!clicks.isEmpty() && clicks.last() != tempClick) {
+	if (clicks.size() > 0) {
 		painter.drawEllipse(clicks[0], 3, 3);
 		for (qsizetype i = 1; i < clicks.size(); i++) {
 			painter.drawEllipse(clicks[i], 3, 3);
 			painter.drawLine(clicks[i - 1], clicks[i]);
 		}
-		tempClick = clicks.last();
-		std::cout << "p.push_back(Point_2(" << tempClick.x() << "," << tempClick.y() << "));" << "\n";
-		polygonQ.append(tempClick);
 	}
-	return;
 }
 
 void PolygonWidget::setFixedPoints(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2) {
@@ -435,25 +435,30 @@ void PolygonWidget::drawLabel(double x, double y, QString label, QPainter& paint
 void PolygonWidget::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
+	//painter.setRenderHint(QPainter::Antialiasing, true); // Smooth edges
 
 	// Translate and scale to center the view
 	painter.translate(width() / 2, height() / 2);
 	painter.scale(1, -1); // Flip y-axis for Cartesian coordinates
 
+	QColor customColor(217, 217, 217);
+	QPen pen(customColor, 3);
+	pen.setBrush(customColor);
+	pen.setColor(Qt::black);
+	painter.setBrush(customColor);
+	painter.setPen(pen);
 
-	painter.setPen(Qt::black);
-	painter.setBrush(Qt::white);
 	if (drawOwnPolygon)
 	{
 		drawPolygonPoints(painter);
+		update();
 	}
 	else if (polygonQ.size() > 2)
 	{
-		painter.setPen(Qt::black);
-		painter.setBrush(Qt::white);
 		painter.drawPolygon(polygonQ);
 	}
 
+	/*
 	// Draw the polygon and its Delaunay triangulation
 	painter.setPen(Qt::darkGray);
 	for (auto edge : m_mesh.edges())
@@ -463,7 +468,9 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 
 		painter.drawLine(QPointF(source.x(), source.y()), QPointF(target.x(), target.y()));
 	}
+	*/
 
+	pen.setBrush(Qt::black);
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::black);
 
@@ -472,18 +479,24 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		//startingPoint = QPointF(47, -119);
 		//queryPoint1 = QPointF(275, -98);
 
+		// one point query test
 		/*
-		* closed hourglass
+		startingPoint = QPointF(-218, 88);
+		queryPoint1 = QPointF(307, -80);
+		*/
+
+		//closed hourglass
+		/*
 		startingPoint = QPointF(203, 171);
 		queryPoint1 = QPointF(-71, -4);
 		queryPoint2 = QPointF(-152, 99);
 		*/
 
+
 		// opern hourglass
 		startingPoint = QPointF(204, 162);
 		queryPoint1 = QPointF(-111, 10);
 		queryPoint2 = QPointF(-154, 114);
-
 		update();
 		//setFixedPoints(startingPoint = QPointF(205, 169), queryPoint1 = QPointF(-105, -5), queryPoint2 = QPointF(-157, 108));
 	}
@@ -554,7 +567,7 @@ void PolygonWidget::visualizeOnePointQuery(QPainter& painter)
 
 	// Draw the Shortest Path
 	if (step >= 2) {
-		painter.setPen(QPen(Qt::red, 2));
+		painter.setPen(QPen(Qt::red, 1));
 		QVector<QPointF> pathStartToQuery = resultQ1.pathStartToQuery;
 		for (size_t i = 1; i < pathStartToQuery.size(); ++i)
 		{
@@ -611,7 +624,7 @@ void PolygonWidget::visualizeOnePointQuery(QPainter& painter)
 		QVector<QPointF> pathRB = resultQ1.pathRootToB;
 		for (size_t i = 1; i < pathRB.size(); ++i)
 		{
-			painter.setPen(QPen(Qt::darkBlue, 2));
+			painter.setPen(QPen(Qt::blue, 2));
 			painter.drawLine(pathRB[i - 1], pathRB[i]);
 			//painter.setPen(Qt::green);
 			//painter.drawEllipse(pathRB[i - 1], 5, 5);
@@ -846,6 +859,10 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 	{
 		//painter.drawLine(m_twoPointHandler.funnelVecSideTest[i - 1], m_twoPointHandler.funnelVecSideTest[i]);
 	}
+
+	QPointF intersectionPoint = QPointF(81.6327, 55.0918);
+	painter.drawEllipse(intersectionPoint, 3, 3);
+	drawLabel(intersectionPoint.x(), intersectionPoint.y(), QString("IP"), painter);
 	/////////
 
 	for (size_t i = 1; i < tangent1.size(); ++i)
@@ -1027,7 +1044,7 @@ void PolygonWidget::visualizeNApprox(QPainter& painter) {
 			painter.drawLine(window);
 		}
 	}
-
+	/*
 	double radius = resultNApprox.discRadius;
 	if (step >= 3) {
 		painter.setBrush(Qt::NoBrush); // No filling for the ellipse
@@ -1059,4 +1076,5 @@ void PolygonWidget::visualizeNApprox(QPainter& painter) {
 			painter.drawLine(shortestPath[i - 1], shortestPath[i]);
 		}
 	}
+	*/
 }

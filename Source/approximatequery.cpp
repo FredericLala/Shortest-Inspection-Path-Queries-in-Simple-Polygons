@@ -27,15 +27,20 @@ QVector<QPointF> ApproximateQuery::nApproximateQuery(QPointF& startingPoint, QVe
 	}
 
 	OnePointQuery::QueryResult tempQueryResult;
+	QPointF point;
 
-	for (QPointF point : queryPoints) {
+	for (size_t i = 0; i < queryPoints.size(); ++i) {
+		point = queryPoints[i];
 		m_onePointHandler.executeOnePointQuery(startingPoint, point, polygon, mesh);
 		tempQueryResult = m_onePointHandler.getResult();
 		windowsVector.append(tempQueryResult.window);
 		nApproximatePath.append(tempQueryResult.optimalPath);
-		if (point != queryPoints.rbegin()[0]) {
-			nApproximatePath.append(m_shortestPathHandler.reversePath(tempQueryResult.optimalPath));
+
+		if (i == queryPoints.size() - 1) {
+			break;
 		}
+
+		nApproximatePath.append(m_shortestPathHandler.reversePath(tempQueryResult.optimalPath));
 	}
 
 	return nApproximatePath;
@@ -91,7 +96,9 @@ void ApproximateQuery::nEpsilonApproximateQuery(double epsilon, QPointF& startin
 	nApproximateResult.shortestPath = shortestPath;
 
 	qint64 elapsedTime = timer.elapsed();
-	std::cout << "epsilonApproximateQuery completed in" << elapsedTime << " ms \n";
+	std::cout << "epsilonApproximateQuery completed in " << elapsedTime << " ms \n";
+	std::cout << "path length " << m_twoPointHandler.calculatePathLength(shortestPath) << "\n";
+	std::cout << "epsilon value " << epsilon << "\n";
 }
 
 ApproximateQuery::NApproximateResult ApproximateQuery::getNApproximateResult() { return nApproximateResult; }
@@ -331,7 +338,85 @@ QVector<QPointF> ApproximateQuery::findShortestPathAmongPairs(
 	return bestPath;
 }
 
+QVector<QPointF> ApproximateQuery::findShortestPathAmongVectorOfVectors(
+	QVector<QVector<QPointF>>& spacedPointsGroups,
+	QPointF& startingPoint,
+	Polygon_2& polygon,
+	Surface_mesh& mesh)
+{
+	auto computeShortestPathLength = [&](const QPointF& p1, const QPointF& p2) -> double {
+		return m_shortestPathHandler.findShortestPathLength(p1, p2, polygon, mesh);
+		};
 
+	QVector<QPointF> bestPath;
+	double minTotalDistance = std::numeric_limits<double>::max();
+
+	int numGroups = spacedPointsGroups.size();
+	QVector<int> windowIndices(numGroups);
+	std::iota(windowIndices.begin(), windowIndices.end(), 0); // Initialize indices as {0, 1, ..., numGroups-1}
+
+	// Explore all permutations of group order
+	do {
+		// Backtracking function to explore combinations of points within the current window order
+		std::function<void(int, QPointF&, double, QVector<QPointF>&)> exploreCombinations =
+			[&](int groupIndex, QPointF& currentPoint, double currentDistance, QVector<QPointF>& currentPath) {
+			// Base case: all groups in the current permutation have been visited
+			if (groupIndex == numGroups) {
+				if (currentDistance < minTotalDistance) {
+					minTotalDistance = currentDistance;
+					bestPath = currentPath;
+				}
+				return;
+			}
+
+			// Get the group corresponding to the current window index in this permutation
+			int currentWindowIndex = windowIndices[groupIndex];
+			const QVector<QPointF>& currentGroup = spacedPointsGroups[currentWindowIndex];
+
+			// Explore all points in the current group
+			for (const QPointF& nextPoint : currentGroup) {
+				double distance = computeShortestPathLength(currentPoint, nextPoint);
+
+				// Add the next point to the path
+				currentPath.append(nextPoint);
+
+				// Recur to the next group in this permutation
+				exploreCombinations(groupIndex + 1, const_cast<QPointF&>(nextPoint),
+					currentDistance + distance, currentPath);
+
+				// Backtrack
+				currentPath.pop_back();
+			}
+			};
+
+		// Start backtracking for the current permutation
+		QVector<QPointF> currentPath;
+		exploreCombinations(0, startingPoint, 0.0, currentPath);
+
+	} while (std::next_permutation(windowIndices.begin(), windowIndices.end()));
+
+	// Compute the actual shortest path for the best sequence of windows and points
+	QVector<QPointF> fullPath;
+	fullPath.append(startingPoint);
+
+	QPointF currentPoint = startingPoint;
+	for (const QPointF& targetPoint : bestPath) {
+		QVector<QPointF> segmentPath = m_shortestPathHandler.findShortestPath(currentPoint, targetPoint, polygon, mesh);
+
+		// Append the segment path to the full path, excluding the first point to avoid duplication.
+		if (!fullPath.isEmpty()) {
+			segmentPath.pop_front();
+		}
+		fullPath.append(segmentPath);
+
+		// Update the current point
+		currentPoint = targetPoint;
+	}
+
+	return fullPath;
+}
+
+/*
 QVector<QPointF> ApproximateQuery::findShortestPathAmongVectorOfVectors(
 	QVector<QVector<QPointF>>& spacedPointsGroups,
 	QPointF& startingPoint,
@@ -407,6 +492,7 @@ QVector<QPointF> ApproximateQuery::findShortestPathAmongVectorOfVectors(
 
 	return fullPath;
 }
+*/
 
 /*
 QVector<QPointF> ApproximateQuery::findShortestPathAmongVectorOfVectors(
