@@ -27,6 +27,10 @@ MainWindow::MainWindow(QWidget* parent)
 	mainLayout->addWidget(startButton);
 
 	// Polygon display widget
+	polygonWidget->setStyleSheet(
+		"background-color: #ffffff;"  // Background color
+		"border-radius: 20px;"        // Rounded corners (adjust radius as needed)
+	);
 	mainLayout->addWidget(polygonWidget);
 
 	log = new QLabel("Log: ", this);
