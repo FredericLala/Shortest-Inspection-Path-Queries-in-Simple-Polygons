@@ -26,6 +26,7 @@ set(SOURCES
     Source/shortestpath.cpp
     Source/twopointquery.cpp
     Source/approximatequery.cpp
+    Source/generalcase.cpp
 )
 
 # List each header file explicitly
@@ -38,6 +39,7 @@ set(HEADERS
     Header/shortestpath.h
     Header/twopointquery.h
     Header/approximatequery.h
+    Header/generalcase.h
 )
 
 # Add the collected source files to the executable or library

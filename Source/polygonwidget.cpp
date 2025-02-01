@@ -194,7 +194,7 @@ void PolygonWidget::clearComputation() {
 	step = 0;
 	resultQ1 = OnePointQuery::QueryResult();
 	resultQ2 = TwoPointQuery::QueryResult();
-	resultGeneral = TwoPointQuery::GeneralCaseResult();
+	resultGeneral = GeneralCase::GeneralCaseResult();
 	resultIntersection = TwoPointQuery::IntersectionResult();
 	resultDomination = TwoPointQuery::DominationResult();
 	//resultApprox = ApproximateQuery::ApproximateResult();
@@ -786,7 +786,7 @@ void PolygonWidget::visualizeDomination(QPainter& painter) {
 }
 
 void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
-	TwoPointQuery::GeneralCaseResult generalResult = m_twoPointHandler.getGeneralCaseResult();
+	GeneralCase::GeneralCaseResult generalResult = m_twoPointHandler.getGeneralCaseResult();
 
 	QVector<QPointF> funnelSideA = generalResult.funnelSideA;
 	QVector<QPointF> funnelSideB = generalResult.funnelSideB;
@@ -826,8 +826,9 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 			painter.setPen(QPen(Qt::blue, 2));
 			painter.drawLine(hourglassSide1[i - 1], hourglassSide1[i]);
 			painter.setPen(QPen(Qt::yellow, 2));
-			painter.drawLine(m_twoPointHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a2, b2)), m_twoPointHandler.mirrorPoint(hourglassSide1[i], QLineF(a2, b2)));
-			painter.drawEllipse(m_twoPointHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a2, b2)), 3, 3);
+			painter.drawLine(m_generalCaseHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a2, b2)), m_generalCaseHandler.mirrorPoint(hourglassSide1[i], QLineF(a2, b2)));
+			painter.drawLine(m_generalCaseHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a1, b1)), m_generalCaseHandler.mirrorPoint(hourglassSide1[i], QLineF(a1, b1)));
+			painter.drawEllipse(m_generalCaseHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a2, b2)), 3, 3);
 		}
 
 		for (size_t i = 1; i < hourglassSide2.size(); ++i)
@@ -835,8 +836,9 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 			painter.setPen(QPen(Qt::blue, 2));
 			painter.drawLine(hourglassSide2[i - 1], hourglassSide2[i]);
 			painter.setPen(QPen(Qt::red, 2));
-			painter.drawLine(m_twoPointHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a2, b2)), m_twoPointHandler.mirrorPoint(hourglassSide2[i], QLineF(a2, b2)));
-			painter.drawEllipse(m_twoPointHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a1, b2)), 3, 3);
+			painter.drawLine(m_generalCaseHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a2, b2)), m_generalCaseHandler.mirrorPoint(hourglassSide2[i], QLineF(a2, b2)));
+			painter.drawLine(m_generalCaseHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a1, b1)), m_generalCaseHandler.mirrorPoint(hourglassSide2[i], QLineF(a1, b1)));
+			painter.drawEllipse(m_generalCaseHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a1, b2)), 3, 3);
 		}
 	}
 
@@ -850,12 +852,12 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 	// TEST
 	//painter.drawLine(m_twoPointHandler.line.p1(), m_twoPointHandler.line.p2());
 	//painter.drawLine(m_twoPointHandler.firstWindow.p1(), m_twoPointHandler.firstWindow.p2());
-	for (size_t i = 1; i < m_twoPointHandler.funnelSideTest.size(); ++i)
+	for (size_t i = 1; i < m_generalCaseHandler.funnelSideTest.size(); ++i)
 	{
 		//painter.drawLine(m_twoPointHandler.funnelSideTest[i - 1], m_twoPointHandler.funnelSideTest[i]);
 	}
 
-	for (size_t i = 1; i < m_twoPointHandler.funnelVecSideTest.size(); ++i)
+	for (size_t i = 1; i < m_generalCaseHandler.funnelVecSideTest.size(); ++i)
 	{
 		//painter.drawLine(m_twoPointHandler.funnelVecSideTest[i - 1], m_twoPointHandler.funnelVecSideTest[i]);
 	}
@@ -864,7 +866,7 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 	painter.drawEllipse(intersectionPoint, 3, 3);
 	drawLabel(intersectionPoint.x(), intersectionPoint.y(), QString("IP"), painter);
 	/////////
-
+	painter.setPen(QPen(Qt::darkYellow, 2));
 	for (size_t i = 1; i < tangent1.size(); ++i)
 	{
 		painter.drawLine(tangent1[i - 1], tangent1[i]);
@@ -891,6 +893,18 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 		painter.drawLine(tangent4[i - 1], tangent4[i]);
 	}
 
+
+	QPointF wasit = m_generalCaseHandler.waist;
+	painter.drawEllipse(wasit, 3, 3);
+	drawLabel(wasit.x(), wasit.y(), QString("wasit"), painter);
+
+	QVector<QPointF> polyTest;
+	for (auto it = m_generalCaseHandler.boundTest.vertices_begin(); it != m_generalCaseHandler.boundTest.vertices_end(); ++it)
+	{
+		polyTest.append(QPointF(it->x(), it->y()));
+	}
+	painter.setPen(QPen(Qt::red, 2));
+	//painter.drawPolygon(polyTest);
 
 	if (step >= 6) {
 		for (size_t i = 1; i < concatenatedSide1.size(); ++i)
