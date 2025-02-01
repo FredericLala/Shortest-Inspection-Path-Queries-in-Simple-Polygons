@@ -7,6 +7,7 @@
 #include "TwoPointQuery.h"
 #include "ShortestPath.h"
 #include "approximatequery.h"
+#include "generalcase.h"
 
 #include <QWidget>
 #include <QVector>
@@ -76,6 +77,7 @@ private:
     TwoPointQuery m_twoPointHandler;
     ShortestPath m_shortestPathHandler;
     ApproximateQuery m_approximateHandler;
+    GeneralCase m_generalCaseHandler;
 
  
     QueryMode m_queryMode;
@@ -129,7 +131,7 @@ private:
 
     OnePointQuery::QueryResult resultQ1;
     TwoPointQuery::QueryResult resultQ2;
-    TwoPointQuery::GeneralCaseResult resultGeneral;
+    GeneralCase::GeneralCaseResult resultGeneral;
     TwoPointQuery::IntersectionResult resultIntersection;
     TwoPointQuery::DominationResult resultDomination;
     ApproximateQuery::ApproximateResult resultApprox;
