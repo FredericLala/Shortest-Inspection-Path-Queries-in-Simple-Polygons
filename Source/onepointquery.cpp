@@ -303,10 +303,10 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 
 	if (anglem1 > 90)
 	{
-		int vertex = binarySearchByAngle(pathRA, a, b);
+		int vertex = binarySearchByAngleASide(pathRA, a, b);
 		int v = (pathRA.size() - 1) - vertex; // root would be lowest, but needs to be highest
 
-		logQ1 = "c is at the foot of the perpendicular from v" + v;
+		//logQ1 = "c is at the foot of the perpendicular from v" + v;
 		std::cout << "c is foot from v" << v << "\n";
 		onPathRootToA = true;
 		vertexPerpendicularToC = pathRA[vertex];
@@ -314,7 +314,7 @@ QPointF OnePointQuery::computeOptimalPoint(QVector<QPointF>& pathRA, QVector<QPo
 	}
 	else
 	{
-		int vertex = binarySearchByAngle(pathRB, a, b);
+		int vertex = binarySearchByAngleBSide(pathRB, a, b);
 		int v = vertex + (pathRA.size() - 1);
 		logQ1 = "c is at the foot of the perpendicular from v" + v;
 		std::cout << "c is foot from v" << v << "\n";
@@ -332,33 +332,60 @@ QPointF OnePointQuery::getVertexPerpendicularToC() {
 	return vertexPerpendicularToC;
 }
 
-int OnePointQuery::binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPointF& b)
+int OnePointQuery::binarySearchByAngleASide(QVector<QPointF>& path, QPointF& a, QPointF& b)
 {
 	int left = 0;
 	int right = path.size() - 1;
-	int mid = left + (right - left) / 2;
+	int mid = 0;
+	double theta_mid = 0;
+	// right - left > 1
 
 	while (right - left > 1)
-	{ // Continue until the interval is narrowed down to two successive vertices
-		mid = left + (right - left) / 2;
-
-		// Compute angle at the midpoint
+	{
+		mid = (right + left + 1) / 2;
 		double theta_mid = calculateFunnelAngle(path[mid - 1], path[mid], a, b);
 
-		// Use the angle to decide search direction
 		if (theta_mid > 90)
 		{
-			// Move to the left side
-			right = mid;
-		}
-		else
-		{
-			// Move to the right side
 			left = mid;
 		}
+		else if (theta_mid < 90)
+		{
+			right = mid;
+		}
+		else {
+			return mid;
+		}
 	}
+	return left;
+}
 
-	return mid-1; // Return the index of the narrowed-down interval's start vertex
+int OnePointQuery::binarySearchByAngleBSide(QVector<QPointF>& path, QPointF& a, QPointF& b)
+{
+	int left = 0;
+	int right = path.size() - 1;
+	int mid = 0;
+	double theta_mid = 0;
+	// right - left > 1
+
+	while (right - left > 1)
+	{
+		mid = (right + left + 1) / 2;
+		double theta_mid = calculateFunnelAngle(path[mid - 1], path[mid], a, b);
+
+		if (theta_mid > 90)
+		{
+			right = mid;
+		}
+		else if (theta_mid < 90)
+		{
+			left = mid;
+		}
+		else {
+			return mid;
+		}
+	}
+	return left;
 }
 
 QString OnePointQuery::getLog()

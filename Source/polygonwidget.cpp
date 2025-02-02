@@ -474,15 +474,19 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::black);
 
-	fixedPoints = true;
+	//fixedPoints = true;
 	if (fixedPoints) {
 		//startingPoint = QPointF(47, -119);
 		//queryPoint1 = QPointF(275, -98);
 
 		// one point query test
-		/*
 		startingPoint = QPointF(-218, 88);
 		queryPoint1 = QPointF(307, -80);
+
+		// one point query not working
+		/*
+		startingPoint = QPointF(-130, 166);
+		queryPoint1 = QPointF(-184, -121);
 		*/
 
 		//closed hourglass
@@ -494,10 +498,12 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 
 
 		// opern hourglass
+		/*
 		startingPoint = QPointF(204, 162);
 		queryPoint1 = QPointF(-111, 10);
 		queryPoint2 = QPointF(-154, 114);
 		update();
+		*/
 		//setFixedPoints(startingPoint = QPointF(205, 169), queryPoint1 = QPointF(-105, -5), queryPoint2 = QPointF(-157, 108));
 	}
 

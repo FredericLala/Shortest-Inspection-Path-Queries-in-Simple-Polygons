@@ -50,7 +50,9 @@ public:
 
 	QPointF getVertexPerpendicularToC();
 
-	int binarySearchByAngle(QVector<QPointF>& path, QPointF& a, QPointF& b);
+	int binarySearchByAngleASide(QVector<QPointF>& path, QPointF& a, QPointF& b);
+
+	int binarySearchByAngleBSide(QVector<QPointF>& path, QPointF& a, QPointF& b);
 
 	QString getLog();
 

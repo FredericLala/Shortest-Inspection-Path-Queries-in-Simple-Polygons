@@ -157,7 +157,9 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 		Polygon_2 bounds;
 		bounds.push_back(Point_2(hourglassSide.first().x(), hourglassSide.first().y()));
 		bounds.push_back(Point_2(hourglassSide.begin()[1].x(), hourglassSide.begin()[1].y()));
-		bounds.push_back(Point_2(hourglassSideHelper.begin()[1].x(), hourglassSideHelper.begin()[1].y()));
+		if (hourglassSide.begin()[1] != hourglassSideHelper.begin()[1]) {
+			bounds.push_back(Point_2(hourglassSideHelper.begin()[1].x(), hourglassSideHelper.begin()[1].y()));
+		}
 		bounds.push_back(Point_2(hourglassSideHelper.first().x(), hourglassSideHelper.first().y()));
 		boundTest = bounds;
 
@@ -716,7 +718,7 @@ QPointF GeneralCase::computeOptimalPoint(FunnelStar& funnelStar, QLineF& window1
 
 	if (anglem1 > 90)
 	{
-		int vertex = m_onePointHandler.binarySearchByAngle(modifiedSide1, a2, b2);
+		int vertex = m_onePointHandler.binarySearchByAngleASide(modifiedSide1, a2, b2);
 		int v = (modifiedSide1.size() - 1) - vertex; // root would be lowest, but needs to be highest
 		std::cout << "c is foot from v" << v << "\n";
 		onPathRootToA = true;
@@ -726,7 +728,7 @@ QPointF GeneralCase::computeOptimalPoint(FunnelStar& funnelStar, QLineF& window1
 	}
 	else
 	{
-		int vertex = m_onePointHandler.binarySearchByAngle(modifiedSide2, a2, b2);
+		int vertex = m_onePointHandler.binarySearchByAngleBSide(modifiedSide2, a2, b2);
 		int v = vertex + (modifiedSide2.size() - 1);
 		std::cout << "c is foot from v" << v << "\n";
 		onPathRootToA = false;
