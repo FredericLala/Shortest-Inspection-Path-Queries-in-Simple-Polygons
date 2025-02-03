@@ -39,6 +39,7 @@ public:
 	void clearTree();
 	QPointF shootRayExtended(const QPointF& point1, const QPointF& point2, Polygon_2& polygon);
 	QPointF snapPointInPolygon(const Point_2& query, const Point_2& source, const Polygon_2& polygon);
+	QPointF unsnapPointInPolygon(const QPointF& adjustedPoint, const QPointF& source);
 	Point_2 convertToCGALPoint(const QPointF& qtPoint);
 	QPointF convertToQTPoint(const Point_2& cgalPoint);
 	double calculateFunnelAngle(const QPointF& point1, const QPointF& point2, const QPointF& a, const QPointF& b);

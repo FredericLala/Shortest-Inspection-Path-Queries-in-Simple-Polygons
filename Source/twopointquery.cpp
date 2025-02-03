@@ -49,13 +49,21 @@ double TwoPointQuery::calculatePathLength(const QVector<QPointF>& path) {
 	}
 	return length;
 }
+
+double TwoPointQuery::calculateNormalizedPathLength(const QVector<QPointF>& path) {
+	double length = calculatePathLength(path);
+	return length / 10;
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // DOMINATION
 bool TwoPointQuery::dominateWindowCheck(QLineF window, QVector<QPointF> shortestPath)
 {
+	QPointF originalB = m_onePointHandler.unsnapPointInPolygon(window.p2(), window.p1());
+	QLineF originalWindow = QLineF(window.p1(), originalB);
+
 	for (size_t i = 0; i < shortestPath.size() - 1; ++i) {
 		QLineF segment(shortestPath[i], shortestPath[i + 1]);
-		QLineF::IntersectionType intersection = segment.intersects(window, nullptr);
+		QLineF::IntersectionType intersection = segment.intersects(originalWindow, nullptr);
 		if (intersection == QLineF::BoundedIntersection)
 		{
 			return true; // Intersection found
@@ -67,6 +75,9 @@ bool TwoPointQuery::dominateWindowCheck(QLineF window, QVector<QPointF> shortest
 
 void TwoPointQuery::executeTwoPointQuery(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon, Surface_mesh& mesh)
 {
+	QElapsedTimer timer;
+	timer.start();
+
 	resultQ2.visibility = false;
 	resultQ2.currentCase = Q2CASE::QNONE;
 	bool visibilitySQ1 = m_onePointHandler.checkVisibilty(startingPoint, queryPoint1, polygon);
@@ -113,6 +124,11 @@ void TwoPointQuery::executeTwoPointQuery(QPointF& startingPoint, QPointF& queryP
 	if (currentCase == Q2CASE::QNONE) {
 		computeGeneralCase(startingPoint, window1, window2, polygon, mesh);
 	}
+
+	qint64 elapsedTime = timer.elapsed();
+	resultQ2.time = elapsedTime;
+	std::cout << "TwoPointQuery completed in " << elapsedTime << " ms \n";
+	std::cout << "TwoPointQuery optimal path length " << resultQ2.optimalPathLength << "\n";
 }
 
 void TwoPointQuery::intersectionCase(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh) {
@@ -175,7 +191,7 @@ void TwoPointQuery::intersectionCase(QPointF& startingPoint, QPointF& queryPoint
 			QLineF segWindow1 = QLineF(invisibleEndpoint1, intersectionPoint);
 			QLineF segWindow2 = QLineF(invisibleEndpoint2, intersectionPoint);
 
-			computeGeneralCase(startingPoint, window1, window2, polygon, mesh);
+			computeGeneralCase(startingPoint, segWindow1, segWindow2, polygon, mesh);
 			GeneralCase::GeneralCaseResult generalCaseResult = resultGeneral;
 			QVector<QPointF> intersectionPath3 = generalCaseResult.optimalPath;
 			resultIntersection.intersectionPath3 = intersectionPath3;
@@ -206,6 +222,7 @@ void TwoPointQuery::intersectionCase(QPointF& startingPoint, QPointF& queryPoint
 			std::cout << "Size of Path 3: " << sizePath3 << "\n";
 			currentCase = INTERSECTION;
 			resultQ2.currentCase = INTERSECTION;
+			resultQ2.optimalPathLength = calculateNormalizedPathLength(optimalPath);
 			return;
 		}
 	}
@@ -240,6 +257,7 @@ void TwoPointQuery::dominationCase(QPointF& startingPoint, QLineF& window1, QLin
 	}
 
 	resultDomination.optimalPath = optimalPath;
+	resultQ2.optimalPathLength = calculateNormalizedPathLength(optimalPath);
 	return;
 }
 
@@ -249,20 +267,20 @@ void TwoPointQuery::computeGeneralCase(QPointF& startingPoint, QLineF& window1, 
 	currentCase = GENERAL;
 	resultQ2.currentCase = GENERAL;
 
-	//GeneralCase::GeneralCaseResult firstResult = m_generalCaseHandler.executeGeneralCase(startingPoint, window1, window2, polygon, mesh);
-	//double tempOptimalPathLength1 = calculatePathLength(firstResult.optimalPath);
+	GeneralCase::GeneralCaseResult firstResult = m_generalCaseHandler.executeGeneralCase(startingPoint, window1, window2, polygon, mesh);
+	double tempOptimalPathLength1 = calculatePathLength(firstResult.optimalPath);
 
 	GeneralCase::GeneralCaseResult secondResult = m_generalCaseHandler.executeGeneralCase(startingPoint, window2, window1, polygon, mesh);
 	double tempOptimalPathLength2 = calculatePathLength(secondResult.optimalPath);
-
-	/*
+	
 	if (tempOptimalPathLength2 >= tempOptimalPathLength1) {
 		resultGeneral = firstResult;
+		resultQ2.optimalPathLength = calculateNormalizedPathLength(firstResult.optimalPath);
 		return;
 	}
-	*/
 
 	//resultGeneral = firstResult;
+	resultQ2.optimalPathLength = calculateNormalizedPathLength(secondResult.optimalPath);
 	resultGeneral = secondResult;
 }
 

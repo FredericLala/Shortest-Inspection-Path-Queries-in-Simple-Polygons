@@ -474,14 +474,14 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::black);
 
-	//fixedPoints = true;
+	fixedPoints = true;
 	if (fixedPoints) {
 		//startingPoint = QPointF(47, -119);
 		//queryPoint1 = QPointF(275, -98);
 
 		// one point query test
-		startingPoint = QPointF(-218, 88);
-		queryPoint1 = QPointF(307, -80);
+		//startingPoint = QPointF(-218, 88);
+		//queryPoint1 = QPointF(307, -80);
 
 		// one point query not working
 		/*
@@ -498,12 +498,12 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 
 
 		// opern hourglass
-		/*
+
 		startingPoint = QPointF(204, 162);
 		queryPoint1 = QPointF(-111, 10);
 		queryPoint2 = QPointF(-154, 114);
 		update();
-		*/
+
 		//setFixedPoints(startingPoint = QPointF(205, 169), queryPoint1 = QPointF(-105, -5), queryPoint2 = QPointF(-157, 108));
 	}
 
@@ -936,10 +936,10 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 	painter.drawEllipse(m2, 3, 3);
 	drawLabel(m2.x(), m2.y(), QString("m2"), painter);
 
-	painter.drawEllipse(m1, 3, 3);
+	painter.drawEllipse(m3, 3, 3);
 	drawLabel(m3.x(), m3.y(), QString("m3"), painter);
 
-	painter.drawEllipse(m1, 3, 3);
+	painter.drawEllipse(m4, 3, 3);
 	drawLabel(m4.x(), m4.y(), QString("m4"), painter);
 
 	if (step >= 7) {
@@ -964,23 +964,25 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 	/////////
 	// TEST
 	/*
-	painter.drawEllipse(m_twoPointHandler.PRAT[0], 3, 3);
-	drawLabel(m_twoPointHandler.PRAT[0].x(), m_twoPointHandler.PRAT[0].y(), QString("0 PRAT"), painter);
+	painter.drawEllipse(m_generalCaseHandler.PRAT[0], 3, 3);
+	drawLabel(m_generalCaseHandler.PRAT[0].x(), m_generalCaseHandler.PRAT[0].y(), QString("0 PRAT"), painter);
 
-	painter.drawEllipse(m_twoPointHandler.PRBT[0], 3, 3);
-	drawLabel(m_twoPointHandler.PRBT[0].x(), m_twoPointHandler.PRBT[0].y(), QString("0 PRBT"), painter);
+	painter.drawEllipse(m_generalCaseHandler.PRBT[0], 3, 3);
+	drawLabel(m_generalCaseHandler.PRBT[0].x(), m_generalCaseHandler.PRBT[0].y(), QString("0 PRBT"), painter);
+	*/
 
-	painter.drawEllipse(m_twoPointHandler.starRoot, 3, 3);
-	drawLabel(m_twoPointHandler.starRoot.x(), m_twoPointHandler.starRoot.y(), QString("STAR ROOT"), painter);
+	//painter.drawEllipse(m_generalCaseHandler.starRoot, 3, 3);
+	//drawLabel(m_generalCaseHandler.starRoot.x(), m_generalCaseHandler.starRoot.y(), QString("STAR ROOT"), painter);
 
-	for (size_t i = 1; i < m_twoPointHandler.PRAT.size(); ++i)
+	/*
+	for (size_t i = 1; i < m_generalCaseHandler.PRAT.size(); ++i)
 	{
-		painter.drawLine(m_twoPointHandler.PRAT[i - 1], m_twoPointHandler.PRAT[i]);
+		painter.drawLine(m_generalCaseHandler.PRAT[i - 1], m_generalCaseHandler.PRAT[i]);
 	}
 
-	for (size_t i = 1; i < m_twoPointHandler.PRBT.size(); ++i)
+	for (size_t i = 1; i < m_generalCaseHandler.PRBT.size(); ++i)
 	{
-		painter.drawLine(m_twoPointHandler.PRBT[i - 1], m_twoPointHandler.PRBT[i]);
+		painter.drawLine(m_generalCaseHandler.PRBT[i - 1], m_generalCaseHandler.PRBT[i]);
 	}
 	*/
 	/////////
@@ -1064,7 +1066,7 @@ void PolygonWidget::visualizeNApprox(QPainter& painter) {
 			painter.drawLine(window);
 		}
 	}
-	/*
+
 	double radius = resultNApprox.discRadius;
 	if (step >= 3) {
 		painter.setBrush(Qt::NoBrush); // No filling for the ellipse
@@ -1096,5 +1098,4 @@ void PolygonWidget::visualizeNApprox(QPainter& painter) {
 			painter.drawLine(shortestPath[i - 1], shortestPath[i]);
 		}
 	}
-	*/
 }

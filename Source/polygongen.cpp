@@ -141,6 +141,8 @@ Polygon_2 PolygonGen::exampleFour() const
     return p;
 }
 
+// Polygon in BA
+/*
 Polygon_2 PolygonGen::exampleFive() const
 {
     Polygon_2 p;
@@ -163,54 +165,51 @@ Polygon_2 PolygonGen::exampleFive() const
 
     return p;
 }
+*/
 
-
-/*
 Polygon_2 PolygonGen::exampleFive() const
 {
     Polygon_2 p;
-    p.push_back(Point_2(161, -152));
-    p.push_back(Point_2(99, -188));
-    p.push_back(Point_2(34, -185));
-    p.push_back(Point_2(-58, -239));
-    p.push_back(Point_2(106, -221));
-    p.push_back(Point_2(176, -182));
-    p.push_back(Point_2(198, -118));
-    p.push_back(Point_2(222, -34));
-    p.push_back(Point_2(240, 49));
-    p.push_back(Point_2(215, 21));
-    p.push_back(Point_2(143, 136));
-    p.push_back(Point_2(215, 177));
-    p.push_back(Point_2(153, 160));
-    p.push_back(Point_2(43, 234));
-    p.push_back(Point_2(45, 84));
-    p.push_back(Point_2(159, 42));
-    p.push_back(Point_2(91, -51));
-    p.push_back(Point_2(72, 14));
-    p.push_back(Point_2(9, -115));
-    p.push_back(Point_2(-110, 158));
-    p.push_back(Point_2(-103, 188));
-    p.push_back(Point_2(-146, 216));
-    p.push_back(Point_2(-232, 175));
-    p.push_back(Point_2(-149, 192));
-    p.push_back(Point_2(-100, -57));
-    p.push_back(Point_2(-47, -96));
-    p.push_back(Point_2(-77, -119));
-    p.push_back(Point_2(-139, -124));
-    p.push_back(Point_2(-221, 59));
-    p.push_back(Point_2(-166, -65));
-    p.push_back(Point_2(-235, 47));
-    p.push_back(Point_2(-206, -5));
-    p.push_back(Point_2(-208, -209));
-    p.push_back(Point_2(-218, -239));
-    p.push_back(Point_2(-194, -204));
-    p.push_back(Point_2(-131, -143));
-    p.push_back(Point_2(-96, -161));
-    p.push_back(Point_2(-74, -223));
-    p.push_back(Point_2(52, -149));
-    p.push_back(Point_2(173, -87));
+    p.push_back(Point_2(182, -92));
+    p.push_back(Point_2(239, -59));
+    p.push_back(Point_2(204, 153));
+    p.push_back(Point_2(91, 214));
+    p.push_back(Point_2(90, 193));
+    p.push_back(Point_2(-93, 227));
+    p.push_back(Point_2(-142, 184));
+    p.push_back(Point_2(-175, 165));
+    p.push_back(Point_2(-108, 166));
+    p.push_back(Point_2(89, 170));
+    p.push_back(Point_2(117, 155));
+    p.push_back(Point_2(172, 120));
+    p.push_back(Point_2(218, 18));
+    p.push_back(Point_2(152, 129));
+    p.push_back(Point_2(181, 57));
+    p.push_back(Point_2(213, 0));
+    p.push_back(Point_2(215, -33));
+    p.push_back(Point_2(72, -48));
+    p.push_back(Point_2(61, 50));
+    p.push_back(Point_2(56, 125));
+    p.push_back(Point_2(47, -57));
+    p.push_back(Point_2(15, -12));
+    p.push_back(Point_2(14, -7));
+    p.push_back(Point_2(-35, 50));
+    p.push_back(Point_2(-39, 76));
+    p.push_back(Point_2(-20, 102));
+    p.push_back(Point_2(-54, 119));
+    p.push_back(Point_2(-134, 132));
+    p.push_back(Point_2(-205, 134));
+    p.push_back(Point_2(-196, 79));
+    p.push_back(Point_2(13, -13));
+    p.push_back(Point_2(5, -27));
+    p.push_back(Point_2(-37, -16));
+    p.push_back(Point_2(-183, 49));
+    p.push_back(Point_2(-190, -180));
+    p.push_back(Point_2(-20, -97));
+    p.push_back(Point_2(-3, -132));
+    p.push_back(Point_2(18, -49));
+    p.push_back(Point_2(94, -198));
+    p.push_back(Point_2(145, -176));
 
     return p;
 }
-*/
-

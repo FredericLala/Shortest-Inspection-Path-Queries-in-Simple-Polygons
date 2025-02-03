@@ -7,6 +7,8 @@
 #include "common.h"
 #include "cmath"
 
+#include <QElapsedTimer>
+
 class TwoPointQuery
 {
 public:
@@ -19,6 +21,8 @@ public:
 	bool dominateWindowCheck(QLineF window, QVector<QPointF> shortestPath);
 
 	double calculatePathLength(const QVector<QPointF>& path);
+
+	double calculateNormalizedPathLength(const QVector<QPointF>& path);
 
 
 	void executeTwoPointQuery(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2, Polygon_2& polygon, Surface_mesh& mesh);
@@ -48,6 +52,8 @@ public:
 		QLineF window1;
 		QLineF window2;
 		Q2CASE currentCase = QNONE;
+		double optimalPathLength = 0;
+		double time;
 	};
 
 	GeneralCase::GeneralCaseResult getGeneralCaseResult();
