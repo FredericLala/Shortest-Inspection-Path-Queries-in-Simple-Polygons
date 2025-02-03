@@ -205,6 +205,31 @@ QPointF OnePointQuery::snapPointInPolygon(const Point_2& query, const Point_2& s
 	return QPointF(query.x(), query.y());
 }
 
+QPointF OnePointQuery::unsnapPointInPolygon(const QPointF& adjustedPoint, const QPointF& source) {
+	const float epsilon = 0.000001;
+
+	// Compute the direction vector from source to adjustedPoint
+	double dx = adjustedPoint.x() - source.x();
+	double dy = adjustedPoint.y() - source.y();
+
+	// Compute the length of the direction vector
+	double length = std::sqrt(dx * dx + dy * dy);
+
+	// Avoid division by zero
+	if (length < epsilon) {
+		return adjustedPoint; // No significant movement
+	}
+
+	// Normalize the direction vector
+	double dirX = dx / length;
+	double dirY = dy / length;
+
+	// Move the adjusted point back along the direction vector
+	QPointF originalPoint(adjustedPoint.x() + epsilon * dirX, adjustedPoint.y() + epsilon * dirY);
+
+	return originalPoint;
+}
+
 // Helper function to calculate angle between two vectors in radians
 double OnePointQuery::calculateAngle(const K::Vector_2& v1, const K::Vector_2& v2)
 {

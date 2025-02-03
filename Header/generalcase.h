@@ -78,20 +78,18 @@ public:
 	QPointF findWaistPoint(const QVector<QPointF>& side1, const QVector<QPointF>& side2);
 
 	QPointF mirrorPoint(const QPointF& point, const QLineF& window);
-	GeneralCase::TangentStruct findTangent(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon, const QVector<QPointF>& hourglassSideHelper);
+	GeneralCase::TangentStruct findTangent(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon, const QVector<QPointF>& funnelSideHelper);
 	bool isTangent(const QVector<QPointF>& path, const QPointF& p1, const QPointF& p2);
 	QLineF extendLine(const QLineF& line, const double extensionFactor);
 	int numberOfIntersections(const QLineF& line, const QVector<QPointF>& side);
 	QVector<QPointF> tangentBinary(const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon, const QVector<QPointF>& hourglassSideHelper);
 	QVector<QPointF> removeElementFromVector(QVector<QPointF> vector, int index);
 
-	ConcatenatedSideStruct concatenateClosed(QVector<QPointF> funnelSide, QVector<QPointF> hourglassSide, QVector<QPointF> tangent);
-	ConcatenatedSideStruct concatenateOpen1(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
-	ConcatenatedSideStruct concatenateOpen2(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
+	ConcatenatedSideStruct concatenateClosedHelper(QVector<QPointF> funnelSide, QVector<QPointF> hourglassSide, QVector<QPointF> tangent);
+	ConcatenatedSideStruct concatenateBlockedOpenHourglassHelper(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
 	FunnelStar concatenateClosedHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
-	FunnelStar concatenateBlockedOpenHourglass(QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, FunnelStruct& funnel, HourglassStruct& hourglass);
+	FunnelStar concatenateBlockedOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
 	FunnelStar concatenateOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
-
 
 	QVector<QPointF> mirrorFunnelPart(QVector<QPointF>& funnelStarSide, int mIndex, QLineF& window1);
 	QPointF computeOptimalPoint(FunnelStar& funnelStar, QLineF& window1, QLineF& window2);
