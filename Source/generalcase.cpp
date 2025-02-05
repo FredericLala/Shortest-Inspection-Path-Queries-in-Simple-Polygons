@@ -81,7 +81,6 @@ QPointF GeneralCase::findWaistPoint(const QVector<QPointF>& side1, const QVector
 	double minDist = std::numeric_limits<double>::max();
 	Point_2 waistPoint1, waistPoint2;
 
-	// Iterate through all point pairs
 	for (const QPointF& p1 : side1) {
 		for (const QPointF& p2 : side2) {
 			double dist = CGAL::squared_distance(Point_2(p1.x(), p1.y()), Point_2(p2.x(), p2.y()));
@@ -93,7 +92,7 @@ QPointF GeneralCase::findWaistPoint(const QVector<QPointF>& side1, const QVector
 		}
 	}
 
-	// Return the midpoint of the two closest points (this is the waist point)
+	// Return the midpoint of the two closest points (waist point)
 	return QPointF((waistPoint1.x() + waistPoint2.x()) / 2.0,
 		(waistPoint1.y() + waistPoint2.y()) / 2.0);
 }
@@ -102,7 +101,6 @@ QPointF GeneralCase::findWaistPoint(const QVector<QPointF>& side1, const QVector
 // Tangent Calculation
 
 QPointF GeneralCase::mirrorPoint(const QPointF& point, const QLineF& window) {
-	// Extract the coordinates of the point and the window endpoints
 	double px = point.x();
 	double py = point.y();
 	double x1 = window.p1().x();
@@ -115,14 +113,12 @@ QPointF GeneralCase::mirrorPoint(const QPointF& point, const QLineF& window) {
 	double b = x1 - x2;
 	double c = x2 * y1 - x1 * y2;
 
-	// Compute the denominator (a^2 + b^2)
 	double denominator = a * a + b * b;
 
 	// Reflect the point across the line
 	double xPrime = px - 2 * a * (a * px + b * py + c) / denominator;
 	double yPrime = py - 2 * b * (a * px + b * py + c) / denominator;
 
-	// Return the reflected point
 	return QPointF(xPrime, yPrime);
 }
 
@@ -132,7 +128,8 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 	const QVector<QPointF>& hourglassSide,
 	const QLineF& window,
 	Polygon_2& polygon,
-	const QVector<QPointF>& funnelSideHelper)
+	const QVector<QPointF>& funnelSideHelper1,
+	const QVector<QPointF>& funnelSideHelper2)
 {
 	QPointF intersectionPoint;
 	QPointF mirroredPoint = mirrorPoint(hourglassPoint, window);
@@ -155,13 +152,12 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 
 	if (funnelPoint == funnelSide.last()) {
 		Polygon_2 bounds;
-		bounds.push_back(Point_2(funnelSide.last().x(), funnelSide.last().y()));
-		bounds.push_back(Point_2(funnelSide.rbegin()[1].x(), funnelSide.rbegin()[1].y()));
-		if (funnelSide.rbegin()[1] != funnelSideHelper.rbegin()[1]) {
-			bounds.push_back(Point_2(funnelSideHelper.rbegin()[1].x(), funnelSideHelper.rbegin()[1].y()));
+		bounds.push_back(Point_2(funnelSideHelper1.last().x(), funnelSideHelper1.last().y()));
+		bounds.push_back(Point_2(funnelSideHelper1.rbegin()[1].x(), funnelSideHelper1.rbegin()[1].y()));
+		if (funnelSideHelper1.rbegin()[1] != funnelSideHelper2.rbegin()[1]) {
+			bounds.push_back(Point_2(funnelSideHelper2.rbegin()[1].x(), funnelSideHelper2.rbegin()[1].y()));
 		}
-		bounds.push_back(Point_2(funnelSideHelper.last().x(), funnelSideHelper.last().y()));
-		boundTest = bounds;
+		bounds.push_back(Point_2(funnelSideHelper2.last().x(), funnelSideHelper2.last().y()));
 
 		QLineF tangentLine = QLineF(mirrorPoint(funnelPoint, window), mirrorPoint(hourglassPoint, window));
 		QLineF extendedLine = extendLine(tangentLine, 0.01);
@@ -172,7 +168,11 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 		}
 	}
 
-	if (!isLineToFunnelTangent && !isLineToHourglassTangent) {
+	if (!(m_onePointHandler.checkVisibilty(funnelPoint, intersectionPoint, polygon) && m_onePointHandler.checkVisibilty(intersectionPoint, hourglassPoint, polygon))) {
+		tangent.failure = VISIBILITY;
+		return tangent;
+	}
+	else if (!isLineToFunnelTangent && !isLineToHourglassTangent) {
 		tangent.failure = FUNNEL_HOURGLASS;
 		return tangent;
 	}
@@ -184,10 +184,7 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 		tangent.failure = HOURGLASS;
 		return tangent;
 	}
-	else if (!(m_onePointHandler.checkVisibilty(funnelPoint, intersectionPoint, polygon) && m_onePointHandler.checkVisibilty(intersectionPoint, hourglassPoint, polygon))) {
-		tangent.failure = VISIBILITY;
-		return tangent;
-	}
+
 
 	QVector<QPointF> tangentPath;
 	tangentPath.append(funnelPoint);
@@ -237,7 +234,7 @@ int GeneralCase::numberOfIntersections(const QLineF& line, const QVector<QPointF
 	QVector<QPointF> intersections;
 	// Iterate over the edges of the side
 	for (int i = 0; i < side.size() - 1; ++i) {
-		QLineF edge(side[i], side[i + 1]); // Create an edge from consecutive points
+		QLineF edge(side[i], side[i + 1]);
 		QPointF intersectionPoint;
 
 		// Check if line intersects the edge
@@ -265,7 +262,7 @@ int GeneralCase::numberOfIntersections(const QLineF& line, const QVector<QPointF
 }
 
 QVector<QPointF> GeneralCase::tangentBinary(const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window,
-	Polygon_2& polygon, const QVector<QPointF>& hourglassSideHelper) {
+	Polygon_2& polygon, const QVector<QPointF>& funnelSideHelper1, const QVector<QPointF>& funnelSideHelper2) {
 	QVector<QPointF> funnelVec = funnelSide;
 	QPointF mirroredPoint;
 	QLineF line;
@@ -285,8 +282,6 @@ QVector<QPointF> GeneralCase::tangentBinary(const QVector<QPointF>& funnelSide, 
 	int hourglassRight = hourglassSide.size() - 1;
 
 	TangentStruct tangent;
-	funnelSideTest = funnelSide;
-	funnelVecSideTest = funnelVec;
 
 	while (funnelLeft <= funnelRight) {
 		int funnelMid = (funnelLeft + funnelRight + 1) / 2;
@@ -305,7 +300,7 @@ QVector<QPointF> GeneralCase::tangentBinary(const QVector<QPointF>& funnelSide, 
 			int funnelIntersections = tangent.funnelIntersections;
 			int hourglassIntersections = tangent.hourglassIntersections;
 
-			tangent = findTangent(funnelCandidate, hourglassCandidate, funnelVec, hourglassSide, window, polygon, hourglassSideHelper);
+			tangent = findTangent(funnelCandidate, hourglassCandidate, funnelVec, hourglassSide, window, polygon, funnelSideHelper1, funnelSideHelper2);
 
 
 			switch (tangent.failure)
@@ -373,7 +368,6 @@ QVector<QPointF> GeneralCase::tangentBinary(const QVector<QPointF>& funnelSide, 
 			case GeneralCase::FUNNEL:
 				if (funnelIntersections == 0) { // case d.
 					std::cout << "case d \n";
-					std::cout << funnelMid - 1 << "\n";
 					funnelRight = funnelMid - 1;
 					hourglassLeft = hourglassMid + 1;
 				}
@@ -545,7 +539,7 @@ GeneralCase::FunnelStar GeneralCase::concatenateClosedHourglass(QVector<QPointF>
 	return funnelStar;
 }
 
-GeneralCase::ConcatenatedSideStruct GeneralCase::concatenateBlockedOpenHourglassHelper(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent) {
+GeneralCase::ConcatenatedSideStruct GeneralCase::concatenateOpenHelper(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent) {
 	ConcatenatedSideStruct concatenatedSideStruct;
 	QVector<QPointF> concatenatedSide;
 
@@ -565,77 +559,23 @@ GeneralCase::ConcatenatedSideStruct GeneralCase::concatenateBlockedOpenHourglass
 	concatenatedSideStruct.mFunnelPoint = tangent.first();
 	concatenatedSideStruct.mHourglassPoint = tangent.last();
 
-	concatenatedSide.append(hourglassSide.last());
+	bool start = false;
+	for (QPointF point : hourglassSide) {
+		if (point == tangent.last()) {
+			start = true;
+			continue;
+		}
+
+		if (start) {
+			concatenatedSide.append(point);
+		}
+	}
 
 	concatenatedSideStruct.concatenatedSide = concatenatedSide;
 	return concatenatedSideStruct;
 }
 
-GeneralCase::FunnelStar GeneralCase::concatenateBlockedOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass) {
-	QVector<QPointF> funnelSideA = funnel.funnelSideA;
-	QVector<QPointF> funnelSideB = funnel.funnelSideB;
-	QVector<QPointF> hourglassSide1 = hourglass.hourglassSide1;
-	QVector<QPointF> hourglassSide2 = hourglass.hourglassSide2;
-	ConcatenatedSideStruct concatenatedSideStruct;
-	FunnelStar funnelStar;
-	std::cout << "concatenate blocked open hourglass \n";
-
-	if (!tangent1.isEmpty()) {
-		std::cout << "1 not empty \n";
-		concatenatedSideStruct = concatenateBlockedOpenHourglassHelper(funnelSideA, hourglassSide1, tangent1);
-		funnelStar.funnelStarSide1 = concatenatedSideStruct.concatenatedSide;
-		funnelStar.m1 = concatenatedSideStruct.mFunnelPoint;
-		funnelStar.m2 = concatenatedSideStruct.mHourglassPoint;
-
-		concatenatedSideStruct = concatenateBlockedOpenHourglassHelper(funnelSideA, hourglassSide2, tangent1);
-		funnelStar.funnelStarSide2 = concatenatedSideStruct.concatenatedSide;
-		funnelStar.m3 = concatenatedSideStruct.mFunnelPoint;
-		funnelStar.m4 = concatenatedSideStruct.mHourglassPoint;
-	}
-	else if (!tangent2.isEmpty()) {
-		std::cout << "2 not empty \n";
-		concatenatedSideStruct = concatenateBlockedOpenHourglassHelper(funnelSideA, hourglassSide1, tangent2);
-		funnelStar.funnelStarSide1 = concatenatedSideStruct.concatenatedSide;
-		funnelStar.m1 = concatenatedSideStruct.mFunnelPoint;
-		funnelStar.m2 = concatenatedSideStruct.mHourglassPoint;
-
-		concatenatedSideStruct = concatenateBlockedOpenHourglassHelper(funnelSideA, hourglassSide2, tangent2);
-		funnelStar.funnelStarSide2 = concatenatedSideStruct.concatenatedSide;
-		funnelStar.m3 = concatenatedSideStruct.mFunnelPoint;
-		funnelStar.m4 = concatenatedSideStruct.mHourglassPoint;
-	}
-	else if (!tangent3.isEmpty()) {
-		std::cout << "3 not empty \n";
-		concatenatedSideStruct = concatenateBlockedOpenHourglassHelper(funnelSideB, hourglassSide1, tangent3);
-		funnelStar.funnelStarSide1 = concatenatedSideStruct.concatenatedSide;
-		funnelStar.m1 = concatenatedSideStruct.mFunnelPoint;
-		funnelStar.m2 = concatenatedSideStruct.mHourglassPoint;
-
-		concatenatedSideStruct = concatenateBlockedOpenHourglassHelper(funnelSideB, hourglassSide2, tangent3);
-		funnelStar.funnelStarSide2 = concatenatedSideStruct.concatenatedSide;
-		funnelStar.m3 = concatenatedSideStruct.mFunnelPoint;
-		funnelStar.m4 = concatenatedSideStruct.mHourglassPoint;
-	}
-	else if (!tangent4.isEmpty()) {
-		std::cout << "4 not empty \n";
-		concatenatedSideStruct = concatenateBlockedOpenHourglassHelper(funnelSideB, hourglassSide1, tangent4);
-		funnelStar.funnelStarSide1 = concatenatedSideStruct.concatenatedSide;
-		funnelStar.m1 = concatenatedSideStruct.mFunnelPoint;
-		funnelStar.m2 = concatenatedSideStruct.mHourglassPoint;
-
-		concatenatedSideStruct = concatenateBlockedOpenHourglassHelper(funnelSideB, hourglassSide2, tangent4);
-		funnelStar.funnelStarSide2 = concatenatedSideStruct.concatenatedSide;
-		funnelStar.m3 = concatenatedSideStruct.mFunnelPoint;
-		funnelStar.m4 = concatenatedSideStruct.mHourglassPoint;
-	}
-
-	funnelStar.isRootInFunnel = false;
-
-	return funnelStar;
-}
-
-
-GeneralCase::FunnelStar GeneralCase::concatenateOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass) {
+GeneralCase::FunnelStar GeneralCase::concatenateOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass) {
 	QVector<QPointF> funnelSideA = funnel.funnelSideA;
 	QVector<QPointF> funnelSideB = funnel.funnelSideB;
 	QVector<QPointF> hourglassSide1 = hourglass.hourglassSide1;
@@ -644,19 +584,34 @@ GeneralCase::FunnelStar GeneralCase::concatenateOpenHourglass(QVector<QPointF>& 
 	FunnelStar funnelStar;
 	std::cout << "concatenate open hourglass \n";
 
-	concatenatedSideStruct = concatenateClosedHelper(funnelSideA, hourglassSide1, tangent1);
-	funnelStar.funnelStarSide1 = concatenatedSideStruct.concatenatedSide;
-	funnelStar.m1 = concatenatedSideStruct.mFunnelPoint;
-	funnelStar.m2 = concatenatedSideStruct.mHourglassPoint;
-	funnelStar.m1Index = concatenatedSideStruct.mFunnelIndex;
-	funnelStar.m2Index = concatenatedSideStruct.mHourglassIndex;
-
-	concatenatedSideStruct = concatenateClosedHelper(funnelSideB, hourglassSide2, tangent4);
-	funnelStar.funnelStarSide2 = concatenatedSideStruct.concatenatedSide;
-	funnelStar.m3 = concatenatedSideStruct.mFunnelPoint;
-	funnelStar.m4 = concatenatedSideStruct.mHourglassPoint;
-	funnelStar.m3Index = concatenatedSideStruct.mFunnelIndex;
-	funnelStar.m4Index = concatenatedSideStruct.mHourglassIndex;
+	if (!tangent1.isEmpty()) {
+		std::cout << "1 not empty \n";
+		concatenatedSideStruct = concatenateOpenHelper(funnelSideA, hourglassSide1, tangent1);
+		funnelStar.funnelStarSide1 = concatenatedSideStruct.concatenatedSide;
+		funnelStar.m1 = concatenatedSideStruct.mFunnelPoint;
+		funnelStar.m2 = concatenatedSideStruct.mHourglassPoint;
+	}
+	if (!tangent2.isEmpty()) {
+		std::cout << "2 not empty \n";
+		concatenatedSideStruct = concatenateOpenHelper(funnelSideA, hourglassSide2, tangent2);
+		funnelStar.funnelStarSide2 = concatenatedSideStruct.concatenatedSide;
+		funnelStar.m3 = concatenatedSideStruct.mFunnelPoint;
+		funnelStar.m4 = concatenatedSideStruct.mHourglassPoint;
+	}
+	if (!tangent3.isEmpty()) {
+		std::cout << "3 not empty \n";
+		concatenatedSideStruct = concatenateOpenHelper(funnelSideB, hourglassSide1, tangent3);
+		funnelStar.funnelStarSide1 = concatenatedSideStruct.concatenatedSide;
+		funnelStar.m1 = concatenatedSideStruct.mFunnelPoint;
+		funnelStar.m2 = concatenatedSideStruct.mHourglassPoint;
+	}
+	if (!tangent4.isEmpty()) {
+		std::cout << "4 not empty \n";
+		concatenatedSideStruct = concatenateOpenHelper(funnelSideB, hourglassSide2, tangent4);
+		funnelStar.funnelStarSide2 = concatenatedSideStruct.concatenatedSide;
+		funnelStar.m3 = concatenatedSideStruct.mFunnelPoint;
+		funnelStar.m4 = concatenatedSideStruct.mHourglassPoint;
+	}
 
 	funnelStar.isRootInFunnel = true;
 
@@ -666,81 +621,84 @@ GeneralCase::FunnelStar GeneralCase::concatenateOpenHourglass(QVector<QPointF>& 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Optimal Point / Path Computation
 
-QVector<QPointF> GeneralCase::mirrorFunnelPart(QVector<QPointF>& funnelStarSide, int mIndex, QLineF& window1) {
-	QVector<QPointF> modifiedSide;
-	for (size_t i = 0; i < funnelStarSide.size(); ++i) {
-		if (i <= mIndex) {
-			modifiedSide.append(mirrorPoint(funnelStarSide[i], window1));
+int GeneralCase::getLCAIndex(QVector<QPointF>& path1, QVector<QPointF>& path2)
+{
+	int lcaIndex = 0;
+
+	// Iterate over both paths until they diverge
+	size_t minLength = std::min(path1.size(), path2.size());
+	for (size_t i = 0; i < minLength; ++i)
+	{
+		if (path1[i] == path2[i])
+		{
+			lcaIndex = i;
 		}
-		else {
-			modifiedSide.append(funnelStarSide[i]);
+		else
+		{
+			break; // Paths diverge, stop the search
 		}
 	}
 
-	return modifiedSide;
+	return lcaIndex;
 }
 
-QPointF GeneralCase::computeOptimalPoint(FunnelStar& funnelStar, QLineF& window1, QLineF& window2) {
-	bool onPathRootToA = false;
-	QPointF vertexPerpendicularToC;
-	int perpendicularIndex = 0;
+GeneralCase::OptimalPointStruct GeneralCase::computeOptimalPoint(QVector<QPointF>& side1, QVector<QPointF>& side2, QLineF& window1, QLineF& window2) {
+	OptimalPointStruct optimalPointStruct;
 	QPointF a2 = window2.p1();
 	QPointF b2 = window2.p2();
-	QVector<QPointF> funnelStarSide1 = funnelStar.funnelStarSide1;
-	QVector<QPointF> funnelStarSide2 = funnelStar.funnelStarSide2;
-	QVector<QPointF> modifiedSide1 = mirrorFunnelPart(funnelStarSide1, funnelStar.m1Index, window1);
-	QVector<QPointF> modifiedSide2 = mirrorFunnelPart(funnelStarSide2, funnelStar.m3Index, window1);
 
-	const double angle0 = m_onePointHandler.calculateFunnelAngle(modifiedSide1.rbegin()[1], modifiedSide1.rbegin()[0], a2, b2); // theta_0
+	const double angle0 = m_onePointHandler.calculateFunnelAngle(side1.rbegin()[1], side1.rbegin()[0], a2, b2); // theta_0
 	if (angle0 > 90)
 	{
 		std::cout << "c = a2 \n";
-		onPathRootToA = true;
-		vertexPerpendicularToC = a2;
-		perpendicularIndex = modifiedSide1.size() - 1;
-		return a2;
+		optimalPointStruct.optimalPoint = a2;
+		optimalPointStruct.perpendicularPointIndex = side1.size() - 1;
+		optimalPointStruct.onPathRootToA = true;
+		return optimalPointStruct;
 	}
 
-	const double anglek = m_onePointHandler.calculateFunnelAngle(modifiedSide2.rbegin()[1], modifiedSide2.rbegin()[0], a2, b2); // theta_k
+	const double anglek = m_onePointHandler.calculateFunnelAngle(side2.rbegin()[1], side2.rbegin()[0], a2, b2); // theta_k
 	if (anglek < 90)
 	{
 		std::cout << "c = b2 \n";
-		onPathRootToA = false;
-		vertexPerpendicularToC = b2;
-		perpendicularIndex = modifiedSide2.size() - 1;
-		return b2;
+		optimalPointStruct.optimalPoint = b2;
+		optimalPointStruct.perpendicularPointIndex = side2.size() - 1;
+		optimalPointStruct.onPathRootToA = false;
+		return optimalPointStruct;
 	}
 	//
 	//
-	const double anglem1 = m_onePointHandler.calculateFunnelAngle(modifiedSide1.begin()[0], modifiedSide1.begin()[1], a2, b2); // theta_m-1
-	const double anglem = m_onePointHandler.calculateFunnelAngle(modifiedSide2.begin()[0], modifiedSide2.begin()[1], a2, b2);  // theta_m
+	const double anglem1 = m_onePointHandler.calculateFunnelAngle(side1.begin()[0], side1.begin()[1], a2, b2); // theta_m-1
+	const double anglem = m_onePointHandler.calculateFunnelAngle(side2.begin()[0], side2.begin()[1], a2, b2);  // theta_m
 	if (anglem1 == 90 || anglem == 90 || (anglem1 <= 90 && 90 < anglem))
 	{
 		std::cout << "c is at foot of rootStar \n";
-		perpendicularIndex = 0;
-		vertexPerpendicularToC = funnelStarSide1[0];
-		return m_onePointHandler.calculateWindowIntersection(vertexPerpendicularToC, a2, b2);
+		optimalPointStruct.optimalPoint = m_onePointHandler.calculateWindowIntersection(side1.first(), a2, b2);;
+		optimalPointStruct.perpendicularPointIndex = 0;
+		optimalPointStruct.onPathRootToA = true;
+		return optimalPointStruct;
 	}
 
 	if (anglem1 > 90)
 	{
-		int vertex = m_onePointHandler.binarySearchByAngleASide(modifiedSide1, a2, b2);
-		int v = (modifiedSide1.size() - 1) - vertex; // root would be lowest, but needs to be highest
+		int vertex = m_onePointHandler.binarySearchByAngleASide(side1, a2, b2);
+		int v = (side1.size() - 1) - vertex; // root would be lowest, but needs to be highest
 		std::cout << "c is foot from v" << v << "\n";
-		onPathRootToA = true;
-		perpendicularIndex = vertex;
-		vertexPerpendicularToC = modifiedSide1[vertex];
-		return m_onePointHandler.calculateWindowIntersection(modifiedSide1[vertex], a2, b2);
+		optimalPointStruct.optimalPoint = m_onePointHandler.calculateWindowIntersection(side1[vertex], a2, b2);
+		optimalPointStruct.perpendicularPointIndex = vertex;
+		optimalPointStruct.onPathRootToA = true;
+		return optimalPointStruct;
+
 	}
 	else
 	{
-		int vertex = m_onePointHandler.binarySearchByAngleBSide(modifiedSide2, a2, b2);
-		int v = vertex + (modifiedSide2.size() - 1);
+		int vertex = m_onePointHandler.binarySearchByAngleBSide(side2, a2, b2);
+		int v = vertex + (side2.size() - 1);
 		std::cout << "c is foot from v" << v << "\n";
-		onPathRootToA = false;
-		perpendicularIndex = vertex;
-		vertexPerpendicularToC = modifiedSide2[vertex];
-		return m_onePointHandler.calculateWindowIntersection(modifiedSide2[vertex], a2, b2);
+		optimalPointStruct.optimalPoint = m_onePointHandler.calculateWindowIntersection(side2[vertex], a2, b2);
+		optimalPointStruct.perpendicularPointIndex = vertex;
+		optimalPointStruct.onPathRootToA = false;
+		return optimalPointStruct;
 	}
 }
 
@@ -752,121 +710,89 @@ QVector<QPointF> GeneralCase::computeOptimalPathRootInFunnel(QLineF& window1, QL
 	QVector<QPointF> funnelStarSide1 = funnelStar.funnelStarSide1;
 	QVector<QPointF> funnelStarSide2 = funnelStar.funnelStarSide2;
 	QPointF funnelStarRoot;
-	int funnelStarRootIndex = 0;
+	int funnelStarRootIndex = getLCAIndex(funnelStarSide1, funnelStarSide2);
 
-	QPointF mirrorM1 = mirrorPoint(funnelStar.m1, window1);
-	int prevIndexM1 = funnelStar.m1Index - 1;
-	if (mirrorM1 == funnelStar.m2 && prevIndexM1 >= 0) {
-		mirrorM1 = mirrorPoint(funnelStarSide1[prevIndexM1], window1);
+
+	pathRootToA2.append(mirrorPoint(funnelStarSide1[funnelStarRootIndex], window1));
+	for (size_t i = funnelStarRootIndex+1; i < funnelStarSide1.size(); ++i) {
+
+		pathRootToA2.append(funnelStarSide1[i]);
 	}
 
-	QPointF mirrorM3 = mirrorPoint(funnelStar.m3, window1);
-	int prevIndexM3 = funnelStar.m3Index - 1;
-	if (mirrorM3 == funnelStar.m4 && prevIndexM3 >= 0) {
-		mirrorM3 = mirrorPoint(funnelStarSide2[prevIndexM3], window1);
+	pathRootToB2.append(mirrorPoint(funnelStarSide2[funnelStarRootIndex], window1));
+	for (size_t i = funnelStarRootIndex+1; i < funnelStarSide2.size(); ++i) {
+		pathRootToB2.append(funnelStarSide2[i]);
 	}
 
-	//std::cout << "m2: " << funnelStar.m2Index << "\n";
-	//std::cout << "m4: " << funnelStar.m4Index << "\n";
-	if (funnelStar.m1 == funnelStar.funnelStarSide1[funnelStar.m1Index]) {
-		std::cout << "m1 is correct \n";
+	OptimalPointStruct c = computeOptimalPoint(pathRootToA2, pathRootToB2, window1, window2);
+	int perpendicularPointIndex = c.perpendicularPointIndex + funnelStarRootIndex;
+
+	if (c.onPathRootToA) {
+		for (size_t i = 0; i <= perpendicularPointIndex; ++i) {
+			optimalPath.append(funnelStarSide1[i]);
+		}
+
+		if (perpendicularPointIndex == funnelStarSide1.size() - 1) { // if c == a 
+			return optimalPath;
+		}
+	}
+	else {
+		for (size_t i = 0; i <= perpendicularPointIndex; ++i) {
+			optimalPath.append(funnelStarSide2[i]);
+		}
+
+		if (perpendicularPointIndex == funnelStarSide2.size() - 1) { // if c == b
+			return optimalPath;
+		}
 	}
 
-	if (funnelStar.m2 == funnelStar.funnelStarSide1[funnelStar.m2Index]) {
-		std::cout << "m2 is correct \n";
-	}
-
-	if (funnelStar.m3 == funnelStar.funnelStarSide2[funnelStar.m3Index]) {
-		std::cout << "m3 is correct \n";
-	}
-
-	if (funnelStar.m4 == funnelStar.funnelStarSide2[funnelStar.m4Index]) {
-		std::cout << "m4 is correct \n";
-	}
-
-	QPointF c = computeOptimalPoint(funnelStar, window1, window2);
-	optimalPath.append(c);
+	optimalPath.append(c.optimalPoint);
 	return optimalPath;
 }
 
 
-QVector<QPointF> GeneralCase::computeOptimalPathRootInHourglass(QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot) {
+QVector<QPointF> GeneralCase::computeOptimalPathRootInHourglass(QLineF& window1, QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot) {
 	std::cout << "root in hourglass \n";
-	QVector<QPointF> pathA2ToRoot;
-	QVector<QPointF> pathB2ToRoot;
 	QVector<QPointF> pathRootToA2;
 	QVector<QPointF> pathRootToB2;
 	QVector<QPointF> optimalPath;
 	QVector<QPointF> funnelStarSide1 = funnelStar.funnelStarSide1;
 	QVector<QPointF> funnelStarSide2 = funnelStar.funnelStarSide2;
-	QPointF funnelStarRoot = funnelStar.m4;
-	starRoot = funnelStar.m4;
-	int funnelStarRootIndex = 0;
+	int funnelStarRootIndex = getLCAIndex(funnelStarSide1, funnelStarSide2);
 
-	for (int i = funnelStarSide1.size() - 1; i >= 0; --i) {
-		if (funnelStarSide1[i] != funnelStarRoot) {
-			pathA2ToRoot.append(funnelStarSide1[i]);
-		}
-		else {
-			pathA2ToRoot.append(funnelStarSide1[i]);
-			break;
-		}
-	}
-	pathRootToA2 = m_shortestPathHandler.reversePath(pathA2ToRoot);
+	for (size_t i = funnelStarRootIndex; i < funnelStarSide1.size(); ++i) {
 
-	for (int i = funnelStarSide2.size() - 1; i >= 0; --i) {
-		if (funnelStarSide2[i] != funnelStarRoot) {
-			pathB2ToRoot.append(funnelStarSide2[i]);
-		}
-		else {
-			pathB2ToRoot.append(funnelStarSide2[i]);
-			break;
-		}
-	}
-	pathRootToB2 = m_shortestPathHandler.reversePath(pathB2ToRoot);
-
-	////
-	// TEST
-	PRAT = pathRootToA2;
-	PRBT = pathRootToB2;
-	//
-
-	QPointF c = m_onePointHandler.computeOptimalPoint(pathRootToA2, pathRootToB2, funnelStarRoot, window2);
-	QPointF vertexPerpendicularToC = m_onePointHandler.getVertexPerpendicularToC();
-	if (c != vertexPerpendicularToC) {
-		optimalPath.append(c);
+		pathRootToA2.append(funnelStarSide1[i]);
 	}
 
-	bool start = false;
-	if (m_onePointHandler.getOnPathRootToA()) {
-		for (int i = funnelStarSide1.size() - 1; i >= 0; --i) {
-			if (funnelStarSide1[i] == vertexPerpendicularToC) {
-				start = true;
-			}
+	for (size_t i = funnelStarRootIndex; i < funnelStarSide2.size(); ++i) {
+		pathRootToB2.append(funnelStarSide2[i]);
+	}
 
-			if (start) {
-				optimalPath.append(funnelStarSide1[i]);
-			}
+	OptimalPointStruct c = computeOptimalPoint(pathRootToA2, pathRootToB2, window1, window2);
+	int perpendicularPointIndex = c.perpendicularPointIndex + funnelStarRootIndex;
+
+	if (c.onPathRootToA) {
+		for (size_t i = 0; i <= perpendicularPointIndex; ++i) {
+			optimalPath.append(funnelStarSide1[i]);
+		}
+
+		if (perpendicularPointIndex == funnelStarSide1.size() - 1) { // if c == a 
+			return optimalPath;
 		}
 	}
 	else {
-		for (int i = funnelStarSide2.size() - 1; i >= 0; --i) {
-			if (funnelStarSide2[i] == vertexPerpendicularToC) {
-				start = true;
-			}
+		for (size_t i = 0; i <= perpendicularPointIndex; ++i) {
+			optimalPath.append(funnelStarSide2[i]);
+		}
 
-			if (start) {
-				optimalPath.append(funnelStarSide2[i]);
-			}
+		if (perpendicularPointIndex == funnelStarSide2.size() - 1) { // if c == b
+			return optimalPath;
 		}
 	}
 
-	for (int i = pathStartToFunnelRoot.size() - 1; i >= 0; --i) {
-		optimalPath.append(pathStartToFunnelRoot[i]);
-	}
-
-
-	return m_shortestPathHandler.reversePath(optimalPath);
+	optimalPath.append(c.optimalPoint);
+	return optimalPath;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -912,16 +838,10 @@ GeneralCase::GeneralCaseResult GeneralCase::executeGeneralCase(QPointF& starting
 	resultGeneral.hourglassSide1 = hourglassSide1;
 	resultGeneral.hourglassSide2 = hourglassSide2;
 
-	////
-	// TEST
-	firstWindow = window1;
-	/////
-
 	if (!hourglass.isOpen) {
 		QVector<QPointF> newSide1;
 		QVector<QPointF> newSide2;
 		QPointF waistPoint = findWaistPoint(hourglassSide1, hourglassSide2);
-		waist = waistPoint;
 
 		for (QPointF hourglassPoint : hourglassSide1) {
 			if (hourglassPoint == waistPoint) {
@@ -943,31 +863,30 @@ GeneralCase::GeneralCaseResult GeneralCase::executeGeneralCase(QPointF& starting
 		hourglassSide2 = newSide2;
 	}
 
-	QVector<QPointF> tangent1 = tangentBinary(funnelSideA, hourglassSide1, window1, polygon, funnelSideB);
-	QVector<QPointF> tangent2 = tangentBinary(funnelSideA, hourglassSide2, window1, polygon, funnelSideB);
-	QVector<QPointF> tangent3 = tangentBinary(funnelSideB, hourglassSide1, window1, polygon, funnelSideA);
-	QVector<QPointF> tangent4 = tangentBinary(funnelSideB, hourglassSide2, window1, polygon, funnelSideA);
+	std::cout << "tangent1 calculations: \n";
+	QVector<QPointF> tangent1 = tangentBinary(funnelSideA, hourglassSide1, window1, polygon, funnelSideA, funnelSideB);
+	std::cout << "tangent2 calculations: \n";
+	QVector<QPointF> tangent2 = tangentBinary(funnelSideA, hourglassSide2, window1, polygon, funnelSideA, funnelSideB);
+	std::cout << "tangent3 calculations: \n";
+	QVector<QPointF> tangent3 = tangentBinary(funnelSideB, hourglassSide1, window1, polygon, funnelSideA, funnelSideB);
+	std::cout << "tangent4 calculations: \n";
+	QVector<QPointF> tangent4 = tangentBinary(funnelSideB, hourglassSide2, window1, polygon, funnelSideA, funnelSideB);
 	resultGeneral.tangent1 = tangent1;
 	resultGeneral.tangent2 = tangent2;
 	resultGeneral.tangent3 = tangent3;
 	resultGeneral.tangent4 = tangent4;
 
-
-	bool areOuterTangentsBlocked = (tangent1.isEmpty() || tangent4.isEmpty());
-
+	if (tangent1.isEmpty() && tangent2.isEmpty() && tangent3.isEmpty() && tangent4.isEmpty()) {
+		std::cout << "Error: No valid tangent was found! \n";
+		return resultGeneral;
+	}
 
 	FunnelStar funnelStar;
 	if (!hourglass.isOpen) {
 		funnelStar = concatenateClosedHourglass(tangent1, tangent2, tangent3, tangent4, funnel, hourglass);
 	}
 	else {
-		if (areOuterTangentsBlocked) {
-			funnelStar = concatenateBlockedOpenHourglass(tangent1, tangent2, tangent3, tangent4, funnel, hourglass);
-		}
-		else {
-			funnelStar = concatenateOpenHourglass(tangent1, tangent4, funnel, hourglass);
-
-		}
+		funnelStar = concatenateOpenHourglass(tangent1, tangent2, tangent3, tangent4, funnel, hourglass);
 	}
 
 	QVector<QPointF> funnelStarSide1 = funnelStar.funnelStarSide1;
@@ -979,20 +898,29 @@ GeneralCase::GeneralCaseResult GeneralCase::executeGeneralCase(QPointF& starting
 	resultGeneral.m3 = funnelStar.m3;
 	resultGeneral.m4 = funnelStar.m4;
 
+	if (funnelStarSide1.isEmpty() || funnelStarSide2.isEmpty()) {
+		std::cout << "Error: no two valid sides were constructed! \n";
+		return resultGeneral;
+	}
+
 	QVector<QPointF> optimalPath;
 	QVector<QPointF> pathStartToFunnelRoot = m_shortestPathHandler.findShortestPath(startingPoint, funnelRoot, polygon, mesh);
 	if (funnelStar.isRootInFunnel) {
 		optimalPath = computeOptimalPathRootInFunnel(window1, window2, funnelStar, pathStartToFunnelRoot);
 	}
 	else {
-		optimalPath = computeOptimalPathRootInHourglass(window2, funnelStar, pathStartToFunnelRoot);
+		optimalPath = computeOptimalPathRootInHourglass(window1, window2, funnelStar, pathStartToFunnelRoot);
+	}
+
+	if (optimalPath.isEmpty()) {
+		std::cout << "Error: Optimal Path is empty! \n";
+		return resultGeneral;
 	}
 
 	QPointF c = optimalPath.rbegin()[0];
 
 	resultGeneral.optimalPath = optimalPath;
 	resultGeneral.optimalPoint = c;
-
 
 	return resultGeneral;
 }

@@ -270,18 +270,22 @@ void TwoPointQuery::computeGeneralCase(QPointF& startingPoint, QLineF& window1, 
 	GeneralCase::GeneralCaseResult firstResult = m_generalCaseHandler.executeGeneralCase(startingPoint, window1, window2, polygon, mesh);
 	double tempOptimalPathLength1 = calculatePathLength(firstResult.optimalPath);
 
+	/*
 	GeneralCase::GeneralCaseResult secondResult = m_generalCaseHandler.executeGeneralCase(startingPoint, window2, window1, polygon, mesh);
 	double tempOptimalPathLength2 = calculatePathLength(secondResult.optimalPath);
-	
 	if (tempOptimalPathLength2 >= tempOptimalPathLength1) {
+		std::cout << "General case: First is shorter" << "\n";
 		resultGeneral = firstResult;
 		resultQ2.optimalPathLength = calculateNormalizedPathLength(firstResult.optimalPath);
 		return;
 	}
-
 	//resultGeneral = firstResult;
+	std::cout << "General case: Second is shorter" << "\n";
 	resultQ2.optimalPathLength = calculateNormalizedPathLength(secondResult.optimalPath);
 	resultGeneral = secondResult;
+	*/
+
+	resultGeneral = firstResult;
 }
 
 

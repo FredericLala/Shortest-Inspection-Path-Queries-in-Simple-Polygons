@@ -54,11 +54,11 @@ public:
     void decreaseStep();
     void timedStepper(int targetStep, int interval);
     QString updateLog();
-    
+    void setFixedPoints(int index);
+
 
 protected:
     void drawPolygonPoints(QPainter& painter);
-    void setFixedPoints(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2);
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
 
@@ -138,6 +138,7 @@ private:
     ApproximateQuery::NApproximateResult resultNApprox;
 
     bool newClickPoint = false;
+    QString m_log;
 };
 
 #endif // POLYGONWIDGET_H

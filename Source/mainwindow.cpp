@@ -464,7 +464,9 @@ void MainWindow::setupGivenPolygon()
 	givenPolygonSelector->addItem("Q2: Window Intersection");
 	givenPolygonSelector->addItem("Q2: Window Domination");
 	givenPolygonSelector->addItem("Q2: General Case");
-	givenPolygonSelector->addItem("Q2: TEST");
+	givenPolygonSelector->addItem("Q2: Closed Hourglass | Alt. is Open");
+	givenPolygonSelector->addItem("Q2: Open Hourglass");
+	givenPolygonSelector->addItem("Q2: Test Polygon");
 	connect(givenPolygonSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
 		this, &MainWindow::onGivenPolygonChanged);
 
@@ -474,6 +476,7 @@ void MainWindow::setupGivenPolygon()
 void MainWindow::onGivenPolygonChanged(int index)
 {
 	polygonWidget->chooseExamplePolygon(index);
+	polygonWidget->setFixedPoints(index);
 }
 
 ////////////////////////////////////////////////////////////////

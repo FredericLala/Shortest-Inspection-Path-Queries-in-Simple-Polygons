@@ -99,7 +99,13 @@ void PolygonWidget::chooseExamplePolygon(int index) {
 		polygonC = m_polygonGenHandler.exampleFour();
 		break;
 	case 4:
-		polygonC = m_polygonGenHandler.exampleFive();
+		polygonC = m_polygonGenHandler.altIsOpen();
+		break;
+	case 5:
+		polygonC = m_polygonGenHandler.openHourglass();
+		break;
+	case 6:
+		polygonC = m_polygonGenHandler.testPolygon();
 		break;
 	default:
 		polygonC = m_polygonGenHandler.generateRandomPolygon(40);
@@ -110,6 +116,55 @@ void PolygonWidget::chooseExamplePolygon(int index) {
 	for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
 	{
 		polygonQ.append(QPointF(it->x(), it->y()));
+	}
+
+	update();
+}
+
+void PolygonWidget::setFixedPoints(int index) {
+	switch (index)
+	{
+	case 0:
+		break;
+	case 1:
+		setStartingPoint(QPointF(-31, -104));
+		setQueryPoint1(QPointF(-146, -20));
+		setQueryPoint2(QPointF(99, -48));
+		break;
+	case 2:
+		break;
+	case 3:
+		//closed hourglass
+		setStartingPoint(QPointF(202, 158));
+		setQueryPoint1(QPointF(-151, 111));
+		setQueryPoint2(QPointF(-73, -1));
+
+		// opern hourglass
+		/*
+		startingPoint = QPointF(204, 162);
+		queryPoint1 = QPointF(-111, 10);
+		queryPoint2 = QPointF(-154, 114);
+		update();
+		*/
+		break;
+	case 4:
+		setStartingPoint(QPointF(-228, -27));
+		setQueryPoint1(QPointF(-322, 312));
+		setQueryPoint2(QPointF(-80, -131));
+		break;
+
+	case 5:
+		setStartingPoint(QPointF(-23, 135));
+		setQueryPoint1(QPointF(145, 64));
+		setQueryPoint2 (QPointF(-204, 47));
+		break;
+	case 6:
+		setStartingPoint(QPointF(307, -108));
+		setQueryPoint1(QPointF(291, 153));
+		setQueryPoint2(QPointF(-111, -291));
+		break;
+	default:
+		break;
 	}
 
 	update();
@@ -275,13 +330,13 @@ void PolygonWidget::startTwoPointQuery(int interval, bool stepMode) {
 			maxSteps = 0;
 			break;
 		case TwoPointQuery::INTERSECTION:
-			maxSteps = 7;
+			maxSteps = 9;
 			break;
 		case TwoPointQuery::DOMINATION:
 			maxSteps = 5;
 			break;
 		case TwoPointQuery::GENERAL:
-			maxSteps = 8;
+			maxSteps = 9;
 			break;
 		default:
 			maxSteps = 0;
@@ -343,23 +398,30 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 	if (m_queryMode == EXACT) {
 		if (!startSelected) {
 			setStartingPoint(clickPoint);
-			std::cout << "startingPoint = QPointF(" << startingPoint.x() << ", " << startingPoint.y() << "); \n";
+			std::cout << "setStartingPoint(QPointF(" << startingPoint.x() << ", " << startingPoint.y() << ")); \n";
 		}
 		else if (!query1Selected) {
 			setQueryPoint1(clickPoint);
-			std::cout << "queryPoint1 = QPointF(" << queryPoint1.x() << ", " << queryPoint1.y() << "); \n";
+			std::cout << "setQueryPoint1(QPointF(" << queryPoint1.x() << ", " << queryPoint1.y() << ")); \n";
 		}
 		else if (!query2Selected) {
 			setQueryPoint2(clickPoint);
-			std::cout << "queryPoint2 = QPointF(" << queryPoint2.x() << ", " << queryPoint2.y() << "); \n";
+			std::cout << "setQueryPoint2(QPointF(" << queryPoint2.x() << ", " << queryPoint2.y() << ")); \n";
 		}
 	}
 	else if (m_queryMode == APPROX) {
 		if (!startSelected) {
 			setStartingPoint(clickPoint);
+			std::cout << "setStartingPoint(QPointF(" << startingPoint.x() << ", " << startingPoint.y() << ")); \n";
 		}
 		else {
 			approxQueryPoints.append(clickPoint);
+			if (approxQueryPoints.size() == 2) {
+				std::cout << "setQueryPoint2(QPointF(" << approxQueryPoints[1].x() << ", " << approxQueryPoints[1].y() << ")); \n";
+			}
+			else if (approxQueryPoints.size() == 1) {
+				std::cout << "setQueryPoint1(QPointF(" << approxQueryPoints[0].x() << ", " << approxQueryPoints[0].y() << ")); \n";
+			}
 		}
 	}
 
@@ -383,23 +445,6 @@ void PolygonWidget::drawPolygonPoints(QPainter& painter) {
 			painter.drawLine(clicks[i - 1], clicks[i]);
 		}
 	}
-}
-
-void PolygonWidget::setFixedPoints(QPointF& startingPoint, QPointF& queryPoint1, QPointF& queryPoint2) {
-	//startingPoint = QPointF(221, 161);
-	//queryPoint1 = QPointF(-29, -150);
-	//update();
-
-	startingPoint = startingPoint;
-	queryPoint1 = queryPoint1;
-	queryPoint2 = queryPoint2;
-
-	update();
-
-	//startingPoint = QPointF(203, 169);
-	//queryPoint1 = QPointF(-70, -3);
-	//queryPoint2 = QPointF(-162, 105);
-	//update();
 }
 
 void PolygonWidget::drawLabel(double x, double y, QString label, QPainter& painter)
@@ -474,7 +519,7 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 	painter.setPen(Qt::black);
 	painter.setBrush(Qt::black);
 
-	fixedPoints = true;
+	//fixedPoints = true;
 	if (fixedPoints) {
 		//startingPoint = QPointF(47, -119);
 		//queryPoint1 = QPointF(275, -98);
@@ -489,20 +534,9 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		queryPoint1 = QPointF(-184, -121);
 		*/
 
-		//closed hourglass
-		/*
-		startingPoint = QPointF(203, 171);
-		queryPoint1 = QPointF(-71, -4);
-		queryPoint2 = QPointF(-152, 99);
-		*/
 
 
-		// opern hourglass
 
-		startingPoint = QPointF(204, 162);
-		queryPoint1 = QPointF(-111, 10);
-		queryPoint2 = QPointF(-154, 114);
-		update();
 
 		//setFixedPoints(startingPoint = QPointF(205, 169), queryPoint1 = QPointF(-105, -5), queryPoint2 = QPointF(-157, 108));
 	}
@@ -848,71 +882,41 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 		}
 	}
 
-	QVector<QPointF> tangent1 = generalResult.tangent1;
-	QVector<QPointF> tangent2 = generalResult.tangent2;
-	QVector<QPointF> tangent3 = generalResult.tangent3;
-	QVector<QPointF> tangent4 = generalResult.tangent4;
-	painter.setPen(QPen(Qt::green, 2));
-
-	/////////
-	// TEST
-	//painter.drawLine(m_twoPointHandler.line.p1(), m_twoPointHandler.line.p2());
-	//painter.drawLine(m_twoPointHandler.firstWindow.p1(), m_twoPointHandler.firstWindow.p2());
-	for (size_t i = 1; i < m_generalCaseHandler.funnelSideTest.size(); ++i)
-	{
-		//painter.drawLine(m_twoPointHandler.funnelSideTest[i - 1], m_twoPointHandler.funnelSideTest[i]);
-	}
-
-	for (size_t i = 1; i < m_generalCaseHandler.funnelVecSideTest.size(); ++i)
-	{
-		//painter.drawLine(m_twoPointHandler.funnelVecSideTest[i - 1], m_twoPointHandler.funnelVecSideTest[i]);
-	}
-
-	QPointF intersectionPoint = QPointF(81.6327, 55.0918);
-	painter.drawEllipse(intersectionPoint, 3, 3);
-	drawLabel(intersectionPoint.x(), intersectionPoint.y(), QString("IP"), painter);
-	/////////
-	painter.setPen(QPen(Qt::darkYellow, 2));
-	for (size_t i = 1; i < tangent1.size(); ++i)
-	{
-		painter.drawLine(tangent1[i - 1], tangent1[i]);
-	}
-
-	painter.setPen(QPen(Qt::gray, 2));
-
-	for (size_t i = 1; i < tangent2.size(); ++i)
-	{
-		painter.drawLine(tangent2[i - 1], tangent2[i]);
-	}
-
-	painter.setPen(QPen(Qt::darkCyan, 2));
-
-	for (size_t i = 1; i < tangent3.size(); ++i)
-	{
-		painter.drawLine(tangent3[i - 1], tangent3[i]);
-	}
-
-	painter.setPen(QPen(Qt::cyan, 2));
-
-	for (size_t i = 1; i < tangent4.size(); ++i)
-	{
-		painter.drawLine(tangent4[i - 1], tangent4[i]);
-	}
-
-
-	QPointF wasit = m_generalCaseHandler.waist;
-	painter.drawEllipse(wasit, 3, 3);
-	drawLabel(wasit.x(), wasit.y(), QString("wasit"), painter);
-
-	QVector<QPointF> polyTest;
-	for (auto it = m_generalCaseHandler.boundTest.vertices_begin(); it != m_generalCaseHandler.boundTest.vertices_end(); ++it)
-	{
-		polyTest.append(QPointF(it->x(), it->y()));
-	}
-	painter.setPen(QPen(Qt::red, 2));
-	//painter.drawPolygon(polyTest);
-
 	if (step >= 6) {
+		QVector<QPointF> tangent1 = generalResult.tangent1;
+		QVector<QPointF> tangent2 = generalResult.tangent2;
+		QVector<QPointF> tangent3 = generalResult.tangent3;
+		QVector<QPointF> tangent4 = generalResult.tangent4;
+		painter.setPen(QPen(Qt::green, 2));
+
+		for (size_t i = 1; i < tangent1.size(); ++i)
+		{
+			painter.drawLine(tangent1[i - 1], tangent1[i]);
+		}
+
+		painter.setPen(QPen(Qt::gray, 2));
+
+		for (size_t i = 1; i < tangent2.size(); ++i)
+		{
+			painter.drawLine(tangent2[i - 1], tangent2[i]);
+		}
+
+		painter.setPen(QPen(Qt::darkCyan, 2));
+
+		for (size_t i = 1; i < tangent3.size(); ++i)
+		{
+			painter.drawLine(tangent3[i - 1], tangent3[i]);
+		}
+
+		painter.setPen(QPen(Qt::cyan, 2));
+
+		for (size_t i = 1; i < tangent4.size(); ++i)
+		{
+			painter.drawLine(tangent4[i - 1], tangent4[i]);
+		}
+	}
+
+	if (step >= 7) {
 		for (size_t i = 1; i < concatenatedSide1.size(); ++i)
 		{
 			painter.setPen(QPen(Qt::darkMagenta, 2));
@@ -924,25 +928,25 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 			painter.setPen(QPen(Qt::magenta, 2));
 			painter.drawLine(concatenatedSide2[i - 1], concatenatedSide2[i]);
 		}
+
+		QPointF m1 = generalResult.m1;
+		QPointF m2 = generalResult.m2;
+		QPointF m3 = generalResult.m3;
+		QPointF m4 = generalResult.m4;
+		painter.drawEllipse(m1, 3, 3);
+		drawLabel(m1.x(), m1.y(), QString("m1"), painter);
+
+		painter.drawEllipse(m2, 3, 3);
+		drawLabel(m2.x(), m2.y(), QString("m2"), painter);
+
+		painter.drawEllipse(m3, 3, 3);
+		drawLabel(m3.x(), m3.y(), QString("m3"), painter);
+
+		painter.drawEllipse(m4, 3, 3);
+		drawLabel(m4.x(), m4.y(), QString("m4"), painter);
 	}
 
-	QPointF m1 = generalResult.m1;
-	QPointF m2 = generalResult.m2;
-	QPointF m3 = generalResult.m3;
-	QPointF m4 = generalResult.m4;
-	painter.drawEllipse(m1, 3, 3);
-	drawLabel(m1.x(), m1.y(), QString("m1"), painter);
-
-	painter.drawEllipse(m2, 3, 3);
-	drawLabel(m2.x(), m2.y(), QString("m2"), painter);
-
-	painter.drawEllipse(m3, 3, 3);
-	drawLabel(m3.x(), m3.y(), QString("m3"), painter);
-
-	painter.drawEllipse(m4, 3, 3);
-	drawLabel(m4.x(), m4.y(), QString("m4"), painter);
-
-	if (step >= 7) {
+	if (step >= 8) {
 		for (size_t i = 1; i < optimalPath.size(); ++i)
 		{
 			painter.setPen(QPen(Qt::darkYellow, 2));
@@ -950,7 +954,7 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 		}
 	}
 
-	if (step == 8) {
+	if (step == 9) {
 		painter.drawEllipse(optimalPoint, 3, 3);
 
 		if (optimalPoint == a2 || optimalPoint == b2) {
@@ -960,32 +964,6 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 			drawLabel(optimalPoint.x(), optimalPoint.y(), QString("c"), painter);
 		}
 	}
-
-	/////////
-	// TEST
-	/*
-	painter.drawEllipse(m_generalCaseHandler.PRAT[0], 3, 3);
-	drawLabel(m_generalCaseHandler.PRAT[0].x(), m_generalCaseHandler.PRAT[0].y(), QString("0 PRAT"), painter);
-
-	painter.drawEllipse(m_generalCaseHandler.PRBT[0], 3, 3);
-	drawLabel(m_generalCaseHandler.PRBT[0].x(), m_generalCaseHandler.PRBT[0].y(), QString("0 PRBT"), painter);
-	*/
-
-	//painter.drawEllipse(m_generalCaseHandler.starRoot, 3, 3);
-	//drawLabel(m_generalCaseHandler.starRoot.x(), m_generalCaseHandler.starRoot.y(), QString("STAR ROOT"), painter);
-
-	/*
-	for (size_t i = 1; i < m_generalCaseHandler.PRAT.size(); ++i)
-	{
-		painter.drawLine(m_generalCaseHandler.PRAT[i - 1], m_generalCaseHandler.PRAT[i]);
-	}
-
-	for (size_t i = 1; i < m_generalCaseHandler.PRBT.size(); ++i)
-	{
-		painter.drawLine(m_generalCaseHandler.PRBT[i - 1], m_generalCaseHandler.PRBT[i]);
-	}
-	*/
-	/////////
 }
 
 
