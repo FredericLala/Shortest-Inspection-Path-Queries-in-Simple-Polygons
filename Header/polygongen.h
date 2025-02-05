@@ -27,6 +27,12 @@ public:
 
     Polygon_2 exampleFive() const;
 
+    Polygon_2 altIsOpen() const;
+
+    Polygon_2 openHourglass() const;
+
+    Polygon_2 testPolygon() const;
+
 private:
 
 };

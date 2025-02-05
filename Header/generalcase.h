@@ -73,43 +73,35 @@ public:
 		QPointF optimalPoint;
 	};
 
+	struct OptimalPointStruct {
+		QPointF optimalPoint;
+		int perpendicularPointIndex = 0;
+		bool onPathRootToA=false;
+	};
+
 	GeneralCase::HourglassStruct constructHourglass(QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh);
 	bool isHourglassOpenCheck(QVector<QPointF>& hourglassSide1, QVector<QPointF>& hourglassSide2);
 	QPointF findWaistPoint(const QVector<QPointF>& side1, const QVector<QPointF>& side2);
 
 	QPointF mirrorPoint(const QPointF& point, const QLineF& window);
-	GeneralCase::TangentStruct findTangent(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon, const QVector<QPointF>& funnelSideHelper);
+	GeneralCase::TangentStruct findTangent(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon, const QVector<QPointF>& funnelSideHelper1, const QVector<QPointF>& funnelSideHelper2);
 	bool isTangent(const QVector<QPointF>& path, const QPointF& p1, const QPointF& p2);
 	QLineF extendLine(const QLineF& line, const double extensionFactor);
 	int numberOfIntersections(const QLineF& line, const QVector<QPointF>& side);
-	QVector<QPointF> tangentBinary(const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon, const QVector<QPointF>& hourglassSideHelper);
+	QVector<QPointF> tangentBinary(const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon, const QVector<QPointF>& funnelSideHelper1, const QVector<QPointF>& funnelSideHelper2);
 	QVector<QPointF> removeElementFromVector(QVector<QPointF> vector, int index);
 
 	ConcatenatedSideStruct concatenateClosedHelper(QVector<QPointF> funnelSide, QVector<QPointF> hourglassSide, QVector<QPointF> tangent);
-	ConcatenatedSideStruct concatenateBlockedOpenHourglassHelper(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
 	FunnelStar concatenateClosedHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
-	FunnelStar concatenateBlockedOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
-	FunnelStar concatenateOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
+	GeneralCase::ConcatenatedSideStruct concatenateOpenHelper(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
+	FunnelStar concatenateOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
 
-	QVector<QPointF> mirrorFunnelPart(QVector<QPointF>& funnelStarSide, int mIndex, QLineF& window1);
-	QPointF computeOptimalPoint(FunnelStar& funnelStar, QLineF& window1, QLineF& window2);
+	int getLCAIndex(QVector<QPointF>& path1, QVector<QPointF>& path2);
+	GeneralCase::OptimalPointStruct computeOptimalPoint(QVector<QPointF>& side1, QVector<QPointF>& side2, QLineF& window1, QLineF& window2);
 	QVector<QPointF> computeOptimalPathRootInFunnel(QLineF& window1, QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot);
-	QVector<QPointF> computeOptimalPathRootInHourglass(QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot);
+	QVector<QPointF> computeOptimalPathRootInHourglass(QLineF& window1, QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot);
 
 	GeneralCase::GeneralCaseResult executeGeneralCase(QPointF& startingPoint, QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh);
-
-	///////////
-	//TEST
-	QLineF line;
-	QLineF firstWindow;
-	QVector<QPointF> funnelSideTest;
-	QVector<QPointF> funnelVecSideTest;
-	QPointF starRoot;
-	QVector<QPointF> PRAT;
-	QVector<QPointF> PRBT;
-	QPointF waist;
-	Polygon_2 boundTest;
-	///////////
 
 private:
 	ShortestPath m_shortestPathHandler;
