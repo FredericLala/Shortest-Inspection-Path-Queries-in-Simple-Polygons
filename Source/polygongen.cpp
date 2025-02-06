@@ -5,13 +5,12 @@ PolygonGen::PolygonGen()
 }
 
 // Function to generate a random polygon and return the points
-Polygon_2 PolygonGen::generateRandomPolygon(int size)
+Polygon_2 PolygonGen::generateRandomPolygon(int size, double radius)
 {
 	Polygon_2 polygon;
 	std::list<Point_2> point_set;
 	CGAL::Random rand;
 
-	const double RADIUS = 250;
 	const int MAX_POLY_SIZE = 100;
 
 	if (size < 4)
@@ -20,7 +19,7 @@ Polygon_2 PolygonGen::generateRandomPolygon(int size)
 	}
 
 	// copy size points from the generator, eliminating duplicates
-	CGAL::copy_n_unique(Point_generator(RADIUS), size, std::back_inserter(point_set));
+	CGAL::copy_n_unique(Point_generator(radius), size, std::back_inserter(point_set));
 
 	// Generate the polygon from the points
 	CGAL::random_polygon_2(point_set.size(), std::back_inserter(polygon), point_set.begin());

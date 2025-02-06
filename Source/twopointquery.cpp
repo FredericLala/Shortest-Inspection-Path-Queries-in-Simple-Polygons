@@ -78,14 +78,15 @@ void TwoPointQuery::executeTwoPointQuery(QPointF& startingPoint, QPointF& queryP
 	QElapsedTimer timer;
 	timer.start();
 
-	resultQ2.visibility = false;
 	resultQ2.currentCase = Q2CASE::QNONE;
 	bool visibilitySQ1 = m_onePointHandler.checkVisibilty(startingPoint, queryPoint1, polygon);
 	bool visibilitySQ2 = m_onePointHandler.checkVisibilty(startingPoint, queryPoint2, polygon);
+	resultQ2.visibilityQ1 = visibilitySQ1;
+	resultQ2.visibilityQ2 = visibilitySQ2;
+
 	if (visibilitySQ1 && visibilitySQ2)
 	{
 		std::cout << "Both Query Points are Visible from the Starting Point \n";
-		resultQ2.visibility = true;
 		return;
 	}
 	else if (visibilitySQ1)

@@ -27,6 +27,24 @@ void PolygonWidget::setQueryPoint2(const QPointF& point)
 	query2Selected = true;
 }
 
+void PolygonWidget::setScaledStartingPoint(const QPointF& point)
+{
+	startingPoint = scalePoints(point);
+	startSelected = true;
+}
+
+void PolygonWidget::setScaledQueryPoint1(const QPointF& point)
+{
+	queryPoint1 = scalePoints(point);
+	query1Selected = true;
+}
+
+void PolygonWidget::setScaledQueryPoint2(const QPointF& point)
+{
+	queryPoint2 = scalePoints(point);
+	query2Selected = true;
+}
+
 bool PolygonWidget::isStartingPointSet() const
 {
 	return startSelected;
@@ -46,7 +64,9 @@ bool PolygonWidget::isQueryPoint2Set() const
 
 void PolygonWidget::constructRandomPolygon(int size) {
 	clearCanvas();
-	polygonC = m_polygonGenHandler.generateRandomPolygon(size);
+	QSize widgetSize = this->size();
+	int targetSize = std::min(widgetSize.width(), widgetSize.height()) - 20; // Slightly smaller
+	polygonC = m_polygonGenHandler.generateRandomPolygon(size, targetSize / 2);
 	m_mesh = m_shortestPathHandler.createMesh(polygonC);
 	// Convert CGAL polygon vertices to Qt points
 	for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
@@ -67,6 +87,7 @@ void PolygonWidget::prepareDrawnPolygon() {
 
 void PolygonWidget::finishDrawnPolygon() {
 	drawOwnPolygon = false;
+	shadowPolygon.clear();
 	polygonC.clear();
 	for (QPointF vertex : polygonQ)
 	{
@@ -75,14 +96,19 @@ void PolygonWidget::finishDrawnPolygon() {
 
 	if (!polygonC.is_simple()) {
 		clearCanvas();
+		return;
 	}
 
-	m_mesh = m_shortestPathHandler.createMesh(polygonC);
+	if (polygonC.size() >= 3) {
+		m_mesh = m_shortestPathHandler.createMesh(polygonC);
+	}
 	update();
 }
 
 void PolygonWidget::chooseExamplePolygon(int index) {
 	clearCanvas();
+	QSize widgetSize = this->size();
+	int targetSize = std::min(widgetSize.width(), widgetSize.height()) - 20; // Slightly smaller
 
 	switch (index)
 	{
@@ -108,10 +134,11 @@ void PolygonWidget::chooseExamplePolygon(int index) {
 		polygonC = m_polygonGenHandler.testPolygon();
 		break;
 	default:
-		polygonC = m_polygonGenHandler.generateRandomPolygon(40);
+		polygonC = m_polygonGenHandler.generateRandomPolygon(40, targetSize);
 		break;
 	}
 
+	polygonC = scalePolygon(polygonC, targetSize);
 	m_mesh = m_shortestPathHandler.createMesh(polygonC);
 	for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
 	{
@@ -127,17 +154,17 @@ void PolygonWidget::setFixedPoints(int index) {
 	case 0:
 		break;
 	case 1:
-		setStartingPoint(QPointF(-31, -104));
-		setQueryPoint1(QPointF(-146, -20));
-		setQueryPoint2(QPointF(99, -48));
+		setScaledStartingPoint(QPointF(-31, -104));
+		setScaledQueryPoint1(QPointF(-146, -20));
+		setScaledQueryPoint2(QPointF(99, -48));
 		break;
 	case 2:
 		break;
 	case 3:
 		//closed hourglass
-		setStartingPoint(QPointF(202, 158));
-		setQueryPoint1(QPointF(-151, 111));
-		setQueryPoint2(QPointF(-73, -1));
+		setScaledStartingPoint(QPointF(202, 158));
+		setScaledQueryPoint1(QPointF(-151, 111));
+		setScaledQueryPoint2(QPointF(-73, -1));
 
 		// opern hourglass
 		/*
@@ -148,20 +175,20 @@ void PolygonWidget::setFixedPoints(int index) {
 		*/
 		break;
 	case 4:
-		setStartingPoint(QPointF(-228, -27));
-		setQueryPoint1(QPointF(-322, 312));
-		setQueryPoint2(QPointF(-80, -131));
+		setScaledStartingPoint(QPointF(-228, -27));
+		setScaledQueryPoint1(QPointF(-322, 312));
+		setScaledQueryPoint2(QPointF(-80, -131));
 		break;
 
 	case 5:
-		setStartingPoint(QPointF(-23, 135));
-		setQueryPoint1(QPointF(145, 64));
-		setQueryPoint2 (QPointF(-204, 47));
+		setScaledStartingPoint(QPointF(-23, 135));
+		setScaledQueryPoint1(QPointF(145, 64));
+		setScaledQueryPoint2(QPointF(-204, 47));
 		break;
 	case 6:
-		setStartingPoint(QPointF(307, -108));
-		setQueryPoint1(QPointF(291, 153));
-		setQueryPoint2(QPointF(-111, -291));
+		setScaledStartingPoint(QPointF(307, -108));
+		setScaledQueryPoint1(QPointF(291, 153));
+		setScaledQueryPoint2(QPointF(-111, -291));
 		break;
 	default:
 		break;
@@ -169,6 +196,59 @@ void PolygonWidget::setFixedPoints(int index) {
 
 	update();
 }
+
+Polygon_2 PolygonWidget::scalePolygon(Polygon_2& polygon, int targetSize) {
+	if (polygon.is_empty()) {
+		return polygon;
+	}
+
+	CGAL::Bbox_2 bbox = polygon.bbox();
+	centerX = (bbox.xmin() + bbox.xmax()) / 2.0;
+	centerY = (bbox.ymin() + bbox.ymax()) / 2.0;
+	centerY = 0;
+	double width = bbox.xmax() - bbox.xmin();
+	double height = bbox.ymax() - bbox.ymin();
+	scale = targetSize / std::max(width, height);
+
+	// Apply scaling and translation to center it
+	Polygon_2 normalizedPolygon;
+	for (auto it = polygon.vertices_begin(); it != polygon.vertices_end(); ++it)
+	{
+		double newX = (CGAL::to_double(it->x()) - centerX) * scale;
+		double newY = (CGAL::to_double(it->y()) - centerY) * scale;
+		normalizedPolygon.push_back(Point_2(newX, newY));
+	}
+
+	return normalizedPolygon;
+}
+
+const QPointF PolygonWidget::scalePoints(const QPointF& point) {
+	double newX = (point.x() - centerX) * scale;
+	double newY = (point.y() - centerY) * scale;
+
+	return QPointF(newX, newY);
+}
+
+/*
+void PolygonWidget::resizeEvent(QResizeEvent* event)
+{
+	QSize newSize = event->size();
+	int targetSize = std::min(newSize.width(), newSize.height()) - 20; // Keep margin
+
+	// Re-center and normalize the polygon
+	scalePolygon(polygonC, targetSize);
+	m_mesh = m_shortestPathHandler.createMesh(polygonC);
+
+	// Update Qt polygon data
+	polygonQ.clear();
+	for (auto it = polygonC.vertices_begin(); it != polygonC.vertices_end(); ++it)
+	{
+		polygonQ.append(QPointF(it->x(), it->y()));
+	}
+
+	update();  // Trigger a repaint
+}
+*/
 
 ////////////////////////////////////////////////////////////////
 
@@ -211,7 +291,7 @@ void PolygonWidget::decreaseStep()
 
 void PolygonWidget::timedStepper(int targetStep, int interval)
 {
-	step = 0;
+	step = 1;
 	if (step >= targetStep) // Check if already at or above target
 		return;
 
@@ -432,13 +512,21 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
 ////////////////////////////////////////////////////////////////
 
 void PolygonWidget::drawPolygonPoints(QPainter& painter) {
+	QColor customColor(217, 217, 217);
 	if (!clicks.isEmpty() && newClickPoint) {
 		std::cout << "p.push_back(Point_2(" << clicks.last().x() << "," << clicks.last().y() << "));" << "\n";
 		polygonQ.append(clicks.last());
+		shadowPolygon.push_back(clicks.last());
 		newClickPoint = false;
 	}
 
 	if (clicks.size() > 0) {
+		painter.setBrush(customColor);
+		painter.setPen(Qt::NoPen);
+		painter.drawPolygon(shadowPolygon);
+
+		painter.setBrush(Qt::NoBrush);
+		painter.setPen(QPen(Qt::black, 3));
 		painter.drawEllipse(clicks[0], 3, 3);
 		for (qsizetype i = 1; i < clicks.size(); i++) {
 			painter.drawEllipse(clicks[i], 3, 3);
@@ -503,7 +591,7 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		painter.drawPolygon(polygonQ);
 	}
 
-	/*
+
 	// Draw the polygon and its Delaunay triangulation
 	painter.setPen(Qt::darkGray);
 	for (auto edge : m_mesh.edges())
@@ -513,7 +601,6 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 
 		painter.drawLine(QPointF(source.x(), source.y()), QPointF(target.x(), target.y()));
 	}
-	*/
 
 	pen.setBrush(Qt::black);
 	painter.setPen(Qt::black);
@@ -566,41 +653,43 @@ void PolygonWidget::paintEvent(QPaintEvent* event)
 		}
 	}
 
-
-	switch (m_queryMode)
-	{
-	case EXACT:
-		if (query1Selected && !query2Selected) {
-			visualizeOnePointQuery(painter);
-		}
-		else if (query2Selected) {
-			if (resultQ2.currentCase == TwoPointQuery::Q2CASE::QNONE)
-			{
-				resultQ1 = resultQ2.resultQ1;
+	if (step >= 1) {
+		switch (m_queryMode)
+		{
+		case EXACT:
+			if (query1Selected && !query2Selected) {
 				visualizeOnePointQuery(painter);
 			}
-			visualizeTwoPointQuery(painter);
+			else if (query2Selected) {
+				if (resultQ2.currentCase == TwoPointQuery::Q2CASE::QNONE)
+				{
+					resultQ1 = resultQ2.resultQ1;
+					visualizeOnePointQuery(painter);
+				}
+				visualizeTwoPointQuery(painter);
+			}
+			break;
+
+		case APPROX:
+			//visualizeApprox(painter);
+			visualizeNApprox(painter);
+			break;
+
+		default:
+			break;
 		}
-		break;
-
-	case APPROX:
-		//visualizeApprox(painter);
-		visualizeNApprox(painter);
-		break;
-
-	default:
-		break;
 	}
 }
 
 
 void PolygonWidget::visualizeOnePointQuery(QPainter& painter)
 {
-	if (step == 1) {
+	if (step >= 1) {
 		if (resultQ1.visibility)
 		{
 			errorMessage = "The Query Point is Visible from the Starting Point";
-			drawLabel(startingPoint.x() + 1, startingPoint.y() - 1, QString("c"), painter);
+			drawLabel(startingPoint.x() + 5, startingPoint.y(), QString(" = c"), painter);
+			
 			return;
 		}
 	}
@@ -698,11 +787,16 @@ void PolygonWidget::visualizeOnePointQuery(QPainter& painter)
 
 void PolygonWidget::visualizeTwoPointQuery(QPainter& painter) {
 	// Visibility Check
-	if (step == 1) {
-		if (resultQ2.visibility) {
+	if (step >= 1) {
+		if (resultQ2.visibilityQ1 && resultQ2.visibilityQ2) {
 			errorMessage = "Both Query Points arre Visible from the Starting Point";
 			drawLabel(startingPoint.x() + 1, startingPoint.y() - 1, QString("c"), painter);
 			return;
+		}
+		// TODO: This does not work
+		else if (resultQ2.visibilityQ1 || resultQ2.visibilityQ2) {
+			resultQ1 = resultQ2.resultQ1;
+			visualizeOnePointQuery(painter);
 		}
 	}
 
@@ -964,6 +1058,17 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
 			drawLabel(optimalPoint.x(), optimalPoint.y(), QString("c"), painter);
 		}
 	}
+
+	painter.setPen(QPen(Qt::green, 2));
+	painter.drawLine(QPointF(-110.59, 149.287), QPointF(-145.384, 111.7));
+	painter.drawLine(QPointF(-145.384, 111.7), QPointF(-268.896, -61.0969));
+	QPointF(-110.59, 149.287);
+	QPointF(-145.384, 111.7);
+	QPointF(-268.896, -61.0969);
+	QPointF tangentPoint1 = QPointF(-110.59, 149.287);
+	QPointF tangentPoint2 = QPointF(-145.384, 111.7);
+	painter.setPen(QPen(Qt::magenta, 2));
+	painter.drawLine(tangentPoint1, tangentPoint2);
 }
 
 

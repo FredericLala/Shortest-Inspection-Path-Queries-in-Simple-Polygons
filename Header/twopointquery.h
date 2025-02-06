@@ -47,7 +47,8 @@ public:
 	enum Q2CASE { QNONE, INTERSECTION, DOMINATION, GENERAL };
 
 	struct QueryResult {
-		bool visibility = false;
+		bool visibilityQ1 = false;
+		bool visibilityQ2 = false;
 		OnePointQuery::QueryResult resultQ1;
 		QLineF window1;
 		QLineF window2;

@@ -84,6 +84,7 @@ public:
 	QPointF findWaistPoint(const QVector<QPointF>& side1, const QVector<QPointF>& side2);
 
 	QPointF mirrorPoint(const QPointF& point, const QLineF& window);
+	bool areEqual(const QPointF& a, const QPointF b);
 	GeneralCase::TangentStruct findTangent(const QPointF& funnelPoint, const QPointF& hourglassPoint, const QVector<QPointF>& funnelSide, const QVector<QPointF>& hourglassSide, const QLineF& window, Polygon_2& polygon, const QVector<QPointF>& funnelSideHelper1, const QVector<QPointF>& funnelSideHelper2);
 	bool isTangent(const QVector<QPointF>& path, const QPointF& p1, const QPointF& p2);
 	QLineF extendLine(const QLineF& line, const double extensionFactor);
