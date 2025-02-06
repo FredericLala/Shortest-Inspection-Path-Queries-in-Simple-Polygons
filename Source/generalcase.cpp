@@ -122,6 +122,14 @@ QPointF GeneralCase::mirrorPoint(const QPointF& point, const QLineF& window) {
 	return QPointF(xPrime, yPrime);
 }
 
+bool GeneralCase::areEqual(const QPointF& a, const QPointF b) {
+	const double EPSILON = 1e-9; // A small tolerance value
+	bool equalX = std::abs(a.x() - b.x()) < EPSILON;
+	bool equalY = std::abs(a.y() - b.y()) < EPSILON;
+
+	return (equalX && equalY);
+}
+
 GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 	const QPointF& hourglassPoint,
 	const QVector<QPointF>& funnelSide,
@@ -150,7 +158,10 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 	bool isLineToFunnelTangent = isTangent(funnelSide, funnelPoint, mirroredPoint);
 	bool isLineToHourglassTangent = isTangent(mirrorSide, funnelPoint, mirroredPoint);
 
-	if (funnelPoint == funnelSide.last()) {
+	//if (funnelPoint == funnelSide.last()) {
+	QPointF cba = funnelPoint;
+	QPointF abc = funnelSide.last();
+	if (areEqual(funnelPoint, funnelSide.last())) {
 		Polygon_2 bounds;
 		bounds.push_back(Point_2(funnelSideHelper1.last().x(), funnelSideHelper1.last().y()));
 		bounds.push_back(Point_2(funnelSideHelper1.rbegin()[1].x(), funnelSideHelper1.rbegin()[1].y()));
@@ -162,6 +173,12 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 		QLineF tangentLine = QLineF(mirrorPoint(funnelPoint, window), mirrorPoint(hourglassPoint, window));
 		QLineF extendedLine = extendLine(tangentLine, 0.01);
 		Point_2 testPoint = Point_2(extendedLine.p1().x(), extendedLine.p1().y());
+		if (!bounds.is_simple()) {
+			std::cout << "Error: Bound Polygon is not simple \n";
+			tangent.failure = FUNNEL_HOURGLASS;
+			return tangent;
+		}
+
 		if (bounds.has_on_unbounded_side(testPoint)) {
 			tangent.failure = FUNNEL_HOURGLASS;
 			return tangent;
@@ -191,7 +208,8 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 	tangentPath.append(intersectionPoint);
 	tangentPath.append(hourglassPoint);
 
-	if (funnelPoint == funnelSide.first() && hourglassPoint == hourglassSide.last()) {
+	//if (funnelPoint == funnelSide.first() && hourglassPoint == hourglassSide.last()) {
+	if (areEqual(funnelPoint, funnelSide.first()) && areEqual(hourglassPoint, hourglassSide.last())) {
 		if (numberOfIntersections(window, tangentPath) == 0) {
 			tangent.failure = FUNNEL_HOURGLASS;
 			return tangent;
@@ -205,15 +223,23 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 bool GeneralCase::isTangent(const QVector<QPointF>& path, const QPointF& p1, const QPointF& p2) {
 	double dx = p2.x() - p1.x();
 	double dy = p2.y() - p1.y();
-
+	const double epsilon = 1e-9;
 	int sign = 0;
+
 	for (const QPointF& p : path) {
 		double cross = (p.y() - p1.y()) * dx - (p.x() - p1.x()) * dy;
-		int newSign = (cross > 0) - (cross < 0); // +1 if positive, -1 if negative, 0 if on the line
-		if (sign == 0) sign = newSign; // First point determines reference sign
-		else if (newSign != 0 && newSign != sign) return false; // Points are on different sides
+		// Treat very small values as zero (collinear points)
+		if (fabs(cross) < epsilon) continue;
+
+		int newSign = (cross > 0) ? 1 : -1;
+		if (sign == 0) {
+			sign = newSign; // First non-zero sign sets the reference
+		}
+		else if (newSign != sign) {
+			return false; // If we get opposite signs, path crosses the line
+		}
 	}
-	return true;
+	return true; // If no conflicts, it's a tangent
 }
 
 QLineF GeneralCase::extendLine(const QLineF& line, const double extensionFactor) {

@@ -18,6 +18,9 @@
 #include <QTimer>
 
 #include <list>
+#include <CGAL/centroid.h>
+#include <CGAL/Bbox_2.h>
+
 
 class PolygonWidget : public QWidget
 {
@@ -29,6 +32,12 @@ public:
     void setQueryPoint1(const QPointF& point);
 
     void setQueryPoint2(const QPointF& point);
+
+    void setScaledStartingPoint(const QPointF& point);
+
+    void setScaledQueryPoint1(const QPointF& point);
+
+    void setScaledQueryPoint2(const QPointF& point);
 
     enum QueryMode { EXACT, APPROX };
 
@@ -55,6 +64,14 @@ public:
     void timedStepper(int targetStep, int interval);
     QString updateLog();
     void setFixedPoints(int index);
+
+    Polygon_2 scalePolygon(Polygon_2& polygon, int targetSize);
+
+    const QPointF scalePoints(const QPointF& point);
+
+
+    //void resizeEvent(QResizeEvent* event);
+
 
 
 protected:
@@ -109,7 +126,7 @@ private:
     bool visibilitySQ;
     bool visibilitySQ1;
     bool visibilitySQ2;
-    int step;
+    int step = 0;
     bool stepmode;
 
     bool drawOwnPolygon;
@@ -139,6 +156,11 @@ private:
 
     bool newClickPoint = false;
     QString m_log;
+
+    double centerX = 0;
+    double centerY = 0;
+    double scale = 0;
+    QPolygonF shadowPolygon;
 };
 
 #endif // POLYGONWIDGET_H

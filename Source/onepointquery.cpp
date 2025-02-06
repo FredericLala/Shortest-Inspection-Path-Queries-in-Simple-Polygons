@@ -150,7 +150,8 @@ QPointF OnePointQuery::shootRayExtended(const QPointF& point1, const QPointF& po
 		// Check if intersection is a Point_2
 		if (const Point_2* p = std::get_if<Point_2>(&(intersection->first)))
 		{
-			if (*p == target)
+			//if (*p == target)
+			if (areEqual(target, *p))
 			{
 				// Skip the intersection if it matches the target point
 				continue;
