@@ -1,8 +1,8 @@
 #ifndef GeneralCase_H
 #define GeneralCase_H
 
-#include "ShortestPath.h"
-#include "OnePointQuery.h"
+#include "shortestpath.h"
+#include "onepointquery.h"
 #include "common.h"
 #include "cmath"
 

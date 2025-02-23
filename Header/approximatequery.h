@@ -3,9 +3,9 @@
 
 #include "common.h"
 
-#include "OnePointQuery.h"
-#include "TwoPointQuery.h"
-#include "ShortestPath.h"
+#include "onepointquery.h"
+#include "twopointquery.h"
+#include "shortestpath.h"
 
 #include <CGAL/Exact_circular_kernel_2.h>
 #include <CGAL/Circular_kernel_intersections.h>

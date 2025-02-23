@@ -4,38 +4,43 @@ MainWindow::MainWindow(QWidget* parent)
 	: QWidget(parent), currentStep(0)
 {
 	// Main layout setup
-	mainLayout = new QVBoxLayout(this);
+    mainLayout = new QVBoxLayout(this);
+    settingLayout = new QVBoxLayout(this);
+    //settingLayout->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 	polygonWidget = new PolygonWidget(this);
-	mainLayout->setSpacing(10);
+    polygonWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    mainLayout->setSpacing(0);
+    settingLayout->setSpacing(10);
 
 	// Selection
 	polygonSelection();
-	mainLayout->addWidget(createLine());
+    settingLayout->addWidget(createLine());
 	querySelection();
-	mainLayout->addWidget(createLine());
+    settingLayout->addWidget(createLine());
 	runSelection();
-	mainLayout->addWidget(createLine());
+    settingLayout->addWidget(createLine());
 
 	// Clear Points Button
 	QPushButton* clearPointsButton = new QPushButton("Clear Points", this);
 	connect(clearPointsButton, &QPushButton::clicked, this, &MainWindow::onClearPointsClicked);
-	mainLayout->addWidget(clearPointsButton);
+    settingLayout->addWidget(clearPointsButton);
 
 	// Start Button
 	QPushButton* startButton = new QPushButton("Start", this);
 	connect(startButton, &QPushButton::clicked, this, &MainWindow::onStartClicked);
-	mainLayout->addWidget(startButton);
+    settingLayout->addWidget(startButton);
 
 	// Polygon display widget
 	polygonWidget->setStyleSheet(
 		"background-color: #ffffff;"  // Background color
 		"border-radius: 20px;"        // Rounded corners (adjust radius as needed)
 	);
-	mainLayout->addWidget(polygonWidget);
+    mainLayout->addLayout(settingLayout);
+    mainLayout->addWidget(polygonWidget);
 
 	log = new QLabel("Log: ", this);
 	log->setFixedHeight(20);
-	mainLayout->addWidget(log);
+    mainLayout->addWidget(log);
 	//log->setText("Log: " + polygonWidget->getLog());
 }
 
@@ -83,8 +88,8 @@ void MainWindow::runSelection()
 		if (checked) updateRunSelection(AUTO);
 		});
 
-	mainLayout->addLayout(runLayout);
-	mainLayout->addWidget(runModeWidget);
+    settingLayout->addLayout(runLayout);
+    settingLayout->addWidget(runModeWidget);
 }
 
 void MainWindow::updateRunSelection(RunMode mode)
@@ -267,8 +272,8 @@ void MainWindow::querySelection()
 		if (checked) updateQuerySelection(PolygonWidget::APPROX);
 		});
 
-	mainLayout->addLayout(queryLayout);
-	mainLayout->addWidget(queryModeWidget);
+    settingLayout->addLayout(queryLayout);
+    settingLayout->addWidget(queryModeWidget);
 }
 
 void MainWindow::updateQuerySelection(PolygonWidget::QueryMode mode)
@@ -357,8 +362,8 @@ void MainWindow::polygonSelection()
 
 	polyLayout->setSpacing(5);
 
-	mainLayout->addLayout(polyLayout);
-	mainLayout->addWidget(polygonModeWidget);
+    settingLayout->addLayout(polyLayout);
+    settingLayout->addWidget(polygonModeWidget);
 }
 
 void MainWindow::updatePolySelection(PolyMode mode)
@@ -426,7 +431,7 @@ QHBoxLayout* MainWindow::createTickLabel()
 		tickLabelsLayout->addWidget(label);
 	}
 
-	//mainLayout->addLayout(tickLabelsLayout);
+    //settingLayout->addLayout(tickLabelsLayout);
 	return tickLabelsLayout;
 }
 

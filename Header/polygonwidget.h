@@ -3,9 +3,9 @@
 
 #include "common.h"
 #include "polygongen.h"
-#include "OnePointQuery.h"
-#include "TwoPointQuery.h"
-#include "ShortestPath.h"
+#include "onepointquery.h"
+#include "twopointquery.h"
+#include "shortestpath.h"
 #include "approximatequery.h"
 #include "generalcase.h"
 
@@ -99,7 +99,6 @@ private:
  
     QueryMode m_queryMode;
     int m_step;
-    enum Step;
 
     QPointF startingPoint;
     QPointF queryPoint1;

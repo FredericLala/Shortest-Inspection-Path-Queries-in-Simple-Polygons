@@ -58,7 +58,6 @@ void ApproximateQuery::nEpsilonApproximateQuery(double epsilon, QPointF& startin
 	QVector<QPointF> nApproximatePath = nApproximateQuery(startingPoint, queryPoints, polygon, mesh);
 	nApproximateResult.nApproxPath = nApproximatePath;
 	double nApproximatePathLength = m_twoPointHandler.calculatePathLength(nApproximatePath);
-	double nApproxNormalizedLength = m_twoPointHandler.calculateNormalizedPathLength(nApproximatePath);
 	const int sizeOfN = queryPoints.size() * 2 - 1;
 	std::cout << "size n: " << sizeOfN << "\n";
 
@@ -100,7 +99,7 @@ void ApproximateQuery::nEpsilonApproximateQuery(double epsilon, QPointF& startin
 
 	qint64 elapsedTime = timer.elapsed();
 	std::cout << "epsilonApproximateQuery completed in " << elapsedTime << " ms \n";
-	double approxPathLength = m_twoPointHandler.calculateNormalizedPathLength(shortestPath);
+    double approxPathLength = m_twoPointHandler.calculatePathLength(shortestPath);
 	std::cout << "path length " << approxPathLength << "\n";
 	std::cout << "epsilon value " << epsilon << "\n";
 
@@ -108,7 +107,7 @@ void ApproximateQuery::nEpsilonApproximateQuery(double epsilon, QPointF& startin
 	if (queryPoints.size() == 2) {
 		m_twoPointHandler.executeTwoPointQuery(startingPoint, queryPoints[0], queryPoints[1], polygon, mesh);
 		TwoPointQuery::QueryResult resultQ2 = m_twoPointHandler.getQ2Result();
-		std::cout << "path length difference: " << approxPathLength - resultQ2.optimalPathLength << "\n";
+        std::cout << "allowed max length: " << resultQ2.optimalPathLength * (1 + epsilon)  << "\n";
 	}
 
 

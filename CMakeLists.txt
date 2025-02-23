@@ -4,17 +4,28 @@ cmake_minimum_required(VERSION 3.18)
 # Project name
 project(Bachelor)
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "CMAKE_LANG_FLAGS_RELWITHDEBINFO")
+endif()
+
 # Set CMake variables for Qt handling
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_PREFIX_PATH "/home/freddy/Qt/6.8.2/gcc_64")
+find_package(Qt6Core REQUIRED)
+find_package(Qt6Widgets REQUIRED)
+find_package(Qt6Gui REQUIRED)
 # set(CMAKE_AUTORCC ON)
 
 # Find the necessary packages: CGAL and Qt6
-find_package(CGAL REQUIRED OPTIONAL_COMPONENTS Qt6)
-find_package(Qt6Core REQUIRED)
-find_package(Qt6Gui REQUIRED)
-find_package(Qt6Widgets REQUIRED)
+set(CMAKE_PREFIX_PATH "/home/freddy/cgal/CGAL-6.0.1")
+find_package(CGAL REQUIRED)
+
+set(CMAKE_PREFIX_PATH "/home/freddy/cgal/boost_1_87_0")
+find_package(Boost REQUIRED)
+
+find_package(GMP REQUIRED)
 
 # Collect all .cpp and .h files from Source and Header directories
 set(SOURCES
@@ -56,14 +67,6 @@ target_link_libraries(Bachelor PUBLIC
   Qt6::Gui
   Qt6::Widgets
 )
-
-# If CGAL with Qt6 support is found, link the CGAL Qt viewer library
-if(CGAL_Qt6_FOUND)
-  target_link_libraries(Bachelor PUBLIC CGAL::CGAL_Basic_viewer)
-else()
-  message(STATUS "NOTICE: CGAL Qt6 components were not found, some features may not be compiled.")
-endif()
-
 
 
 

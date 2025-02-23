@@ -33,8 +33,8 @@ typedef Graph_traits::face_iterator face_iterator;
 typedef Graph_traits::face_descriptor face_descriptor;
 
 #include <CGAL/AABB_face_graph_triangle_primitive.h>
-#include <CGAL/AABB_traits_3.h>
 #include <CGAL/AABB_tree.h>
+#include <CGAL/AABB_traits_3.h>
 typedef CGAL::AABB_face_graph_triangle_primitive<Surface_mesh> AABB_face_graph_primitive;
 typedef CGAL::AABB_traits_3<K, AABB_face_graph_primitive> AABB_face_graph_traits;
 typedef CGAL::AABB_tree<AABB_face_graph_traits> AABB_Tree;

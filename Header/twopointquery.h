@@ -1,8 +1,8 @@
 #ifndef TwoPointQuery_H
 #define TwoPointQuery_H
 
-#include "ShortestPath.h"
-#include "OnePointQuery.h"
+#include "shortestpath.h"
+#include "onepointquery.h"
 #include "generalcase.h"
 #include "common.h"
 #include "cmath"

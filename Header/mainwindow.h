@@ -6,10 +6,10 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QLabel>
-#include "PolygonWidget.h"
-#include "OnePointQuery.h"
-#include "TwoPointQuery.h"
-#include "ShortestPath.h"
+#include "polygonwidget.h"
+#include "onepointquery.h"
+#include "twopointquery.h"
+#include "shortestpath.h"
 #include <QMainWindow>
 #include <QApplication>
 #include <QSlider>
@@ -66,6 +66,7 @@ private:
 
 	// Main layout
 	QVBoxLayout* mainLayout;
+    QVBoxLayout* settingLayout;
 
 	// Initializes the stepper stages and query options
 	void setupStepper();
