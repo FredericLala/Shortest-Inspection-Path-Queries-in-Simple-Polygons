@@ -55,12 +55,9 @@ public:
 
 	int binarySearchByAngleBSide(QVector<QPointF>& path, QPointF& a, QPointF& b);
 
-	QString getLog();
-
-	void resetLog();
 
 	struct QueryResult {
-		bool visibility;
+        bool visibility = false;
 		QVector<QPointF> pathStartToQuery;
 		QLineF window;
 		QVector<QPointF> pathRootToA;
@@ -68,6 +65,7 @@ public:
 		QPointF lca;
 		QPointF optimalPoint;
 		QVector<QPointF> optimalPath;
+        QString log;
 	};
 
 	void executeOnePointQuery(QPointF& startingPoint, QPointF& queryPoint, Polygon_2& polygon, const Surface_mesh& mesh);
@@ -88,7 +86,6 @@ private:
 	AABB_tree tree;
 	std::vector<Segment_2> edges;
 	double calculateAngle(const K::Vector_2& v1, const K::Vector_2& v2);
-	QString logQ1;
 	bool onPathRootToA;
 	QPointF vertexPerpendicularToC;
 

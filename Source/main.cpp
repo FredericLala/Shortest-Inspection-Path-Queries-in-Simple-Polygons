@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     // Create an instance of MainUI
     MainWindow mainWindow;
-    mainWindow.setWindowTitle("Polygon Query Application");
+    mainWindow.setWindowTitle("Shortest Inspection-Path Queries");
 
     // Show the main window
     mainWindow.showMaximized();

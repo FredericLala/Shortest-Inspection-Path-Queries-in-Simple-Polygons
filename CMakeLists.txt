@@ -51,11 +51,13 @@ set(HEADERS
     Header/twopointquery.h
     Header/approximatequery.h
     Header/generalcase.h
+    Header/logredirect.h
 )
 
 # Add the collected source files to the executable or library
 # Add executable and include directories
-add_executable(Bachelor ${SOURCES} ${HEADERS})
+add_executable(Bachelor ${SOURCES} ${HEADERS}
+    Header/logredirect.h)
 
 # Add Header directory to the include path
 target_include_directories(Bachelor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Header)

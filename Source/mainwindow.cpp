@@ -4,13 +4,22 @@ MainWindow::MainWindow(QWidget* parent)
 	: QWidget(parent), currentStep(0)
 {
 	// Main layout setup
-    mainLayout = new QVBoxLayout(this);
+    mainLayout = new QHBoxLayout(this);
+    mainLayout->setSpacing(0);
+
     settingLayout = new QVBoxLayout(this);
-    //settingLayout->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    settingLayout->setContentsMargins(0,0,0,0);
+    settingLayout->setSpacing(5);
+    QWidget* settingContainer = new QWidget();
+    settingContainer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    settingContainer->setLayout(settingLayout);
+
 	polygonWidget = new PolygonWidget(this);
     polygonWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    mainLayout->setSpacing(0);
-    settingLayout->setSpacing(10);
+    polygonWidget->setStyleSheet(
+        "background-color: #ffffff;"  // Background color
+        "border-radius: 20px;"        // Rounded corners
+        );
 
 	// Selection
 	polygonSelection();
@@ -30,18 +39,23 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(startButton, &QPushButton::clicked, this, &MainWindow::onStartClicked);
     settingLayout->addWidget(startButton);
 
-	// Polygon display widget
-	polygonWidget->setStyleSheet(
-		"background-color: #ffffff;"  // Background color
-		"border-radius: 20px;"        // Rounded corners (adjust radius as needed)
-	);
-    mainLayout->addLayout(settingLayout);
-    mainLayout->addWidget(polygonWidget);
+    // Log
+    log = new QLabel("Log: ", this);
+    log->setFixedHeight(20);
+    settingLayout->addWidget(log);
+    logOutput = new QPlainTextEdit(this);
+    logOutput->setReadOnly(true);
+    logOutput->setFont(QFont("Courier", 10));
+    logOutput->setStyleSheet("background-color: white; color: black;");
+    logOutput->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    settingLayout->addWidget(logOutput);
+    logRedirect = new LogRedirect(logOutput);
+    std::cout.rdbuf(logRedirect);
 
-	log = new QLabel("Log: ", this);
-	log->setFixedHeight(20);
-    mainLayout->addWidget(log);
-	//log->setText("Log: " + polygonWidget->getLog());
+    //settingLayout->addStretch();
+
+    mainLayout->addWidget(settingContainer, 1);
+    mainLayout->addWidget(polygonWidget, 2);
 }
 
 QFrame* MainWindow::createLine()
@@ -50,6 +64,10 @@ QFrame* MainWindow::createLine()
 	line->setFrameShape(QFrame::HLine);  // Horizontal line
 	line->setFrameShadow(QFrame::Sunken);
 	return line;
+}
+
+void MainWindow::onHideClicked() {
+    polygonWidget->setVisible(false);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -88,6 +106,8 @@ void MainWindow::runSelection()
 		if (checked) updateRunSelection(AUTO);
 		});
 
+
+
     settingLayout->addLayout(runLayout);
     settingLayout->addWidget(runModeWidget);
 }
@@ -99,9 +119,14 @@ void MainWindow::updateRunSelection(RunMode mode)
 	{
 	case MainWindow::STEPPER:
 		runModeWidget->setCurrentWidget(stepperLayoutWidget);
+        polygonWidget->reset();
+        currentStep = 0;
+        updateLabel();
 		break;
 	case MainWindow::AUTO:
 		runModeWidget->setCurrentWidget(autoLayoutWidget);
+        polygonWidget->reset();
+        currentStep = 0;
 		break;
 	default:
 		break;
@@ -111,23 +136,22 @@ void MainWindow::updateRunSelection(RunMode mode)
 void MainWindow::setupStepper()
 {
 	stepperLayoutWidget = new QWidget(this);
-	QHBoxLayout* stepperLayout = new QHBoxLayout(stepperLayoutWidget);
+    QVBoxLayout* stepperLayout = new QVBoxLayout(stepperLayoutWidget);
+    QHBoxLayout* buttonBox = new QHBoxLayout();
 
 	// Stepper control buttons
 	prevButton = new QPushButton("Previous", this);
 	nextButton = new QPushButton("Next", this);
 	connect(prevButton, &QPushButton::clicked, this, &MainWindow::onPrevStep);
 	connect(nextButton, &QPushButton::clicked, this, &MainWindow::onNextStep);
+    buttonBox->addWidget(prevButton);
+    buttonBox->addWidget(nextButton);
 
-	// Step label to show current step description
-	stepLabel = new QLabel("Click in Polygon to draw Start and Query", this);
-
-	// Add to layout
-	stepperLayout->addWidget(prevButton);
-	stepperLayout->addWidget(stepLabel);
-	stepLabel->setAlignment(Qt::AlignCenter);
-	updateUIForStepQ1();
-	stepperLayout->addWidget(nextButton);
+    // Step label to show current step description
+    stepLabel = new QLabel("Click on the Polygon to Select Points and Press Start", this);
+    // Add to layout
+    stepperLayout->addWidget(stepLabel);
+    stepperLayout->addLayout(buttonBox);
 }
 
 void MainWindow::onNextStep()
@@ -136,7 +160,7 @@ void MainWindow::onNextStep()
 	{
 		currentStep++;
 		polygonWidget->increaseStep();
-		updateUIForStepQ1();
+        updateLabel();
 	}
 }
 
@@ -145,29 +169,30 @@ void MainWindow::onPrevStep()
 	if (currentStep > 1)
 		currentStep--;
 	polygonWidget->decreaseStep();
-	updateUIForStepQ1();
+    updateLabel();
 }
 
 
 void MainWindow::setupAuto()
 {
-	autoLayoutWidget = new QWidget(this);
-	QHBoxLayout* autoLayout = new QHBoxLayout(autoLayoutWidget);
+    autoLayoutWidget = new QWidget(this);
+    QVBoxLayout* autoLayout = new QVBoxLayout(autoLayoutWidget);
 
-	// Create the slider
-	intervalSlider = new QSlider(Qt::Horizontal);
-	// Add ticks to the slider
-	intervalSlider->setTickPosition(QSlider::TicksAbove);
-	intervalSlider->setTickInterval(100);
-	intervalSlider->setRange(0, 1000); // Range of epsilon values
-	intervalSlider->setValue(0);    // Default value
+    // Create the slider
+    intervalSlider = new QSlider(Qt::Horizontal);
+    intervalSlider->setTickPosition(QSlider::TicksAbove);
+    intervalSlider->setTickInterval(1);
+    intervalSlider->setRange(0, 10);
+    intervalSlider->setValue(0);    // Default value
 
-	// Create labels for the ticks
-	QHBoxLayout* tickLabelsLayout = createTickLabel();
+    QLabel* valueLabel = new QLabel("Interval: 0 s");
+    connect(intervalSlider, &QSlider::valueChanged, [=](double value) {
+        valueLabel->setText(QString("Interval: %1 s").arg(value / 10));
+    });
 
-
-	// Add to layout
-	autoLayout->addWidget(intervalSlider);
+    // Add to layout
+    autoLayout->addWidget(valueLabel);
+    autoLayout->addWidget(intervalSlider);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -189,15 +214,10 @@ void MainWindow::onStartClicked()
 				currentStep = 1;
 				polygonWidget->startOnePointQuery(0, true);
 			}
-
-			updateUIForStepQ1();
 			break;
 		case PolygonWidget::APPROX:
-			if (polygonWidget->isQueryPoint2Set()) {
-				currentStep = 1;
-				polygonWidget->startApproximateQuery(0, true, epsilonSlider->value() / static_cast<double>(100));
-			}
-			polygonWidget->startNApproximateQuery(0, true, epsilonSlider->value() / static_cast<double>(100));
+            currentStep = 1;
+            polygonWidget->startNApproximateQuery(0, true, epsilonSlider->value() / static_cast<double>(10));
 			break;
 		default:
 			break;
@@ -209,19 +229,15 @@ void MainWindow::onStartClicked()
 		{
 		case PolygonWidget::EXACT:
 			if (polygonWidget->isQueryPoint2Set()) {
-				polygonWidget->startTwoPointQuery(intervalSlider->value(), false);
+                polygonWidget->startTwoPointQuery(intervalSlider->value() * 100, false);
 			}
 			else if (polygonWidget->isQueryPoint1Set()) {
-				polygonWidget->startOnePointQuery(intervalSlider->value(), false);
+                polygonWidget->startOnePointQuery(intervalSlider->value() * 100, false);
 			}
 
 			break;
 		case PolygonWidget::APPROX:
-			if (polygonWidget->isQueryPoint2Set()) {
-				polygonWidget->startApproximateQuery(intervalSlider->value(), false, epsilonSlider->value() / static_cast<double>(100));
-			}
-
-			polygonWidget->startNApproximateQuery(intervalSlider->value(), false, epsilonSlider->value() / static_cast<double>(100));
+            polygonWidget->startNApproximateQuery(intervalSlider->value() * 100, false, epsilonSlider->value() / static_cast<double>(10));
 			break;
 		default:
 			break;
@@ -231,12 +247,261 @@ void MainWindow::onStartClicked()
 	default:
 		break;
 	}
+    updateLabel();
 }
 
 void MainWindow::onClearPointsClicked() {
 	polygonWidget->clearComputation();
 }
 
+void MainWindow::updateLabel()
+{
+    switch (queryModeEnum)
+    {
+    case PolygonWidget::EXACT:
+        if (polygonWidget->isQueryPoint2Set()) {
+            switch (polygonWidget->resultQ2.currentCase) {
+            case TwoPointQuery::INTERSECTION:
+                updateUIForIntersection();
+                break;
+            case TwoPointQuery::DOMINATION:
+                updateUIForDomination();
+                break;
+            case TwoPointQuery::GENERAL:
+                updateUIForGeneral();
+                break;
+            default:
+                updateUIForQ2();
+                break;
+            }
+        } else if (polygonWidget->isQueryPoint1Set()) {
+            updateUIForStepQ1();
+        }
+        break;
+    case PolygonWidget::APPROX:
+        updateUIForApprox();
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::updateUIForStepQ1()
+{
+    // Update UI elements based on the current step
+    switch (currentStep)
+    {
+    case 0:
+        stepLabel->setText("Click on the Polygon to Select Points and Press Start");
+        prevButton->setEnabled(false);
+        break;
+    case 1:
+        stepLabel->setText("Perform Visibility Check");
+        prevButton->setEnabled(true);
+        break;
+    case 2:
+        stepLabel->setText("Shortest Path Calculation");
+        break;
+    case 3:
+        stepLabel->setText("Calculate Point a");
+        break;
+    case 4:
+        stepLabel->setText("Calculate Point b and Draw Window");
+        break;
+    case 5:
+        stepLabel->setText("Calculate Point Funnel Root");
+        break;
+    case 6:
+        stepLabel->setText("Calculate Funnel Sides");
+        break;
+    case 7:
+        stepLabel->setText("Draw Optimal Point c");
+        nextButton->setEnabled(true);
+        break;
+    case 8:
+        stepLabel->setText("Draw Optimal Path | END");
+        nextButton->setEnabled(false);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::updateUIForQ2()
+{
+    // Update UI elements based on the current step
+    switch (currentStep)
+    {
+    case 0:
+        stepLabel->setText("Click on the Polygon to Select Points and Press Start");
+        prevButton->setEnabled(false);
+        nextButton->setEnabled(false);
+        break;
+    case 1:
+        stepLabel->setText("Perform Visibility Check");
+        prevButton->setEnabled(false);
+        nextButton->setEnabled(false);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::updateUIForIntersection()
+{
+    // Update UI elements based on the current step
+    switch (currentStep)
+    {
+    case 0:
+        stepLabel->setText("Click on the Polygon to Select Points and Press Start");
+        prevButton->setEnabled(false);
+        nextButton->setEnabled(false);
+        break;
+    case 1:
+        stepLabel->setText("Perform Visibility Check");
+        nextButton->setEnabled(true);
+        break;
+    case 2:
+        stepLabel->setText("Draw the First Window");
+        prevButton->setEnabled(true);
+        break;
+    case 3:
+        stepLabel->setText("Draw the Second Window");
+        break;
+    case 4:
+        stepLabel->setText("Calculate the Shortest Path to the First Mutually Visible Segment");
+        break;
+    case 5:
+        stepLabel->setText("Calculate the Shortest Path to the Second Mutually Visible Segment");
+        break;
+    case 6:
+        stepLabel->setText("Calculate the Shortest Path to the Remaining Segments");
+        nextButton->setEnabled(true);
+        break;
+    case 7:
+        stepLabel->setText("Highlight the Optimal Path | END");
+        nextButton->setEnabled(false);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::updateUIForDomination()
+{
+    switch (currentStep)
+    {
+    case 0:
+        stepLabel->setText("Click on the Polygon to Select Points and Press Start");
+        prevButton->setEnabled(false);
+        nextButton->setEnabled(false);
+        break;
+    case 1:
+        stepLabel->setText("Perform Visibility Check");
+        nextButton->setEnabled(true);
+        break;
+    case 2:
+        stepLabel->setText("Draw the First Window");
+        prevButton->setEnabled(true);
+        break;
+    case 3:
+        stepLabel->setText("Draw the Second Window");
+        break;
+    case 4:
+        stepLabel->setText("Draw Optimal Point c");
+        nextButton->setEnabled(true);
+        break;
+    case 5:
+        stepLabel->setText("Draw Optimal Path | END");
+        nextButton->setEnabled(false);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::updateUIForGeneral()
+{
+    // Update UI elements based on the current step
+    switch (currentStep)
+    {
+    case 0:
+        stepLabel->setText("Click on the Polygon to Select Points and Press Start");
+        prevButton->setEnabled(false);
+        nextButton->setEnabled(false);
+        break;
+    case 1:
+        stepLabel->setText("Perform Visibility Check");
+        nextButton->setEnabled(true);
+        break;
+    case 2:
+        stepLabel->setText("Draw the First Window");
+        prevButton->setEnabled(true);
+        break;
+    case 3:
+        stepLabel->setText("Draw the Second Window");
+        break;
+    case 4:
+        stepLabel->setText("Calculate the Funnel");
+        break;
+    case 5:
+        stepLabel->setText("Calculate the Hourglass");
+        break;
+    case 6:
+        stepLabel->setText("Determine the Common Tangents");
+        break;
+    case 7:
+        stepLabel->setText("Concatenate");
+        break;
+    case 8:
+        stepLabel->setText("Draw Optimal Point c");
+        nextButton->setEnabled(true);
+        break;
+    case 9:
+        stepLabel->setText("Draw Optimal Path | END");
+        nextButton->setEnabled(false);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::updateUIForApprox()
+{
+    // Update UI elements based on the current step
+    switch (currentStep)
+    {
+    case 0:
+        stepLabel->setText("Click on the Polygon to Select Points and Press Start");
+        prevButton->setEnabled(false);
+        nextButton->setEnabled(false);
+        break;
+    case 1:
+        stepLabel->setText("Determine (2n-1)-Approximate Path");
+        nextButton->setEnabled(true);
+        break;
+    case 2:
+        stepLabel->setText("Draw Windows");
+        prevButton->setEnabled(true);
+        break;
+    case 3:
+        stepLabel->setText("Draw Disc");
+        break;
+    case 4:
+        stepLabel->setText("Compute Intersection Window");
+        break;
+    case 5:
+        stepLabel->setText("Generate Equally Spaced Points");
+        nextButton->setEnabled(true);
+        break;
+    case 6:
+        stepLabel->setText("Calculate (1+Epsilon)-Appproximate Path | END");
+        nextButton->setEnabled(false);
+        break;
+    default:
+        break;
+    }
+}
 ////////////////////////////////////////////////////////////////
 
 void MainWindow::querySelection()
@@ -273,7 +538,9 @@ void MainWindow::querySelection()
 		});
 
     settingLayout->addLayout(queryLayout);
-    settingLayout->addWidget(queryModeWidget);
+    //settingLayout->addWidget(queryModeWidget);
+    settingLayout->addWidget(approximateLayoutWidget);
+    settingLayout->addWidget(exactLayoutWidget);
 }
 
 void MainWindow::updateQuerySelection(PolygonWidget::QueryMode mode)
@@ -282,37 +549,43 @@ void MainWindow::updateQuerySelection(PolygonWidget::QueryMode mode)
 	switch (queryModeEnum) {
 	case PolygonWidget::EXACT:
 		polygonWidget->setQueryMode(PolygonWidget::EXACT);
-		queryModeWidget->setCurrentWidget(exactLayoutWidget);
+        //queryModeWidget->setCurrentWidget(exactLayoutWidget);
+        approximateLayoutWidget->setVisible(false);
+        exactLayoutWidget->setVisible(true);
 		break;
 	case PolygonWidget::APPROX:
 		polygonWidget->setQueryMode(PolygonWidget::APPROX);
-		queryModeWidget->setCurrentWidget(approximateLayoutWidget);
+        //queryModeWidget->setCurrentWidget(approximateLayoutWidget);
+        approximateLayoutWidget->setVisible(true);
+        exactLayoutWidget->setVisible(false);
 		break;
 	}
 }
 
 void MainWindow::setupApproximateQuery() {
 	approximateLayoutWidget = new QWidget(this);
-	QVBoxLayout* approximateLayout = new QVBoxLayout(approximateLayoutWidget);
+    QVBoxLayout* approximateLayout = new QVBoxLayout(approximateLayoutWidget);
 
 	// Create the slider
 	epsilonSlider = new QSlider(Qt::Horizontal);
-	// Add ticks to the slider
 	epsilonSlider->setTickPosition(QSlider::TicksAbove);
-	epsilonSlider->setTickInterval(10);
-	epsilonSlider->setRange(10, 100); // Range of epsilon values
-	epsilonSlider->setValue(50);    // Default value
+    epsilonSlider->setTickInterval(1);
+    epsilonSlider->setRange(1, 10); // Range of epsilon values
+    epsilonSlider->setValue(5);    // Default value
 
-	// Create labels for the ticks
-	QHBoxLayout* tickLabelsLayout = createTickLabel();
-
+    QLabel* valueLabel = new QLabel("Epsilon Value: 0.5");
+    connect(epsilonSlider, &QSlider::valueChanged, [=](double value) {
+        valueLabel->setText(QString("Epsilon Value: %1").arg(value / 10));
+    });
 
 	// Add to layout
+    approximateLayout->addWidget(valueLabel);
 	approximateLayout->addWidget(epsilonSlider);
 }
 
 void MainWindow::setupExactQuery() {
 	exactLayoutWidget = new QWidget(this);
+    exactLayoutWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 	QVBoxLayout* exactLayout = new QVBoxLayout(exactLayoutWidget);
 }
 
@@ -394,51 +667,29 @@ void MainWindow::setupRandomPolygon()
 
 	// Create the slider
 	slider = new QSlider(Qt::Horizontal);
-	// Add ticks to the slider
 	slider->setTickPosition(QSlider::TicksAbove);
-	slider->setTickInterval(10);
-	slider->setRange(10, 100); // Range of polygon size
-	slider->setValue(40);    // Default size
+    slider->setTickInterval(1);
+    slider->setRange(1, 10); // Range of polygon size
+    slider->setValue(4);    // Default size
 
-	// Create labels for the ticks
-	QHBoxLayout* tickLabelsLayout = createTickLabel();
+    QLabel* valueLabel = new QLabel("Polygon Size: 40");
+    connect(slider, &QSlider::valueChanged, [=](double value) {
+        valueLabel->setText(QString("Polygon Size: %1").arg(value * 10));
+    });
 
 	// Regenerate button
 	QPushButton* regenerateButton = new QPushButton("Regenerate Polygon", this);
-	// Connect the regenerate button to polygon generation handling
 	connect(regenerateButton, &QPushButton::clicked, this, &MainWindow::onRegenerateClicked);
 
-	// Add to layout
+    randomLayout->addWidget(valueLabel);
 	randomLayout->addWidget(slider);
 	randomLayout->addWidget(regenerateButton);
-}
-
-QHBoxLayout* MainWindow::createTickLabel()
-{
-	// Create a layout for tick labels
-	QHBoxLayout* tickLabelsLayout = new QHBoxLayout();
-	tickLabelsLayout->setSpacing(60);
-
-	int minValue = slider->minimum();
-	int maxValue = slider->maximum();
-	int tickInterval = slider->tickInterval();
-
-	// Add tick labels
-	for (int i = minValue; i <= maxValue; i += tickInterval) {
-		QLabel* label = new QLabel(QString::number(i));
-		label->setFixedHeight(20);
-		//label->setAlignment(Qt::AlignCenter);
-		tickLabelsLayout->addWidget(label);
-	}
-
-    //settingLayout->addLayout(tickLabelsLayout);
-	return tickLabelsLayout;
 }
 
 void MainWindow::onRegenerateClicked()
 {
 	polygonWidget->clearCanvas();
-	polygonWidget->constructRandomPolygon(slider->value());
+    polygonWidget->constructRandomPolygon(slider->value() * 10);
 }
 
 
@@ -485,49 +736,6 @@ void MainWindow::onGivenPolygonChanged(int index)
 }
 
 ////////////////////////////////////////////////////////////////
-
-void MainWindow::updateUIForStepQ1()
-{
-	// Update UI elements based on the current step
-	switch (currentStep)
-	{
-	case 0:
-		stepLabel->setText("Click in Polygon to Add Points and Press Start");
-		prevButton->setEnabled(false);
-		nextButton->setEnabled(false);
-		break;
-	case 1:
-		stepLabel->setText("Perform Visibility Check");
-		nextButton->setEnabled(true);
-		break;
-	case 2:
-		stepLabel->setText("Shortest Path Calculation");
-		prevButton->setEnabled(true);
-		break;
-	case 3:
-		stepLabel->setText("Calculate Point a");
-		break;
-	case 4:
-		stepLabel->setText("Calculate Point b and Draw Window");
-		break;
-	case 5:
-		stepLabel->setText("Calculate Point Funnel Root");
-		break;
-	case 6:
-		stepLabel->setText("Calculate Funnel Sides");
-		break;
-	case 7:
-		stepLabel->setText("Draw Optimal Point c");
-		nextButton->setEnabled(true);
-		break;
-	case 8:
-		stepLabel->setText("Draw Optimal Path | END");
-		nextButton->setEnabled(false);
-		break;
-	default:
-		break;
-	}
-}
 
 
 

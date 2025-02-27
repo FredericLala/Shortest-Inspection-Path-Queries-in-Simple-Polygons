@@ -52,6 +52,7 @@ public:
     void chooseExamplePolygon(int index);
     void clearCanvas();
     void clearComputation();
+    void reset();
     void setStep(int step);
 
     void startOnePointQuery(int interval, bool stepMode);
@@ -62,15 +63,14 @@ public:
     void increaseStep();
     void decreaseStep();
     void timedStepper(int targetStep, int interval);
-    QString updateLog();
     void setFixedPoints(int index);
 
     Polygon_2 scalePolygon(Polygon_2& polygon, int targetSize);
 
     const QPointF scalePoints(const QPointF& point);
+    TwoPointQuery::QueryResult resultQ2;
 
-
-    //void resizeEvent(QResizeEvent* event);
+    void resizeEvent(QResizeEvent* event);
 
 
 
@@ -146,7 +146,6 @@ private:
     QVector<QPointF> optimalPath;
 
     OnePointQuery::QueryResult resultQ1;
-    TwoPointQuery::QueryResult resultQ2;
     GeneralCase::GeneralCaseResult resultGeneral;
     TwoPointQuery::IntersectionResult resultIntersection;
     TwoPointQuery::DominationResult resultDomination;

@@ -27,14 +27,14 @@ GeneralCase::HourglassStruct GeneralCase::constructHourglass(QLineF& window1, QL
 		std::cout << "one side is degen \n";
 		hourglass.hourglassSide1 = hourglassSide1;
 		hourglass.hourglassSide2 = hourglassSide2;
-		hourglass.isOpen = true;
+        hourglass.isOpen = false;
 		return hourglass;
 	}
 	else if (hourglassSide1.size() == 1 || hourglassSide2.size() == 1) {
 		std::cout << "one side is degen \n";
 		hourglass.hourglassSide1 = hourglassSide1;
 		hourglass.hourglassSide2 = hourglassSide2;
-		hourglass.isOpen = true;
+        hourglass.isOpen = false;
 		return hourglass;
 	}
 
@@ -170,8 +170,8 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 		}
 		bounds.push_back(Point_2(funnelSideHelper2.last().x(), funnelSideHelper2.last().y()));
 
-		QLineF tangentLine = QLineF(mirrorPoint(funnelPoint, window), mirrorPoint(hourglassPoint, window));
-		QLineF extendedLine = extendLine(tangentLine, 0.01);
+        QLineF tangentLine = QLineF(funnelPoint, mirrorPoint(hourglassPoint, window));
+        QLineF extendedLine = extendLine(tangentLine, 0.00001);
 		Point_2 testPoint = Point_2(extendedLine.p1().x(), extendedLine.p1().y());
 		if (!bounds.is_simple()) {
 			std::cout << "Error: Bound Polygon is not simple \n";
@@ -180,6 +180,7 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 		}
 
 		if (bounds.has_on_unbounded_side(testPoint)) {
+            std::cout << "unbound \n";
 			tangent.failure = FUNNEL_HOURGLASS;
 			return tangent;
 		}
@@ -210,7 +211,8 @@ GeneralCase::TangentStruct GeneralCase::findTangent(const QPointF& funnelPoint,
 
 	//if (funnelPoint == funnelSide.first() && hourglassPoint == hourglassSide.last()) {
 	if (areEqual(funnelPoint, funnelSide.first()) && areEqual(hourglassPoint, hourglassSide.last())) {
-		if (numberOfIntersections(window, tangentPath) == 0) {
+        if (!(type == QLineF::BoundedIntersection)) {
+            std::cout << "ints failure \n";
 			tangent.failure = FUNNEL_HOURGLASS;
 			return tangent;
 		}
@@ -235,10 +237,11 @@ bool GeneralCase::isTangent(const QVector<QPointF>& path, const QPointF& p1, con
 		if (sign == 0) {
 			sign = newSign; // First non-zero sign sets the reference
 		}
-		else if (newSign != sign) {
+        else if (newSign != sign && newSign != 0) {
 			return false; // If we get opposite signs, path crosses the line
 		}
 	}
+    std::cout << "true \n";
 	return true; // If no conflicts, it's a tangent
 }
 
@@ -280,10 +283,6 @@ int GeneralCase::numberOfIntersections(const QLineF& line, const QVector<QPointF
 		}
 	}
 
-	if (overlap) {
-		intersectionCount = std::numeric_limits<int>::max();
-	}
-
 	return intersectionCount;
 }
 
@@ -304,26 +303,30 @@ QVector<QPointF> GeneralCase::tangentBinary(const QVector<QPointF>& funnelSide, 
 	int funnelLeft = 0;
 	int funnelRight = funnelVec.size() - 1;
 
-	int hourglassLeft = 1;
+    int hourglassLeft = 1;
 	int hourglassRight = hourglassSide.size() - 1;
 
 	TangentStruct tangent;
+    int stopper = 0;
 
-	while (funnelLeft <= funnelRight) {
+    while (funnelLeft <= funnelRight) {
 		int funnelMid = (funnelLeft + funnelRight + 1) / 2;
 
 		QPointF funnelCandidate = funnelVec[funnelMid];
 
 		hourglassLeft = 1;
+        if (hourglassSide.size() == 1) {
+            hourglassLeft = 0;
+        }
 		hourglassRight = hourglassSide.size() - 1;
 		if (hourglassLeft > hourglassRight) {
 			return  tangent.tangentPath;;
 		}
-		while (hourglassLeft <= hourglassRight) {
-			int hourglassMid = (hourglassLeft + hourglassRight) / 2;
+        while (hourglassLeft <= hourglassRight) {
+            int hourglassMid = (hourglassLeft + hourglassRight) / 2;
 			QPointF hourglassCandidate = hourglassSide[hourglassMid];
 
-			int funnelIntersections = tangent.funnelIntersections;
+            int funnelIntersections = tangent.funnelIntersections;
 			int hourglassIntersections = tangent.hourglassIntersections;
 
 			tangent = findTangent(funnelCandidate, hourglassCandidate, funnelVec, hourglassSide, window, polygon, funnelSideHelper1, funnelSideHelper2);
@@ -348,8 +351,12 @@ QVector<QPointF> GeneralCase::tangentBinary(const QVector<QPointF>& funnelSide, 
 				}
 
 				if (funnelIntersections == 0 && hourglassIntersections == 1) { // case h.
-					std::cout << "case h \n";
-					funnelRight = funnelMid - 1;
+                    if (stopper == 5) {
+                        break;
+                    }
+                    std::cout << "case h \n";
+                    funnelRight = funnelMid - 1;
+                    stopper++;
 				}
 
 				if (funnelIntersections >= 1 && hourglassIntersections >= 1) { // case i.
@@ -392,7 +399,7 @@ QVector<QPointF> GeneralCase::tangentBinary(const QVector<QPointF>& funnelSide, 
 				break;
 
 			case GeneralCase::FUNNEL:
-				if (funnelIntersections == 0) { // case d.
+                if (funnelIntersections == 0) { // case d.
 					std::cout << "case d \n";
 					funnelRight = funnelMid - 1;
 					hourglassLeft = hourglassMid + 1;
@@ -406,7 +413,7 @@ QVector<QPointF> GeneralCase::tangentBinary(const QVector<QPointF>& funnelSide, 
 
 				break;
 			case GeneralCase::HOURGLASS:
-				if (hourglassIntersections == 0) { // case b.
+                if (hourglassIntersections == 0) { // case b.
 					std::cout << "case b \n";
 					funnelRight = funnelMid - 1;
 					hourglassLeft = hourglassMid + 1;

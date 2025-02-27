@@ -16,6 +16,9 @@
 #include <QRadioButton>
 #include <QButtonGroup>
 #include <QGroupBox>
+#include <QSplitter>
+#include "logredirect.h"
+#include <QPlainTextEdit>
 
 class MainWindow : public QWidget
 {
@@ -27,6 +30,7 @@ public:
 private:
 	// Polygon display widget
 	PolygonWidget* polygonWidget;
+    QWidget* settingWidget;
 	QFrame* createLine();
 
 	QLabel* log;
@@ -65,13 +69,18 @@ private:
 	ShortestPath* shortestPath;
 
 	// Main layout
-	QVBoxLayout* mainLayout;
+    QHBoxLayout* mainLayout;
     QVBoxLayout* settingLayout;
 
 	// Initializes the stepper stages and query options
 	void setupStepper();
+    void updateLabel();
 	void updateUIForStepQ1();
-
+    void updateUIForQ2();
+    void updateUIForIntersection();
+    void updateUIForDomination();
+    void updateUIForGeneral();
+    void updateUIForApprox();
 
 	//
 	QComboBox* modeSelector;
@@ -90,6 +99,9 @@ private:
 	PolygonWidget::QueryMode queryModeEnum;
 	RunMode runModeEnum;
 
+    QPlainTextEdit* logOutput;
+    LogRedirect* logRedirect;
+
 private Q_SLOTS:
 	void onNextStep();            // Advances the stepper to the next stage
 	void onPrevStep();            // Moves the stepper back to the previous stage
@@ -98,6 +110,7 @@ private Q_SLOTS:
 	void setupRandomPolygon();
 
 	void onStartClicked();
+    void onHideClicked();
 	void onClearPointsClicked();
 	void onRegenerateClicked();
 	void setupDrawPolygon();
