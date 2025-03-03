@@ -11,6 +11,7 @@ This application was developed as part of my Bachelor's thesis in Computer Scien
 #### Required Downloads
 The following dependencies must be installed via the command line:
 ```sh
+sudo apt install libxcb-cursor0 libxcb-cursor-dev
 sudo apt-get install build-essential
 sudo apt install libgmp-dev
 sudo apt install libmpfr-dev
