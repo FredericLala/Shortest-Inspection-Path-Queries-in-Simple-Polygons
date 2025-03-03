@@ -48,9 +48,7 @@ public:
     bool is_point_on_polygon_edge(const Polygon_2& polygon, const Point_2& point);
     QVector<QPointF> findShortestPath(QPointF source2D, QPointF query2D, const Polygon_2 &polygon, const Surface_mesh& mesh);
     double findShortestPathLength(QPointF source2D, QPointF query2D, const Polygon_2& polygon, const Surface_mesh& mesh);
-    Point_2 snapQueryInsidePolygon(QPointF& queryPoint, const Polygon_2& polygon);
     QVector<QPointF> point3VectorToQtVector(std::vector<Point_3>& points);
-    const Point_2 &getPenultimate(const std::vector<Point_3> &path, const Polygon_2 &polygon) const;
     QVector<QPointF> reversePath(QVector<QPointF>& path);
     QPointF getLCA(QVector<QPointF>& path1, QVector<QPointF>& path2);
 

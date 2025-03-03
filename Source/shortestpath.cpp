@@ -131,30 +131,6 @@ double ShortestPath::findShortestPathLength(QPointF source2D, QPointF query2D, c
 	return shortest_paths.shortest_distance_to_source_points(query_loc.first, query_loc.second).first;
 }
 
-// TODO: remove me
-Point_2 ShortestPath::snapQueryInsidePolygon(QPointF& queryPoint, const Polygon_2& polygon) {
-	Point_2 query = Point_2(queryPoint.x(), queryPoint.y());
-
-	const float epsilon = 0.000001;
-	// TODO: Add more finer directions (i.e. diagonals)
-	//if (is_point_on_polygon_edge(polygon, query)) {
-	if (polygon.has_on_bounded_side(Point_2(query.x() + epsilon, query.y()))) {
-		query = Point_2(query.x() + epsilon, query.y());
-	}
-	else if (polygon.has_on_bounded_side(Point_2(query.x() - epsilon, query.y()))) {
-		query = Point_2(query.x() - epsilon, query.y());
-	}
-	else if (polygon.has_on_bounded_side(Point_2(query.x(), query.y() + epsilon))) {
-		query = Point_2(query.x(), query.y() + epsilon);
-	}
-	else if (polygon.has_on_bounded_side(Point_2(query.x(), query.y() - epsilon))) {
-		query = Point_2(query.x(), query.y() - epsilon);
-	}
-	//}
-
-	return query;
-}
-
 QVector<QPointF> ShortestPath::point3VectorToQtVector(std::vector<Point_3>& points)
 {
 	QVector<QPointF> qtPoints;
@@ -166,27 +142,6 @@ QVector<QPointF> ShortestPath::point3VectorToQtVector(std::vector<Point_3>& poin
 	}
 
 	return qtPoints;
-}
-
-const Point_2& ShortestPath::getPenultimate(const std::vector<Point_3>& path, const Polygon_2& polygon) const
-{
-	// Iterate over the points vector, starting from the second element (index 1)
-	for (int i = path.size() - 1; i >= 0; i--)
-	{
-		// Convert each point to a Point_2
-		Point_2 penultimate(path[i].x(), path[i].y());
-
-		// Check if this point lies on the boundary of the polygon
-		if (polygon.has_on_boundary(penultimate))
-		{
-			return penultimate; // Return the first point found on the boundary
-		}
-	}
-
-	// Handle case where no point on the boundary was found
-	//throw std::runtime_error("No point on the polygon boundary was found in the path.");
-	Point_3 lastPoint_3 = path.back();
-	return Point_2(lastPoint_3.x(), lastPoint_3.y());
 }
 
 QVector<QPointF> ShortestPath::reversePath(QVector<QPointF>& path)

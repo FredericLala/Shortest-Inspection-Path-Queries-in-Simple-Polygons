@@ -22,7 +22,6 @@ find_package(Qt6Gui REQUIRED)
 set(CMAKE_PREFIX_PATH "$ENV{CGAL_DIR}")
 find_package(CGAL REQUIRED)
 
-set(CMAKE_PREFIX_PATH "$ENV{BOOST_DIR}")
 find_package(Boost REQUIRED)
 
 find_package(GMP REQUIRED)
