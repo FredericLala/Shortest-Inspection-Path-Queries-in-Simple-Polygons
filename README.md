@@ -41,6 +41,10 @@ cmake-gui ..
 ```
 In the **CMake GUI**, click `Configure`, then `Generate`.
 
+Finally, the program can be built:
+```sh
+cmake --build .
+```
 ---
 
 ## Usage
