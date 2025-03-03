@@ -86,19 +86,21 @@ void TwoPointQuery::executeTwoPointQuery(QPointF& startingPoint, QPointF& queryP
 
 	if (visibilitySQ1 && visibilitySQ2)
 	{
-		std::cout << "Both Query Points are Visible from the Starting Point \n";
+        std::cout << "Both Query Points are Visible to the Source Point \n";
+        std::cout << "END OF QUERY: s = c \n";
+        std::cout << "-------------\n";
 		return;
 	}
 	else if (visibilitySQ1)
 	{
-		std::cout << "Q1 is visible from the Starting Point \n";
+        std::cout << "q1 is Visible to the Source Point \n";
 		m_onePointHandler.executeOnePointQuery(startingPoint, queryPoint2, polygon, mesh);
 		resultQ2.resultQ1 = m_onePointHandler.getResult();
 		return;
 	}
 	else if (visibilitySQ2)
 	{
-		std::cout << "Q2 is visible from the Starting Point \n";
+        std::cout << "q2 is Visible to the Source Point \n";
 		m_onePointHandler.executeOnePointQuery(startingPoint, queryPoint1, polygon, mesh);
 		resultQ2.resultQ1 = m_onePointHandler.getResult();
 		return;
@@ -109,7 +111,6 @@ void TwoPointQuery::executeTwoPointQuery(QPointF& startingPoint, QPointF& queryP
 	QVector<QPointF> shortestPathSQ2 = m_shortestPathHandler.findShortestPath(startingPoint, queryPoint2, polygon, mesh);
 
 	QLineF window1 = m_onePointHandler.calculateWindow(shortestPathSQ1, queryPoint1, polygon);
-	std::cout << "window1 endpoints" << window1.p1().x() << ", " << window1.p1().y() << "; " << window1.p2().x() << ", " << window1.p2().y() << "\n";
 	resultQ2.window1 = window1;
 	QLineF window2 = m_onePointHandler.calculateWindow(shortestPathSQ2, queryPoint2, polygon);
 	resultQ2.window2 = window2;
@@ -198,32 +199,45 @@ void TwoPointQuery::intersectionCase(QPointF& startingPoint, QPointF& queryPoint
 			resultIntersection.intersectionPath3 = intersectionPath3;
 			double sizePath3 = calculatePathLength(intersectionPath3);
 
+            std::cout << "Size of the First Mutually Visible Path: " << sizePath1 << "\n";
+            std::cout << "Size of the Second Mutually Visible Path: " << sizePath2 << "\n";
+            std::cout << "Size of the Path to the Remaining Window Segments: " << sizePath3 << "\n";
+
 			double minPath = std::min({ sizePath1, sizePath2, sizePath3 });
-			if (minPath == sizePath1 && minPath == sizePath2) {
+            if (minPath == sizePath1 && minPath == sizePath2 && minPath == sizePath3) {
 				optimalPath = intersectionPath1;
-				std::cout << "Path 1 and 2 are shortest \n";
+                std::cout << "All paths have the same length \n";
+                std::cout << "END OF QUERY" << "\n";
+                std::cout << "-------------\n";
+                std::cout << "\n";
 			}
 			else if (minPath == sizePath1) {
 				optimalPath = intersectionPath1;
 				std::cout << "Path 1 is shortest \n";
+                std::cout << "END OF QUERY" << "\n";
+                std::cout << "-------------\n";
+                std::cout << "\n";
 			}
 			else if (minPath == sizePath2) {
 				optimalPath = intersectionPath2;
 				std::cout << "Path 2 is shortest \n";
+                std::cout << "END OF QUERY" << "\n";
+                std::cout << "-------------\n";
+                std::cout << "\n";
 			}
 			else if (minPath == sizePath3) {
 				optimalPath = intersectionPath3;
 				std::cout << "Path 3 is shortest \n";
+                std::cout << "END OF QUERY" << "\n";
+                std::cout << "-------------\n";
+                std::cout << "\n";
 			}
 
 			resultIntersection.optimalPath = optimalPath;
-
-			std::cout << "Size of Path 1: " << sizePath1 << "\n";
-			std::cout << "Size of Path 2: " << sizePath2 << "\n";
-			std::cout << "Size of Path 3: " << sizePath3 << "\n";
 			currentCase = INTERSECTION;
 			resultQ2.currentCase = INTERSECTION;
             resultQ2.optimalPathLength = calculatePathLength(optimalPath);
+            resultQ2.optimalPath = optimalPath;
 			return;
 		}
 	}
@@ -259,12 +273,17 @@ void TwoPointQuery::dominationCase(QPointF& startingPoint, QLineF& window1, QLin
 
 	resultDomination.optimalPath = optimalPath;
     resultQ2.optimalPathLength = calculatePathLength(optimalPath);
+    resultQ2.optimalPath = optimalPath;
+    std::cout << "Size of the Optimal Path: " << resultQ2.optimalPathLength << "\n";
+    std::cout << "END OF QUERY: " << "\n";
+    std::cout << "-------------\n";
+    std::cout << "\n";
 	return;
 }
 
 
 void TwoPointQuery::computeGeneralCase(QPointF& startingPoint, QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh) {
-	std::cout << "General case: " << "\n";
+    std::cout << "General case" << "\n";
 	currentCase = GENERAL;
 	resultQ2.currentCase = GENERAL;
 
@@ -277,12 +296,16 @@ void TwoPointQuery::computeGeneralCase(QPointF& startingPoint, QLineF& window1, 
 		std::cout << "General case: First is shorter" << "\n";
 		resultGeneral = firstResult;
         resultQ2.optimalPathLength = calculatePathLength(firstResult.optimalPath);
+        resultQ2.optimalPath = firstResult.optimalPath;
 		return;
 	}
-	//resultGeneral = firstResult;
 	std::cout << "General case: Second is shorter" << "\n";
     resultQ2.optimalPathLength = calculatePathLength(secondResult.optimalPath);
+    resultQ2.optimalPath = secondResult.optimalPath;
 	resultGeneral = secondResult;
+    std::cout << "END OF QUERY: " << "\n";
+    std::cout << "-------------\n";
+    std::cout << "\n";
 }
 
 

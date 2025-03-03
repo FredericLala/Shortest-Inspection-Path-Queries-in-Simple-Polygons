@@ -54,6 +54,7 @@ public:
 		QLineF window2;
 		Q2CASE currentCase = QNONE;
 		double optimalPathLength = 0;
+        QVector<QPointF> optimalPath;
 		double time;
 	};
 

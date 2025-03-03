@@ -82,6 +82,7 @@ public:
 	GeneralCase::HourglassStruct constructHourglass(QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh);
 	bool isHourglassOpenCheck(QVector<QPointF>& hourglassSide1, QVector<QPointF>& hourglassSide2);
 	QPointF findWaistPoint(const QVector<QPointF>& side1, const QVector<QPointF>& side2);
+    QPointF findLastWaistPoint(const QVector<QPointF>& side1, const QVector<QPointF>& side2);
 
 	QPointF mirrorPoint(const QPointF& point, const QLineF& window);
 	bool areEqual(const QPointF& a, const QPointF b);
@@ -93,14 +94,14 @@ public:
 	QVector<QPointF> removeElementFromVector(QVector<QPointF> vector, int index);
 
 	ConcatenatedSideStruct concatenateClosedHelper(QVector<QPointF> funnelSide, QVector<QPointF> hourglassSide, QVector<QPointF> tangent);
-	FunnelStar concatenateClosedHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
+    FunnelStar concatenateClosedHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass, QPointF& waistPoint);
 	GeneralCase::ConcatenatedSideStruct concatenateOpenHelper(QVector<QPointF>& funnelSide, QVector<QPointF>& hourglassSide, QVector<QPointF>& tangent);
 	FunnelStar concatenateOpenHourglass(QVector<QPointF>& tangent1, QVector<QPointF>& tangent2, QVector<QPointF>& tangent3, QVector<QPointF>& tangent4, FunnelStruct& funnel, HourglassStruct& hourglass);
 
 	int getLCAIndex(QVector<QPointF>& path1, QVector<QPointF>& path2);
 	GeneralCase::OptimalPointStruct computeOptimalPoint(QVector<QPointF>& side1, QVector<QPointF>& side2, QLineF& window1, QLineF& window2);
 	QVector<QPointF> computeOptimalPathRootInFunnel(QLineF& window1, QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot);
-	QVector<QPointF> computeOptimalPathRootInHourglass(QLineF& window1, QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot);
+    QVector<QPointF> computeOptimalPathRootInHourglass(QLineF& window1, QLineF& window2, FunnelStar& funnelStar, QVector<QPointF>& pathStartToFunnelRoot, QPointF& waistPoint);
 
 	GeneralCase::GeneralCaseResult executeGeneralCase(QPointF& startingPoint, QLineF& window1, QLineF& window2, Polygon_2& polygon, Surface_mesh& mesh);
 

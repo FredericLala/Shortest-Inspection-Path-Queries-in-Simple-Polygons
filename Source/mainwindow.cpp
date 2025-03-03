@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget* parent)
     mainLayout = new QHBoxLayout(this);
     mainLayout->setSpacing(0);
 
-    settingLayout = new QVBoxLayout(this);
+    settingLayout = new QVBoxLayout();
     settingLayout->setContentsMargins(0,0,0,0);
     settingLayout->setSpacing(5);
     QWidget* settingContainer = new QWidget();
@@ -294,13 +294,15 @@ void MainWindow::updateUIForStepQ1()
     case 0:
         stepLabel->setText("Click on the Polygon to Select Points and Press Start");
         prevButton->setEnabled(false);
+        nextButton->setEnabled(false);
         break;
     case 1:
         stepLabel->setText("Perform Visibility Check");
-        prevButton->setEnabled(true);
+        nextButton->setEnabled(true);
         break;
     case 2:
         stepLabel->setText("Shortest Path Calculation");
+        prevButton->setEnabled(true);
         break;
     case 3:
         stepLabel->setText("Calculate Point a");
@@ -492,10 +494,13 @@ void MainWindow::updateUIForApprox()
         break;
     case 5:
         stepLabel->setText("Generate Equally Spaced Points");
-        nextButton->setEnabled(true);
         break;
     case 6:
         stepLabel->setText("Calculate (1+Epsilon)-Appproximate Path | END");
+        nextButton->setEnabled(true);
+        break;
+    case 7:
+        stepLabel->setText("Calculate Exact Inspection-Path (only if |Q| = 2) | END");
         nextButton->setEnabled(false);
         break;
     default:
@@ -606,8 +611,8 @@ void MainWindow::polygonSelection()
 	QRadioButton* polyRadio1 = new QRadioButton("Random Polygon", this);
 	QRadioButton* polyRadio2 = new QRadioButton("Draw a Polygon", this);
 	QRadioButton* polyRadio3 = new QRadioButton("Pick a Polygon", this);
-	polyRadio3->setChecked(true); // Default to "Pick"
-	updatePolySelection(PICK);
+    polyRadio1->setChecked(true); // Default to "Random"
+    updatePolySelection(RANDOM);
 
 	// Group Buttons
 	QButtonGroup* polyButtons = new QButtonGroup();
@@ -645,7 +650,7 @@ void MainWindow::updatePolySelection(PolyMode mode)
 	{
 	case RANDOM:
 		polygonModeWidget->setCurrentWidget(randomLayoutWidget);
-		polygonWidget->constructRandomPolygon(slider->value());
+        polygonWidget->constructRandomPolygon(slider->value() * 10);
 		break;
 	case DRAW:
 		polygonModeWidget->setCurrentWidget(drawnLayoutWidget);
@@ -716,13 +721,15 @@ void MainWindow::setupGivenPolygon()
 	QVBoxLayout* givenLayout = new QVBoxLayout(givenLayoutWidget);
 
 	QComboBox* givenPolygonSelector = new QComboBox(this);
-	givenPolygonSelector->addItem("Test1");
+    givenPolygonSelector->addItem("Q1: c at Foot of Perpendicular to r");
+    givenPolygonSelector->addItem("Q1: c = a");
+    givenPolygonSelector->addItem("Q1: c at Foot of Perpendicular to v1");
 	givenPolygonSelector->addItem("Q2: Window Intersection");
 	givenPolygonSelector->addItem("Q2: Window Domination");
-	givenPolygonSelector->addItem("Q2: General Case");
-	givenPolygonSelector->addItem("Q2: Closed Hourglass | Alt. is Open");
-	givenPolygonSelector->addItem("Q2: Open Hourglass");
-	givenPolygonSelector->addItem("Q2: Test Polygon");
+    givenPolygonSelector->addItem("Q2: General Case - Closed Hourglass");
+    givenPolygonSelector->addItem("Q2: General Case - Closed Hourglass | Alt. is Open");
+    givenPolygonSelector->addItem("Q2: General Case - Open Hourglass");
+    givenPolygonSelector->addItem("Test Polygon");
 	connect(givenPolygonSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
 		this, &MainWindow::onGivenPolygonChanged);
 

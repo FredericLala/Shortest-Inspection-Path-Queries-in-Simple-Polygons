@@ -5,11 +5,12 @@
 #include "shortestpath.h"
 
 #include <CGAL/AABB_tree.h>
-#include <CGAL/AABB_traits_2.h>.h>
+#include <CGAL/AABB_traits_2.h>
 #include <CGAL/Segment_2.h>
 #include <CGAL/AABB_segment_primitive_2.h>
 #include <CGAL/Ray_2.h>
 #include <CGAL/Line_2.h>
+#include <QElapsedTimer>
 
 typedef K::Point_3 Point_3;
 typedef K::Segment_2 Segment_2;
@@ -72,6 +73,7 @@ public:
 
 	const QueryResult getResult() const;
 	QLineF calculateWindow(QVector<QPointF>& path, QPointF& queryPoint, Polygon_2& polygon);
+    double calculatePathLength(const QVector<QPointF>& path);
 
 
 

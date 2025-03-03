@@ -105,12 +105,14 @@ void PolygonWidget::finishDrawnPolygon() {
 
     if (!polygonC.is_simple()) {
         std::cout << "Non-Simple-Polygon-Failure: The Polygon was not Simple \n";
-        clearCanvas();
+        prepareDrawnPolygon();
         return;
     }
 
     if (polygonC.size() >= 3) {
         m_mesh = m_shortestPathHandler.createMesh(polygonC);
+    } else {
+        prepareDrawnPolygon();
     }
 
     update();
@@ -125,24 +127,30 @@ void PolygonWidget::chooseExamplePolygon(int index) {
     switch (index)
     {
     case 0:
-        polygonC = m_polygonGenHandler.exampleOne();
+        polygonC = m_polygonGenHandler.qOneRoot();
         break;
     case 1:
-        polygonC = m_polygonGenHandler.exampleTwo();
+        polygonC = m_polygonGenHandler.qOneA();
         break;
     case 2:
-        polygonC = m_polygonGenHandler.exampleThree();
+        polygonC = m_polygonGenHandler.qOneMiddle();
         break;
     case 3:
-        polygonC = m_polygonGenHandler.exampleFour();
+        polygonC = m_polygonGenHandler.qTwoIntersection();
         break;
     case 4:
-        polygonC = m_polygonGenHandler.altIsOpen();
+        polygonC = m_polygonGenHandler.qTwoDomination();
         break;
     case 5:
-        polygonC = m_polygonGenHandler.openHourglass();
+        polygonC = m_polygonGenHandler.qTwoGeneralClosed();
         break;
     case 6:
+        polygonC = m_polygonGenHandler.qTwoGeneralAltOpen();
+        break;
+    case 7:
+        polygonC = m_polygonGenHandler.qTwoGeneralOpen();
+        break;
+    case 8:
         polygonC = m_polygonGenHandler.testPolygon();
         break;
     default:
@@ -164,45 +172,48 @@ void PolygonWidget::chooseExamplePolygon(int index) {
 void PolygonWidget::setFixedPoints(int index) {
     switch (index)
     {
-    case 0:
+    case 0: // q1: c is perp. to root
+        setScaledStartingPoint(QPointF(-211, 131));
+        setScaledQueryPoint1(QPointF(21, 256));
         break;
-    case 1:
-        setScaledStartingPoint(QPointF(-31, -104));
-        setScaledQueryPoint1(QPointF(-146, -20));
-        setScaledQueryPoint2(QPointF(99, -48));
+    case 1: // q1: c = a
+        setScaledStartingPoint(QPointF(121, 349));
+        setScaledQueryPoint1(QPointF(-55, -137));
         break;
-    case 2:
+    case 2: // q1: c is perp to v1
+        setScaledStartingPoint(QPointF(-184, 279));
+        setScaledQueryPoint1(QPointF(58, 338));
         break;
-    case 3:
-        //closed hourglass
+    case 3: // q2: Intersection
+        setScaledStartingPoint(QPointF(-151, 246));
+        setScaledQueryPoint1(QPointF(-152, -216));
+        setScaledQueryPoint2(QPointF(295, -39));
+        break;
+    case 4: // q2: Domination
+        setScaledStartingPoint(QPointF(-348, 231));
+        setScaledQueryPoint1(QPointF(299, -66));
+        setScaledQueryPoint2(QPointF(-140, -299));
+
+        break;
+    case 5: // q2: general case - closed hourglass
         setScaledStartingPoint(QPointF(202, 158));
         setScaledQueryPoint1(QPointF(-151, 111));
         setScaledQueryPoint2(QPointF(-73, -1));
-
-        // opern hourglass
-        /*
-		startingPoint = QPointF(204, 162);
-		queryPoint1 = QPointF(-111, 10);
-		queryPoint2 = QPointF(-154, 114);
-		update();
-		*/
         break;
-    case 4:
+    case 6: // q2: general case - alt. is open
         setScaledStartingPoint(QPointF(-228, -27));
         setScaledQueryPoint1(QPointF(-322, 312));
         setScaledQueryPoint2(QPointF(-80, -131));
         break;
-
-    case 5:
+    case 7: // q2: general case - open hourglass
         setScaledStartingPoint(QPointF(-23, 135));
         setScaledQueryPoint1(QPointF(145, 64));
         setScaledQueryPoint2(QPointF(-204, 47));
         break;
-    case 6:
-        setStartingPoint(QPointF(-249, -186));
-        setQueryPoint1(QPointF(-239, -5));
-        setQueryPoint2(QPointF(165, -306));
-        break;
+    case 8: // test polygon
+        setScaledStartingPoint(QPointF(-134, 384));
+        setScaledQueryPoint1(QPointF(-242, -19));
+        setScaledQueryPoint2(QPointF(-316, -260));
     default:
         break;
     }
@@ -336,8 +347,6 @@ void PolygonWidget::clearCanvas() {
 
 // clears computations and all points, but not the polygon
 void PolygonWidget::clearComputation() {
-    m_onePointHandler.clearTree();
-    m_shortestPathHandler.clearTree();
     clearPoints();
     reset();
     update();
@@ -360,6 +369,8 @@ void PolygonWidget::reset() {
     resultIntersection = TwoPointQuery::IntersectionResult();
     resultDomination = TwoPointQuery::DominationResult();
     resultNApprox = ApproximateQuery::NApproximateResult();
+    m_onePointHandler.clearTree();
+    m_shortestPathHandler.clearTree();
     update();
 }
 
@@ -401,6 +412,7 @@ bool PolygonWidget::withinBoundaryCheck()
 void PolygonWidget::startOnePointQuery(int interval, bool stepMode) {
     if (withinBoundaryCheck())
     {
+        reset();
         stepmode = stepMode;
         step = 1;
         std::cout << "###########################################\n";
@@ -420,6 +432,7 @@ void PolygonWidget::startOnePointQuery(int interval, bool stepMode) {
 void PolygonWidget::startTwoPointQuery(int interval, bool stepMode) {
     int maxSteps = 0;
     if (withinBoundaryCheck()) {
+        reset();
         stepmode = stepMode;
         step = 1;
         m_twoPointHandler.executeTwoPointQuery(startingPoint, queryPoint1, queryPoint2, polygonC, m_mesh);
@@ -454,7 +467,11 @@ void PolygonWidget::startTwoPointQuery(int interval, bool stepMode) {
 
 // initializes the approximate-query
 void PolygonWidget::startNApproximateQuery(int interval, bool stepMode, double epsilon) {
-    const int maxSteps = 6;
+    int maxSteps = 6;
+    if (approxQueryPoints.size() == 2) {
+        maxSteps = 7;
+    }
+
     if (withinBoundaryCheck()) {
         stepmode = stepMode;
         step = 1;
@@ -493,6 +510,13 @@ void PolygonWidget::mousePressEvent(QMouseEvent* event)
             std::cout << "setScaledQueryPoint1(QPointF(" << queryPoint1.x() << ", " << queryPoint1.y() << ")); \n";
         }
         else if (!query2Selected) {
+            if (step > 0) {
+                QPointF tempStart = startingPoint;
+                QPointF tempQuery1 = queryPoint1;
+                clearComputation();
+                setStartingPoint(tempStart);
+                setQueryPoint1(tempQuery1);
+            }
             setQueryPoint2(clickPoint);
             std::cout << "setScaledQueryPoint2(QPointF(" << queryPoint2.x() << ", " << queryPoint2.y() << ")); \n";
         }
@@ -659,10 +683,6 @@ void PolygonWidget::visualizeOnePointQuery(QPainter& painter)
     if (step >= 1) {
         if (resultQ1.visibility)
         {
-            std::cout << "The Query Point is Visible to the Source Point \n";
-            std::cout << "END OF QUERY: s = c \n";
-            std::cout << "-------------\n";
-            std::cout << "\n";
             drawLabel(startingPoint.x() + 5, startingPoint.y(), QString(" = c"), painter);
 
             return;
@@ -750,11 +770,6 @@ void PolygonWidget::visualizeOnePointQuery(QPainter& painter)
             painter.drawLine(optimalPath[i - 1], optimalPath[i]);
             painter.drawEllipse(optimalPath[i], 3, 3);
         }
-        if (step == 8) {
-            std::cout << "END OF QUERY: " << resultQ1.log.toStdString() << "\n";
-            std::cout << "-------------\n";
-            std::cout << "\n";
-        }
     }
 }
 
@@ -762,20 +777,15 @@ void PolygonWidget::visualizeTwoPointQuery(QPainter& painter) {
     // Visibility Check
     if (step >= 1) {
         if (resultQ2.visibilityQ1 && resultQ2.visibilityQ2) {
-            std::cout << "Both Query Points are Visible to the Source Point \n";
-            std::cout << "END OF QUERY: s = c \n";
-            std::cout << "-------------\n";
-            drawLabel(startingPoint.x() + 1, startingPoint.y() - 1, QString("c"), painter);
+            drawLabel(startingPoint.x() + 5, startingPoint.y(), QString("c"), painter);
             return;
         }
         else if (resultQ2.visibilityQ1) {
-            std::cout << "q1 is Visible to the Source Point \n";
             resultQ1 = resultQ2.resultQ1;
             step = 10;
             visualizeOnePointQuery(painter);
         }
         else if (resultQ2.visibilityQ2) {
-            std::cout << "q2 is Visible to the Source Point \n";
             resultQ1 = resultQ2.resultQ1;
             step = 10;
             visualizeOnePointQuery(painter);
@@ -786,7 +796,7 @@ void PolygonWidget::visualizeTwoPointQuery(QPainter& painter) {
     if (step >= 2) {
         a1 = resultQ2.window1.p1();
         b1 = resultQ2.window1.p2();
-        painter.setPen(QPen(Qt::green, 2));
+        painter.setPen(QPen(Qt::green, 3));
         painter.setBrush(Qt::green);
         painter.drawEllipse(a1, 3, 3);
         drawLabel(a1.x(), a1.y(), QString("a1"), painter);
@@ -801,7 +811,7 @@ void PolygonWidget::visualizeTwoPointQuery(QPainter& painter) {
     if (step >= 3) {
         a2 = resultQ2.window2.p1();
         b2 = resultQ2.window2.p2();
-        painter.setPen(QPen(Qt::darkGreen, 2));
+        painter.setPen(QPen(Qt::darkGreen, 3));
         painter.setBrush(Qt::darkGreen);
         painter.drawEllipse(a2, 3, 3);
         drawLabel(a2.x(), a2.y(), QString("a2"), painter);
@@ -838,7 +848,7 @@ void PolygonWidget::visualizeIntersection(QPainter& painter) {
     QVector<QPointF> optimalPath = intersectionResult.optimalPath;
 
     if (step >= 4) {
-        painter.setPen(QPen(Qt::darkRed, 2));
+        painter.setPen(QPen(Qt::darkRed, 3));
         for (size_t i = 1; i < intersectionPath1.size(); ++i)
         {
             painter.drawLine(intersectionPath1[i - 1], intersectionPath1[i]);
@@ -846,7 +856,7 @@ void PolygonWidget::visualizeIntersection(QPainter& painter) {
     }
 
     if (step >= 5) {
-        painter.setPen(QPen(Qt::red, 2));
+        painter.setPen(QPen(Qt::red, 3));
         for (size_t i = 1; i < intersectionPath2.size(); ++i)
         {
             painter.drawLine(intersectionPath2[i - 1], intersectionPath2[i]);
@@ -854,7 +864,7 @@ void PolygonWidget::visualizeIntersection(QPainter& painter) {
     }
 
     if (step >= 6) {
-        painter.setPen(QPen(Qt::yellow, 2));
+        painter.setPen(QPen(Qt::yellow, 3));
         for (size_t i = 1; i < intersectionPath3.size(); ++i)
         {
             painter.drawLine(intersectionPath3[i - 1], intersectionPath3[i]);
@@ -862,7 +872,7 @@ void PolygonWidget::visualizeIntersection(QPainter& painter) {
     }
 
     if (step == 7) {
-        painter.setPen(QPen(Qt::magenta, 2));
+        painter.setPen(QPen(Qt::magenta, 3));
         for (size_t i = 1; i < optimalPath.size(); ++i)
         {
             painter.drawLine(optimalPath[i - 1], optimalPath[i]);
@@ -875,9 +885,11 @@ void PolygonWidget::visualizeDomination(QPainter& painter) {
     QVector<QPointF> optimalPath = dominationResult.optimalPath;
 
     if (step >= 4) {
+        painter.setPen(QPen(Qt::magenta, 3));
+        painter.setBrush(Qt::magenta);
         QPointF c = optimalPath.rbegin()[0];
         painter.drawEllipse(c, 3, 3);
-        if (c == a2 || c == b2 || c == a1 || c == b1) {
+        if (m_generalCaseHandler.areEqual(a1, c)|| m_generalCaseHandler.areEqual(b1, c) || m_generalCaseHandler.areEqual(a2, c) || m_generalCaseHandler.areEqual(b2, c)) {
             drawLabel(c.x() + 5, c.y(), QString(" = c"), painter);
         }
         else {
@@ -905,48 +917,40 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
     QVector<QPointF> optimalPath = generalResult.optimalPath;
     QPointF optimalPoint = generalResult.optimalPoint;
 
-    QPen thinPen = QPen((Qt::blue));
-
 
     if (step >= 4) {
-        painter.setPen(QPen(Qt::darkRed, 1));
+        painter.setPen(QPen(Qt::blue, 3));
+        painter.setBrush(Qt::blue);
         painter.drawEllipse(generalResult.funnelRoot, 3, 3);
 
         for (size_t i = 1; i < funnelSideA.size(); ++i)
         {
             painter.drawLine(funnelSideA[i - 1], funnelSideA[i]);
-            painter.drawEllipse(funnelSideA[i - 1], 3, 3);
+            painter.drawEllipse(funnelSideA[i], 3, 3);
         }
 
 
         for (size_t i = 1; i < funnelSideB.size(); ++i)
         {
             painter.drawLine(funnelSideB[i - 1], funnelSideB[i]);
-            painter.drawEllipse(funnelSideB[i - 1], 3, 3);
+            painter.drawEllipse(funnelSideB[i], 3, 3);
         }
     }
 
     if (step >= 5) {
-        painter.setPen(QPen(Qt::blue, 2));
+        painter.setPen(QPen(Qt::red, 3));
+        painter.setBrush(Qt::red);
 
         for (size_t i = 1; i < hourglassSide1.size(); ++i)
         {
-            painter.setPen(QPen(Qt::blue, 2));
             painter.drawLine(hourglassSide1[i - 1], hourglassSide1[i]);
-            painter.setPen(QPen(Qt::yellow, 2));
-            painter.drawLine(m_generalCaseHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a2, b2)), m_generalCaseHandler.mirrorPoint(hourglassSide1[i], QLineF(a2, b2)));
-            painter.drawLine(m_generalCaseHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a1, b1)), m_generalCaseHandler.mirrorPoint(hourglassSide1[i], QLineF(a1, b1)));
-            painter.drawEllipse(m_generalCaseHandler.mirrorPoint(hourglassSide1[i - 1], QLineF(a2, b2)), 3, 3);
+            painter.drawEllipse(hourglassSide1[i], 3, 3);
         }
 
         for (size_t i = 1; i < hourglassSide2.size(); ++i)
         {
-            painter.setPen(QPen(Qt::blue, 2));
             painter.drawLine(hourglassSide2[i - 1], hourglassSide2[i]);
-            painter.setPen(QPen(Qt::red, 2));
-            painter.drawLine(m_generalCaseHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a2, b2)), m_generalCaseHandler.mirrorPoint(hourglassSide2[i], QLineF(a2, b2)));
-            painter.drawLine(m_generalCaseHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a1, b1)), m_generalCaseHandler.mirrorPoint(hourglassSide2[i], QLineF(a1, b1)));
-            painter.drawEllipse(m_generalCaseHandler.mirrorPoint(hourglassSide2[i - 1], QLineF(a1, b2)), 3, 3);
+            painter.drawEllipse(hourglassSide2[i], 3, 3);
         }
     }
 
@@ -955,28 +959,23 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
         QVector<QPointF> tangent2 = generalResult.tangent2;
         QVector<QPointF> tangent3 = generalResult.tangent3;
         QVector<QPointF> tangent4 = generalResult.tangent4;
-        painter.setPen(QPen(Qt::green, 2));
+        painter.setPen(QPen(Qt::darkMagenta, 3));
+        painter.setBrush(Qt::darkMagenta);
 
         for (size_t i = 1; i < tangent1.size(); ++i)
         {
             painter.drawLine(tangent1[i - 1], tangent1[i]);
         }
 
-        painter.setPen(QPen(Qt::gray, 2));
-
         for (size_t i = 1; i < tangent2.size(); ++i)
         {
             painter.drawLine(tangent2[i - 1], tangent2[i]);
         }
 
-        painter.setPen(QPen(Qt::darkCyan, 2));
-
         for (size_t i = 1; i < tangent3.size(); ++i)
         {
             painter.drawLine(tangent3[i - 1], tangent3[i]);
         }
-
-        painter.setPen(QPen(Qt::cyan, 2));
 
         for (size_t i = 1; i < tangent4.size(); ++i)
         {
@@ -985,16 +984,18 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
     }
 
     if (step >= 7) {
+        painter.setPen(QPen(Qt::darkCyan, 3));
+        painter.setBrush(Qt::darkCyan);
         for (size_t i = 1; i < concatenatedSide1.size(); ++i)
         {
-            painter.setPen(QPen(Qt::darkMagenta, 2));
             painter.drawLine(concatenatedSide1[i - 1], concatenatedSide1[i]);
+            painter.drawEllipse(concatenatedSide1[i], 3, 3);
         }
 
         for (size_t i = 1; i < concatenatedSide2.size(); ++i)
         {
-            painter.setPen(QPen(Qt::magenta, 2));
             painter.drawLine(concatenatedSide2[i - 1], concatenatedSide2[i]);
+            painter.drawEllipse(concatenatedSide2[i], 3, 3);
         }
 
         QPointF m1 = generalResult.m1;
@@ -1015,9 +1016,12 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
     }
 
     if (step >= 8) {
+        painter.setPen(QPen(Qt::magenta, 3));
+        painter.setBrush(Qt::magenta);
+
         painter.drawEllipse(optimalPoint, 3, 3);
 
-        if (optimalPoint == a2 || optimalPoint == b2) {
+        if (m_generalCaseHandler.areEqual(a1, optimalPoint)|| m_generalCaseHandler.areEqual(b1, optimalPoint) || m_generalCaseHandler.areEqual(a2, optimalPoint) || m_generalCaseHandler.areEqual(b2, optimalPoint)) {
             drawLabel(optimalPoint.x() + 5, optimalPoint.y(), QString(" = c"), painter);
         }
         else {
@@ -1028,97 +1032,29 @@ void PolygonWidget::visualizeGeneralCase(QPainter& painter) {
     if (step == 9) {
         for (size_t i = 1; i < optimalPath.size(); ++i)
         {
-            painter.setPen(QPen(Qt::darkYellow, 2));
             painter.drawLine(optimalPath[i - 1], optimalPath[i]);
-        }
-    }
-
-    painter.setPen(QPen(Qt::green, 2));
-    painter.drawLine(QPointF(-110.59, 149.287), QPointF(-145.384, 111.7));
-    painter.drawLine(QPointF(-145.384, 111.7), QPointF(-268.896, -61.0969));
-    QPointF(-110.59, 149.287);
-    QPointF(-145.384, 111.7);
-    QPointF(-268.896, -61.0969);
-    QPointF tangentPoint1 = QPointF(-110.59, 149.287);
-    QPointF tangentPoint2 = QPointF(-145.384, 111.7);
-    painter.setPen(QPen(Qt::magenta, 2));
-    painter.drawLine(tangentPoint1, tangentPoint2);
-}
-
-
-void PolygonWidget::visualizeApprox(QPainter& painter) {
-    resultApprox = m_approximateHandler.getApproximateResult();
-
-    QVector<QPointF> threeApproxPath = resultApprox.threeApproxPath;
-    if (step >= 1) {
-        painter.setPen(QPen(Qt::yellow, 2));
-        for (size_t i = 1; i < threeApproxPath.size(); ++i)
-        {
-            painter.drawLine(threeApproxPath[i - 1], threeApproxPath[i]);
-        }
-    }
-
-    QLineF window1 = resultApprox.window1;
-    QLineF window2 = resultApprox.window2;
-    if (step >= 2) {
-        painter.setPen(QPen(Qt::green));
-        painter.drawLine(window1);
-        painter.drawLine(window2);
-    }
-
-    double radius = resultApprox.discRadius;
-    if (step >= 3) {
-        painter.setBrush(Qt::NoBrush); // No filling for the ellipse
-        painter.drawEllipse(startingPoint, radius, radius);
-    }
-
-    QLineF intersectionWindow1 = resultApprox.intersectionWindow1;
-    QLineF intersectionWindow2 = resultApprox.intersectionWindow2;
-    if (step >= 4) {
-        painter.setPen(QPen(Qt::darkGreen));
-        painter.drawLine(intersectionWindow1);
-        painter.drawLine(intersectionWindow2);
-    }
-
-    QVector<QPointF> spacedPoints1 = resultApprox.equallySpacedPoints1;
-    QVector<QPointF> spacedPoints2 = resultApprox.equallySpacedPoints2;
-    if (step >= 5) {
-        painter.setPen(QPen(Qt::magenta));
-        for (size_t i = 0; i < spacedPoints1.size(); ++i)
-        {
-            painter.drawEllipse(spacedPoints1[i], 1, 1);
-        }
-        for (size_t i = 0; i < spacedPoints2.size(); ++i)
-        {
-            painter.drawEllipse(spacedPoints2[i], 1, 1);
-        }
-    }
-
-    if (step == 6) {
-        QVector<QPointF> shortestPath = resultApprox.shortestPath;
-        painter.setPen(QPen(Qt::darkRed, 2));
-        for (size_t i = 1; i < shortestPath.size(); ++i)
-        {
-            painter.drawLine(shortestPath[i - 1], shortestPath[i]);
+            painter.drawEllipse(optimalPath[i], 3, 3);
         }
     }
 }
-
 
 void PolygonWidget::visualizeNApprox(QPainter& painter) {
     resultNApprox = m_approximateHandler.getNApproximateResult();
 
     QVector<QPointF> nApproxPath = resultNApprox.nApproxPath;
     if (step >= 1) {
-        painter.setPen(QPen(Qt::yellow, 2));
+        painter.setPen(QPen(Qt::yellow, 3));
+        painter.setBrush(Qt::yellow);
         for (size_t i = 1; i < nApproxPath.size(); ++i)
         {
             painter.drawLine(nApproxPath[i - 1], nApproxPath[i]);
+            painter.drawEllipse(nApproxPath[i], 3, 3);
         }
     }
 
     if (step >= 2) {
-        painter.setPen(QPen(Qt::green));
+        painter.setPen(QPen(Qt::green, 3));
+        painter.setBrush(Qt::green);
         for (const QLineF window : resultNApprox.windows) {
             painter.drawLine(window);
         }
@@ -1126,19 +1062,22 @@ void PolygonWidget::visualizeNApprox(QPainter& painter) {
 
     double radius = resultNApprox.discRadius;
     if (step >= 3) {
+        painter.setPen(QPen(Qt::black, 3));
         painter.setBrush(Qt::NoBrush); // No filling for the ellipse
         painter.drawEllipse(startingPoint, radius, radius);
     }
 
     if (step >= 4) {
-        painter.setPen(QPen(Qt::darkGreen));
+        painter.setPen(QPen(Qt::darkCyan, 3));
+        painter.setBrush(Qt::darkCyan);
         for (const QLineF intersectionWindow : resultNApprox.intersectionWindows) {
             painter.drawLine(intersectionWindow);
         }
     }
 
     if (step >= 5) {
-        painter.setPen(QPen(Qt::magenta));
+        painter.setPen(QPen(Qt::red, 3));
+        painter.setBrush(Qt::red);
 
         for (size_t i = 0; i < resultNApprox.equallySpacedPointsGroup.size(); ++i) {
             for (size_t j = 0; j < resultNApprox.equallySpacedPointsGroup[i].size(); ++j) {
@@ -1147,12 +1086,24 @@ void PolygonWidget::visualizeNApprox(QPainter& painter) {
         }
     }
 
-    if (step == 6) {
+    if (step >= 6) {
+        painter.setPen(QPen(Qt::darkRed, 3));
+        painter.setBrush(Qt::darkRed);
         QVector<QPointF> shortestPath = resultNApprox.shortestPath;
-        painter.setPen(QPen(Qt::darkRed, 2));
         for (size_t i = 1; i < shortestPath.size(); ++i)
         {
             painter.drawLine(shortestPath[i - 1], shortestPath[i]);
+        }
+    }
+
+    if (step == 7) {
+        QPen pen(Qt::magenta, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+        painter.setPen(pen);
+
+        QVector<QPointF> exactShortestPath = resultNApprox.exactShortestPath;
+        for (size_t i = 1; i < exactShortestPath.size(); ++i)
+        {
+            painter.drawLine(exactShortestPath[i - 1], exactShortestPath[i]);
         }
     }
 }

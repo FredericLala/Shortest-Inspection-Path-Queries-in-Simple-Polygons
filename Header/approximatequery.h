@@ -71,6 +71,7 @@ public:
 		QVector<QLineF> intersectionWindows;
 		QVector<QVector<QPointF>> equallySpacedPointsGroup;
 		QVector<QPointF> shortestPath;
+        QVector<QPointF> exactShortestPath;
 	};
 
 	ApproximateQuery::ApproximateResult getApproximateResult();

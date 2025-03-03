@@ -17,20 +17,15 @@ class PolygonGen
 public:
     PolygonGen();
     Polygon_2 generateRandomPolygon(int size, double radius);
-    Polygon_2 exampleOne() const;
 
-    Polygon_2 exampleTwo() const;
-
-    Polygon_2 exampleThree() const;
-
-    Polygon_2 exampleFour() const;
-
-    Polygon_2 exampleFive() const;
-
-    Polygon_2 altIsOpen() const;
-
-    Polygon_2 openHourglass() const;
-
+    Polygon_2 qOneRoot() const;
+    Polygon_2 qOneA() const;
+    Polygon_2 qOneMiddle() const;
+    Polygon_2 qTwoIntersection() const;
+    Polygon_2 qTwoDomination() const;
+    Polygon_2 qTwoGeneralClosed() const;
+    Polygon_2 qTwoGeneralAltOpen() const;
+    Polygon_2 qTwoGeneralOpen() const;
     Polygon_2 testPolygon() const;
 
 private:

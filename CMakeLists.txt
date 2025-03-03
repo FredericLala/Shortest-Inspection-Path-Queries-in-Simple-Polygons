@@ -5,24 +5,24 @@ cmake_minimum_required(VERSION 3.18)
 project(Bachelor)
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "CMAKE_LANG_FLAGS_RELWITHDEBINFO")
+    set(CMAKE_BUILD_TYPE "Release")
 endif()
 
 # Set CMake variables for Qt handling
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
-set(CMAKE_PREFIX_PATH "/home/freddy/Qt/6.8.2/gcc_64")
+set(CMAKE_PREFIX_PATH "$ENV{QT_DIR}")
 find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
 find_package(Qt6Gui REQUIRED)
 # set(CMAKE_AUTORCC ON)
 
 # Find the necessary packages: CGAL and Qt6
-set(CMAKE_PREFIX_PATH "/home/freddy/cgal/CGAL-6.0.1")
+set(CMAKE_PREFIX_PATH "$ENV{CGAL_DIR}")
 find_package(CGAL REQUIRED)
 
-set(CMAKE_PREFIX_PATH "/home/freddy/cgal/boost_1_87_0")
+set(CMAKE_PREFIX_PATH "$ENV{BOOST_DIR}")
 find_package(Boost REQUIRED)
 
 find_package(GMP REQUIRED)

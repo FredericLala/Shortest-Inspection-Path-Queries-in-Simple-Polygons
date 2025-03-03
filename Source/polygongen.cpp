@@ -27,73 +27,172 @@ Polygon_2 PolygonGen::generateRandomPolygon(int size, double radius)
 	return polygon;
 }
 
-Polygon_2 PolygonGen::exampleOne() const
+Polygon_2 PolygonGen::qOneRoot() const
+{
+    Polygon_2 p;
+    p.push_back(Point_2(354,55));
+    p.push_back(Point_2(260,161));
+    p.push_back(Point_2(281,413));
+    p.push_back(Point_2(-156,377));
+    p.push_back(Point_2(104,160));
+    p.push_back(Point_2(33,258));
+    p.push_back(Point_2(91,229));
+    p.push_back(Point_2(214,-44));
+    p.push_back(Point_2(39,123));
+    p.push_back(Point_2(95,-164));
+    p.push_back(Point_2(34,24));
+    p.push_back(Point_2(-138,76));
+    p.push_back(Point_2(-328,366));
+    p.push_back(Point_2(-219,80));
+    p.push_back(Point_2(-161,-18));
+    p.push_back(Point_2(-174,-97));
+    p.push_back(Point_2(-416,-380));
+    p.push_back(Point_2(-263,-226));
+    p.push_back(Point_2(-114,-295));
+    p.push_back(Point_2(-236,-360));
+    p.push_back(Point_2(-72,-332));
+    p.push_back(Point_2(162,-196));
+    p.push_back(Point_2(159,-294));
+    p.push_back(Point_2(218,-335));
+    p.push_back(Point_2(345,-340));
+    p.push_back(Point_2(428,-284));
+    p.push_back(Point_2(428,130));
+    p.push_back(Point_2(395,-41));
+    p.push_back(Point_2(352,-274));
+    p.push_back(Point_2(379,26));
+
+    return p;
+}
+
+Polygon_2 PolygonGen::qOneA() const
+{
+    Polygon_2 p;
+    p.push_back(Point_2(-138,-119));
+    p.push_back(Point_2(21,6));
+    p.push_back(Point_2(341,69));
+    p.push_back(Point_2(420,218));
+    p.push_back(Point_2(415,283));
+    p.push_back(Point_2(407,335));
+    p.push_back(Point_2(345,398));
+    p.push_back(Point_2(374,272));
+    p.push_back(Point_2(76,383));
+    p.push_back(Point_2(174,254));
+    p.push_back(Point_2(-198,142));
+    p.push_back(Point_2(14,341));
+    p.push_back(Point_2(-195,228));
+    p.push_back(Point_2(-353,219));
+    p.push_back(Point_2(-375,125));
+    p.push_back(Point_2(-232,175));
+    p.push_back(Point_2(-345,65));
+    p.push_back(Point_2(-423,-19));
+    p.push_back(Point_2(-305,-42));
+    p.push_back(Point_2(-281,-23));
+    p.push_back(Point_2(-163,-182));
+    p.push_back(Point_2(-352,-214));
+    p.push_back(Point_2(-364,-226));
+    p.push_back(Point_2(-43,-195));
+    p.push_back(Point_2(271,-406));
+    p.push_back(Point_2(396,-309));
+    p.push_back(Point_2(331,-188));
+    p.push_back(Point_2(169,-58));
+    p.push_back(Point_2(401,22));
+    p.push_back(Point_2(360,54));
+
+    return p;
+}
+
+Polygon_2 PolygonGen::qOneMiddle() const
+{
+    Polygon_2 p;
+    p.push_back(Point_2(-308,131));
+    p.push_back(Point_2(-380,136));
+    p.push_back(Point_2(-54,267));
+    p.push_back(Point_2(-182,352));
+    p.push_back(Point_2(-392,218));
+    p.push_back(Point_2(-428,103));
+    p.push_back(Point_2(-390,-139));
+    p.push_back(Point_2(-225,-32));
+    p.push_back(Point_2(-149,-83));
+    p.push_back(Point_2(-391,-218));
+    p.push_back(Point_2(-67,-328));
+    p.push_back(Point_2(-199,-385));
+    p.push_back(Point_2(-322,-423));
+    p.push_back(Point_2(297,-371));
+    p.push_back(Point_2(363,-319));
+    p.push_back(Point_2(425,13));
+    p.push_back(Point_2(347,-275));
+    p.push_back(Point_2(247,-287));
+    p.push_back(Point_2(225,-282));
+    p.push_back(Point_2(414,57));
+    p.push_back(Point_2(298,-44));
+    p.push_back(Point_2(232,-141));
+    p.push_back(Point_2(133,-52));
+    p.push_back(Point_2(398,335));
+    p.push_back(Point_2(-22,404));
+    p.push_back(Point_2(74,253));
+    p.push_back(Point_2(78,-32));
+    p.push_back(Point_2(-250,28));
+    p.push_back(Point_2(-277,138));
+    p.push_back(Point_2(-173,167));
+
+    return p;
+}
+
+Polygon_2 PolygonGen::qTwoIntersection() const
 {
 	Polygon_2 p;
-	p.push_back(Point_2(18, -52));
-	p.push_back(Point_2(96, -98));
-	p.push_back(Point_2(46, -189));
-	p.push_back(Point_2(141, -251));
-	p.push_back(Point_2(-230, -113));
-	p.push_back(Point_2(-63, 108));
-	p.push_back(Point_2(-195, 115));
-	p.push_back(Point_2(-193, 190));
-	p.push_back(Point_2(-43, 189));
-	p.push_back(Point_2(66, 89));
-	p.push_back(Point_2(72, 190));
-	p.push_back(Point_2(290, 189));
-	p.push_back(Point_2(210, 126));
-	p.push_back(Point_2(385, -145));
-	p.push_back(Point_2(211, -201));
-	p.push_back(Point_2(179, 10));
-	p.push_back(Point_2(79, 20));
-	p.push_back(Point_2(-48, -23));
-	p.push_back(Point_2(-63, -129));
-	p.push_back(Point_2(-20, -100));
-	p.push_back(Point_2(9, -142));
+    p.push_back(Point_2(-300,214));
+    p.push_back(Point_2(-313,198));
+    p.push_back(Point_2(-377,98));
+    p.push_back(Point_2(-305,85));
+    p.push_back(Point_2(-330,-96));
+    p.push_back(Point_2(-295,-219));
+    p.push_back(Point_2(266,-413));
+    p.push_back(Point_2(422,18));
+    p.push_back(Point_2(163,406));
+    p.push_back(Point_2(123,320));
+    p.push_back(Point_2(39,363));
+    p.push_back(Point_2(256,55));
+    p.push_back(Point_2(292,13));
+    p.push_back(Point_2(257,-71));
+    p.push_back(Point_2(254,-56));
+    p.push_back(Point_2(210,42));
+    p.push_back(Point_2(-165,348));
+    p.push_back(Point_2(-298,317));
+    p.push_back(Point_2(-50,-64));
+    p.push_back(Point_2(-83,-223));
 
 	return p;
 }
 
-Polygon_2 PolygonGen::exampleTwo() const
+Polygon_2 PolygonGen::qTwoDomination() const
 {
 	Polygon_2 p;
-	p.push_back(Point_2(-84, -140));
-	p.push_back(Point_2(-138, -94));
-	p.push_back(Point_2(-60, 13));
-	p.push_back(Point_2(-168, -37));
-	p.push_back(Point_2(-243, -11));
-	p.push_back(Point_2(-238, 102));
-	p.push_back(Point_2(-180, 153));
-	p.push_back(Point_2(46, 127));
-	p.push_back(Point_2(142, 153));
-	p.push_back(Point_2(183, 122));
-	p.push_back(Point_2(123, -72));
-	p.push_back(Point_2(44, -16));
-	p.push_back(Point_2(57, -121));
+    p.push_back(Point_2(236,90));
+    p.push_back(Point_2(291,-28));
+    p.push_back(Point_2(262,36));
+    p.push_back(Point_2(215,415));
+    p.push_back(Point_2(-302,396));
+    p.push_back(Point_2(-402,189));
+    p.push_back(Point_2(-32,313));
+    p.push_back(Point_2(-74,163));
+    p.push_back(Point_2(-120,94));
+    p.push_back(Point_2(-133,-13));
+    p.push_back(Point_2(-75,-154));
+    p.push_back(Point_2(-48,-257));
+    p.push_back(Point_2(-259,-283));
+    p.push_back(Point_2(-192,-330));
+    p.push_back(Point_2(-187,-368));
+    p.push_back(Point_2(52,-423));
+    p.push_back(Point_2(115,-357));
+    p.push_back(Point_2(349,-83));
+    p.push_back(Point_2(23,130));
+    p.push_back(Point_2(113,179));
 
 	return p;
 }
 
-Polygon_2 PolygonGen::exampleThree() const
-{
-	Polygon_2 p;
-	p.push_back(Point_2(-223, -23));
-	p.push_back(Point_2(-264, 71));
-	p.push_back(Point_2(-108, 52));
-	p.push_back(Point_2(16, 81));
-	p.push_back(Point_2(33, 5));
-	p.push_back(Point_2(189, -42));
-	p.push_back(Point_2(189, -141));
-	p.push_back(Point_2(40, -97));
-	p.push_back(Point_2(-54, -153));
-	p.push_back(Point_2(-166, -124));
-	p.push_back(Point_2(-169, 3));
-
-	return p;
-}
-
-Polygon_2 PolygonGen::exampleFour() const
+Polygon_2 PolygonGen::qTwoGeneralClosed() const
 {
 	Polygon_2 p;
 	p.push_back(Point_2(-201, -40));
@@ -140,33 +239,7 @@ Polygon_2 PolygonGen::exampleFour() const
 	return p;
 }
 
-// Polygon in BA
-/*
-Polygon_2 PolygonGen::exampleFive() const
-{
-	Polygon_2 p;
-	p.push_back(Point_2(-166, 137));
-	p.push_back(Point_2(-216, 60));
-	p.push_back(Point_2(-276, 206));
-	p.push_back(Point_2(-118, 239));
-	p.push_back(Point_2(-37, 92));
-	p.push_back(Point_2(109, -13));
-	p.push_back(Point_2(274, -83));
-	p.push_back(Point_2(297, 25));
-	p.push_back(Point_2(370, 67));
-	p.push_back(Point_2(396, -133));
-	p.push_back(Point_2(254, -260));
-	p.push_back(Point_2(65, -164));
-	p.push_back(Point_2(-93, -256));
-	p.push_back(Point_2(-394, -150));
-	p.push_back(Point_2(-202, -92));
-	p.push_back(Point_2(-124, 58));
-
-	return p;
-}
-*/
-
-Polygon_2 PolygonGen::altIsOpen() const
+Polygon_2 PolygonGen::qTwoGeneralAltOpen() const
 {
 	Polygon_2 p;
 	p.push_back(Point_2(-341, 151));
@@ -204,7 +277,7 @@ Polygon_2 PolygonGen::altIsOpen() const
 	return p;
 }
 
-Polygon_2 PolygonGen::openHourglass() const
+Polygon_2 PolygonGen::qTwoGeneralOpen() const
 {
 	Polygon_2 p;
 	p.push_back(Point_2(25, 157));
@@ -254,46 +327,56 @@ Polygon_2 PolygonGen::openHourglass() const
 Polygon_2 PolygonGen::testPolygon() const
 {
 	Polygon_2 p;
-    p.push_back(Point_2(-60,-410));
-    p.push_back(Point_2(250,-374));
-    p.push_back(Point_2(264,-187));
-    p.push_back(Point_2(276,-159));
-    p.push_back(Point_2(358,-62));
-    p.push_back(Point_2(423,-102));
-    p.push_back(Point_2(411,122));
-    p.push_back(Point_2(367,176));
-    p.push_back(Point_2(383,53));
-    p.push_back(Point_2(298,197));
-    p.push_back(Point_2(246,270));
-    p.push_back(Point_2(131,17));
-    p.push_back(Point_2(211,301));
-    p.push_back(Point_2(55,385));
-    p.push_back(Point_2(-152,411));
-    p.push_back(Point_2(-187,404));
-    p.push_back(Point_2(-207,239));
-    p.push_back(Point_2(-134,47));
-    p.push_back(Point_2(16,-9));
-    p.push_back(Point_2(-80,14));
-    p.push_back(Point_2(-102,-64));
-    p.push_back(Point_2(-229,273));
-    p.push_back(Point_2(-309,49));
-    p.push_back(Point_2(-233,-33));
-    p.push_back(Point_2(-221,0));
-    p.push_back(Point_2(-207,-52));
-    p.push_back(Point_2(-197,-138));
-    p.push_back(Point_2(-312,-61));
-    p.push_back(Point_2(-363,-222));
-    p.push_back(Point_2(-321,-270));
-    p.push_back(Point_2(-243,-265));
-    p.push_back(Point_2(-174,-227));
-    p.push_back(Point_2(-261,-350));
-    p.push_back(Point_2(-180,-353));
-    p.push_back(Point_2(-106,-397));
-    p.push_back(Point_2(-53,-357));
-    p.push_back(Point_2(10,-114));
-    p.push_back(Point_2(192,-127));
-    p.push_back(Point_2(278,-56));
-    p.push_back(Point_2(164,-178));
+    p.push_back(Point_2(218,-300));
+    p.push_back(Point_2(144,-325));
+    p.push_back(Point_2(239,-339));
+    p.push_back(Point_2(182,-369));
+    p.push_back(Point_2(401,-343));
+    p.push_back(Point_2(356,-251));
+    p.push_back(Point_2(388,208));
+    p.push_back(Point_2(345,173));
+    p.push_back(Point_2(318,115));
+    p.push_back(Point_2(148,292));
+    p.push_back(Point_2(224,233));
+    p.push_back(Point_2(320,143));
+    p.push_back(Point_2(377,251));
+    p.push_back(Point_2(392,382));
+    p.push_back(Point_2(296,285));
+    p.push_back(Point_2(372,269));
+    p.push_back(Point_2(123,307));
+    p.push_back(Point_2(198,400));
+    p.push_back(Point_2(-42,414));
+    p.push_back(Point_2(-213,383));
+    p.push_back(Point_2(-356,382));
+    p.push_back(Point_2(-312,361));
+    p.push_back(Point_2(-317,250));
+    p.push_back(Point_2(-393,275));
+    p.push_back(Point_2(-376,192));
+    p.push_back(Point_2(-237,100));
+    p.push_back(Point_2(-23,200));
+    p.push_back(Point_2(-32,304));
+    p.push_back(Point_2(9,373));
+    p.push_back(Point_2(-1,310));
+    p.push_back(Point_2(-16,60));
+    p.push_back(Point_2(-193,-195));
+    p.push_back(Point_2(-378,-32));
+    p.push_back(Point_2(-423,-146));
+    p.push_back(Point_2(-248,-219));
+    p.push_back(Point_2(-298,-285));
+    p.push_back(Point_2(-274,-347));
+    p.push_back(Point_2(126,-362));
+    p.push_back(Point_2(35,-298));
+    p.push_back(Point_2(-137,-316));
+    p.push_back(Point_2(-128,-228));
+    p.push_back(Point_2(-109,-218));
+    p.push_back(Point_2(-85,-212));
+    p.push_back(Point_2(-147,-153));
+    p.push_back(Point_2(-22,-123));
+    p.push_back(Point_2(44,-126));
+    p.push_back(Point_2(206,-111));
+    p.push_back(Point_2(-29,-194));
+    p.push_back(Point_2(248,-163));
+    p.push_back(Point_2(262,-151));
 
 	return p;
 }

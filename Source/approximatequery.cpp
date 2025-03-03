@@ -55,11 +55,12 @@ void ApproximateQuery::nEpsilonApproximateQuery(double epsilon, QPointF& startin
 	timer.start();
 
 	// 1.
+    std::cout << "Approximate Query";
 	QVector<QPointF> nApproximatePath = nApproximateQuery(startingPoint, queryPoints, polygon, mesh);
 	nApproximateResult.nApproxPath = nApproximatePath;
 	double nApproximatePathLength = m_twoPointHandler.calculatePathLength(nApproximatePath);
-	const int sizeOfN = queryPoints.size() * 2 - 1;
-	std::cout << "size n: " << sizeOfN << "\n";
+    //const int sizeOfN = queryPoints.size() * 2 - 1;
+     const int sizeOfN = queryPoints.size() + 2;
 
 	// 2.
 	nApproximateResult.windows = windowsVector;
@@ -82,8 +83,7 @@ void ApproximateQuery::nEpsilonApproximateQuery(double epsilon, QPointF& startin
 
 	// 4.
 	double const delta = epsilon * nApproximatePathLength / sizeOfN;
-	double const spacedDistance = delta / sizeOfN;
-	//double const spacedDistance = epsilon * 50;
+    double const spacedDistance = delta / sizeOfN;
 
 	QVector<QVector<QPointF>> spacedPointsVectorGroup;
 	for (QLineF intersectionWindow : intersectionWindowsVector) {
@@ -98,19 +98,23 @@ void ApproximateQuery::nEpsilonApproximateQuery(double epsilon, QPointF& startin
 	nApproximateResult.shortestPath = shortestPath;
 
 	qint64 elapsedTime = timer.elapsed();
-	std::cout << "epsilonApproximateQuery completed in " << elapsedTime << " ms \n";
-    double approxPathLength = m_twoPointHandler.calculatePathLength(shortestPath);
-	std::cout << "path length " << approxPathLength << "\n";
-	std::cout << "epsilon value " << epsilon << "\n";
 
 	// 6.
 	if (queryPoints.size() == 2) {
 		m_twoPointHandler.executeTwoPointQuery(startingPoint, queryPoints[0], queryPoints[1], polygon, mesh);
 		TwoPointQuery::QueryResult resultQ2 = m_twoPointHandler.getQ2Result();
+        nApproximateResult.exactShortestPath = resultQ2.optimalPath;
         std::cout << "allowed max length: " << resultQ2.optimalPathLength * (1 + epsilon)  << "\n";
 	}
 
+    std::cout << "END OF QUERY: " << "\n";
+    std::cout << "-------------\n";
+    std::cout << "\n";
 
+    std::cout << "epsilonApproximateQuery completed in " << elapsedTime << " ms \n";
+    double approxPathLength = m_twoPointHandler.calculatePathLength(shortestPath);
+    std::cout << "path length " << approxPathLength << "\n";
+    std::cout << "epsilon value " << epsilon << "\n";
 }
 
 ApproximateQuery::NApproximateResult ApproximateQuery::getNApproximateResult() { return nApproximateResult; }
@@ -192,7 +196,6 @@ QVector<QPointF> ApproximateQuery::computeDiscIntersection(QPointF& circleCenter
 	{
 		// Case 1: Intersection is a pair of Circular_arc_point_2 and multiplicity
 		if (const auto* pairResult = std::get_if<std::pair<Circular_arc_point_2, unsigned>>(&intersection)) {
-			std::cout << "Circular arc  Points detected.\n";
 			const Circular_arc_point_2& arcPoint = pairResult->first;
 			double x = CGAL::to_double(arcPoint.x());
 			double y = CGAL::to_double(arcPoint.y());
@@ -207,24 +210,18 @@ QVector<QPointF> ApproximateQuery::computeDiscIntersection(QPointF& circleCenter
 		}
 		// Case 2: Intersection is a Circular_arc_2 (overlap of circular arcs)
 		else if (std::holds_alternative<Circular_arc_2>(intersection)) {
-			std::cout << "Circular arc overlap detected.\n";
 			// Handle overlapping arc as needed (e.g., extract endpoints)
 		}
 		// Case 3: Intersection is a Line_arc_2 (overlap of line segments)
 		else if (std::holds_alternative<Line_arc_2>(intersection)) {
-			std::cout << "Line arc overlap detected.\n";
 			// Handle overlapping line segment as needed
 		}
 		// Case 4: Intersection is a full Line_2 or Circle_2 (coincident objects)
 		else if (std::holds_alternative<Line>(intersection)) {
-			std::cout << "Full line overlap detected.\n";
 		}
 		else if (std::holds_alternative<Circle_2>(intersection)) {
-			std::cout << "Full circle overlap detected.\n";
 		}
 	}
-
-	std::cout << "circle window intersections: " << intersectionsQ.size() << "\n";
 
 	if (intersectionsQ.isEmpty()) {
 		intersectionsQ.append(window.p1());
