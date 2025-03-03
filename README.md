@@ -22,14 +22,12 @@ sudo apt-get install cmake cmake-qt-gui
 Additionally, download and install the following from their official sources:
 - [CGAL v6.0.1](https://github.com/CGAL/cgal/releases/tag/v6.0.1)
 - [Qt Open Source](https://www.qt.io/download-open-source)
-- [Boost v1.79.0](https://www.boost.org/doc/libs/1_79_0/more/getting_started/unix-variants.html)
 
 #### Setup
 After cloning this repository, configure environment variables so that CMake can locate the required libraries:
 ```sh
 export QT_DIR=/home/"user"/Qt/6.8.2/gcc_64
 export CGAL_DIR=/home/"user"/cgal/CGAL-6.0.1
-export BOOST_DIR=/home/"user"/cgal/boost_1_87_0
 ```
 *(Replace `"user"` with your actual username and modify the paths according to where you saved the libraries.)*
 
